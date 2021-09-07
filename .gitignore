@@ -1,0 +1,5 @@
+.DS_Store
+.nova
+.vscode
+extension.afphoto
+node_modules

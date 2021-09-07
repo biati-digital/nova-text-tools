@@ -1,0 +1,36 @@
+{
+  "name": "biati.texttools",
+  "version": "1.0.0",
+  "description": "Nova Text Tools",
+  "main": "main.js",
+  "scripts": {
+    "build": "npx rollup -c",
+    "watch": "onchange -i \"Scripts/**/*.js\" -- npm run build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexanderweiss/nova-prettier.git"
+  },
+  "author": "biati",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexanderweiss/nova-prettier/issues"
+  },
+  "homepage": "https://github.com/alexanderweiss/nova-prettier#readme",
+  "dependencies": {
+    "change-case": "^4.1.2",
+    "esprima-fb": "^15001.1001.0-dev-harmony-fb",
+    "html-entities": "^2.3.2",
+    "locutus": "^2.0.15",
+    "matcher": "^3.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "jest": "^27.1.0",
+    "onchange": "^7.0.2",
+    "rollup": "^2.29.0"
+  }
+}
