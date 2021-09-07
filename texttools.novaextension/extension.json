@@ -3,7 +3,7 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode and much more...",
-  "version": "1.0.1",
+  "version": "1.1",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
@@ -14,14 +14,14 @@
   "commands": {
     "editor": [
       {
-        "title": "Sort Alphanumerically",
-        "paletteTitle": "Sort Alphanumerically",
+        "title": "Sort Lines Alphanumerically",
+        "paletteTitle": "Sort Lines Alphanumerically",
         "command": "biati.texttools.sortalphanumerically",
         "when": "editorHasFocus"
       },
       {
-        "title": "Sort Alphanumerically Reverse",
-        "paletteTitle": "Sort Alphanumerically Reverse",
+        "title": "Sort Lines Alphanumerically Reverse",
+        "paletteTitle": "Sort Lines Alphanumerically Reverse",
         "command": "biati.texttools.sortalphanumericallyreverse",
         "when": "editorHasFocus"
       },
