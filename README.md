@@ -77,14 +77,14 @@ To learn more please checkout the examples below.
 
 ## Mastering commands with Matching...
 
-This is an advanced way to filter by entering a simple query or a regular expression, this works for any command that includes in it's name `Matching...` for example: **Delete Lines Matching..., Keep Lines Matching..., Select Lines Matching**, etc.
+This is an advanced way to filter by entering a simple query or a regular expression, this works for any command that includes in it's name `Matching...` for example: **Delete Lines Matching..., Filter Lines Matching..., Select Lines Matching**, etc.
 Here are some examples of how to use it.
 
 &nbsp;
 
 #### Filter with a simple query:
 
-Having the following text, if we for example call the command "Keep Lines Matching..." and we enter `gmail` it will leave only the lines that contains `gmail`
+Having the following text, if we for example call the command "Filter Lines Matching..." and we enter `gmail` it will leave only the lines that contains `gmail`
 ```
 marquardt.gudrun@gmail.com
 okuneva.gerhard@yahoo.com
@@ -105,7 +105,7 @@ xfranecki@gmail.com
 
 #### Filter lines that begins with:
 
-To match lines at the beggining, when calling the command (for example "Keep Lines Matching...") we just need to enter our query starting with a `^` so if we enter `^ma`
+To match lines at the beggining, when calling the command (for example "Filter Lines Matching...") we just need to enter our query starting with a `^` so if we enter `^ma`
 
 ```
 marquardt.gudrun@gmail.com
@@ -127,7 +127,7 @@ matilda.qkieu@gmail.com
 
 #### Filter lines that ends with:
 
-To match lines that ends with, when calling the command (for example "Keep Lines Matching...") we just need to enter our query ending with a `$` so if we enter `org$`
+To match lines that ends with, when calling the command (for example "Filter Lines Matching...") we just need to enter our query ending with a `$` so if we enter `org$`
 
 ```
 marquardt.gudrun@gmail.com
@@ -146,7 +146,7 @@ miracle47@olson.org
 
 #### Filter lines that DO NOT contain certain text:
 
-To match lines that do not contain some text, when calling the command (for example "Keep Lines Matching...") we just need start our query with a `!` so if we enter `!gmail.com` we are basically saying keep only lines that do not contain `gmail.com`
+To match lines that do not contain some text, when calling the command (for example "Filter Lines Matching...") we just need start our query with a `!` so if we enter `!gmail.com` we are basically saying keep only lines that do not contain `gmail.com`
 
 ```
 marquardt.gudrun@gmail.com
