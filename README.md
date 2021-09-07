@@ -7,8 +7,8 @@
 
 ### Text commands
 
--  Sort Alphanumerically
--  Sort Alphanumerically Reverse
+-  Sort Lines Alphanumerically
+-  Sort Lines Alphanumerically Reverse
 -  Sort Lines by length
 -  Sort Lines by length Reverse
 -  Delete Duplicate Lines
