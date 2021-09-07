@@ -1851,7 +1851,7 @@ class NovaTextTools {
                 newRanges.push(new Range(match.index, match.index + match[0].length));
             });
         }
-        resolve(newRanges);
+        return newRanges;
     }
 
     /**
