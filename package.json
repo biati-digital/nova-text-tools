@@ -1,29 +1,51 @@
 {
   "name": "biati.texttools",
-  "version": "1.1",
+  "version": "1.1.1",
   "description": "Nova Text Tools",
   "main": "main.js",
   "scripts": {
     "build": "npx rollup -c",
     "watch": "onchange -i \"Scripts/**/*.js\" -- npm run build",
-    "test": "jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
+  "jest": {
+    "testEnvironment": "jest-environment-node",
+    "moduleDirectories": [
+      "node_modules",
+      "Scripts"
+    ],
+    "transform": {},
+    "verbose": true
+  },
+  "keywords": [
+    "nova",
+    "sort",
+    "filter",
+    "generate",
+    "randomize",
+    "encode",
+    "decode",
+    "text tools",
+    "uuid"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexanderweiss/nova-prettier.git"
+    "url": "git+https://github.com/biati-digital/nova-text-tools.git"
   },
   "author": "biati",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexanderweiss/nova-prettier/issues"
+    "url": "https://github.com/biati-digital/nova-text-tools/issues"
   },
-  "homepage": "https://github.com/alexanderweiss/nova-prettier#readme",
+  "type": "module",
+  "homepage": "https://github.com/biati-digital/nova-text-tools#readme",
   "dependencies": {
     "change-case": "^4.1.2",
     "esprima-fb": "^15001.1001.0-dev-harmony-fb",
     "html-entities": "^2.3.2",
     "locutus": "^2.0.15",
-    "matcher": "^3.0.0"
+    "matcher": "^3.0.0",
+    "uuid-random": "^1.3.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^13.0.0",

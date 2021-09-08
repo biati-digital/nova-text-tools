@@ -4,7 +4,13 @@ const json = require('@rollup/plugin-json');
 
 module.exports = {
     input: 'Scripts/main.js',
-    plugins: [nodeResolve(), json(), commonjs()],
+    plugins: [
+        commonjs(),
+        nodeResolve({
+            browser: true,
+        }),
+        json(),
+    ],
     output: {
         file: 'texttools.novaextension/Scripts/main.dist.js',
         sourcemap: false,
