@@ -21,6 +21,7 @@
 -  Reverse Lines
 -  Randomize Lines
 -  Join Lines (Join lines using a specified delimiter)
+-  Split Text to Lines (Split a string to lines at the specified delimiter)
 -  Add Lines number with multiple formats: 1, 1., 1), 1.-, 1 -, 1:, Ordinal, Roman Numerals
 -  Make Camel Case: `test string` becomes `testString`
 -  Make Constant Case: `test string` becomes `TEST_STRING`
@@ -64,6 +65,11 @@ To learn more please checkout the examples below.
 -  Add Text At Beginning of Lines... (adds at the beginning of each line the text you entered)
 -  Add Text At Ends of Lines... (adds at the end of each line the text you entered)
 
+### Generate Commands
+
+-  Generate UUID
+-  Generate Fake Data (Names, Emails, Phones, Credit Cards, etc. Still working on it but definetly will be added)
+
 ### Numbers
 
 -  Add All Numbers (View the examples below)
@@ -73,6 +79,17 @@ To learn more please checkout the examples below.
 -  JSON String Parse (Pretty print a JSON encoded string with support for serialized strings, this way you can easily print a serialized array from a database)
 
 &nbsp;
+&nbsp;
+
+## How to use the commands?
+
+Easy, there are several ways.
+
+- You can invoke the commands using the [Commands Palette](https://library.panic.com/nova/command-palettes/)
+- You can right click your file and you will see a "Text Tools" menu that contains all the available commands
+- You can access the tools from the Editor Menu -> Text Tools
+- You can also configure a Key Binding for the command you use the most for exaple `Select All Ocurrences`
+
 &nbsp;
 
 ## Mastering commands with Matching...
@@ -184,6 +201,75 @@ result will be:
 <li>Annamarie Dianei</li>
 ```
 
+&nbsp;
+
+### Join Lines
+
+You can join lines with any delimiter you want, for example, if you use a comma as delimiter.
+
+```
+Duncan Prewett
+Ernesto Gladi
+```
+
+result will be:
+
+```
+Duncan Prewett,Ernesto Gladi
+```
+
+&nbsp;
+
+### Split Text to Lines
+
+You can split text with any delimiter you want, for example, if you use a comma as delimiter.
+
+```
+Duncan Prewett,Ernesto Gladi
+```
+
+result will be:
+
+```
+Duncan Prewett
+Ernesto Gladi
+```
+
+&nbsp;
+
+### JSON String Parse
+
+Really usefull to pretty print some json string, for example:
+
+```
+{"name":"John", "age":30, "car":null}
+```
+
+result will be:
+
+```
+{
+  "name": "John",
+  "age": 30,
+  "car": null
+}
+```
+
+It also works for serialized strings in case you grab the value from a database and quickly need to inspect it's content.
+
+```
+s:60:"{"product":"Awesome Product", "price": 200, "shipping":null}";
+```
+
+result will be:
+
+```
+{
+  "product": "Awesome Product",
+  "price": 200,
+  "shipping": null
+}
+```
 
 &nbsp;
 
@@ -203,5 +289,7 @@ result will be:
 2170.23
 ```
 
-### ¡Have an idea for another tool!
+&nbsp;
+
+### Have an idea for another tool?
 If you have one in mind do not hestiate to share it with us, if it can help a lot of people we'll surely implement it.
