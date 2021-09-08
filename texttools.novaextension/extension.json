@@ -3,7 +3,7 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode and much more...",
-  "version": "1.1",
+  "version": "1.1.1",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
@@ -11,6 +11,7 @@
   "main": "main.dist.js",
   "activationEvents": ["*"],
   "entitlements": {},
+  "keywords": ["nova", "sort", "filter", "generate", "randomize", "encode", "decode", "text tools", "uuid"],
   "commands": {
     "editor": [
       {
@@ -53,6 +54,12 @@
         "title": "Join Lines",
         "paletteTitle": "Join Lines",
         "command": "biati.texttools.joinlines",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Split Text to Lines",
+        "paletteTitle": "Split Text to Lines",
+        "command": "biati.texttools.splittolines",
         "when": "editorHasFocus"
       },
       {
@@ -319,6 +326,12 @@
         "title": "JSON String Parse",
         "paletteTitle": "JSON String Parse",
         "command": "biati.texttools.jsonstringparse",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Generate UUID",
+        "paletteTitle": "Generate UUID",
+        "command": "biati.texttools.generateuuid",
         "when": "editorHasFocus"
       }
     ]
