@@ -1,4 +1,5 @@
-const NovaTextTools = require('./tools.js');
+import NovaTextTools from './tools.js';
+
 const tools = new NovaTextTools();
 
 test('Text to Lower Case', () => {
