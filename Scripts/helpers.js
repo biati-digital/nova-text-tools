@@ -1,4 +1,6 @@
-function romanize(num) {
+//const faker = require('faker');
+
+export function romanize(num) {
     if (isNaN(num)) return NaN;
     var digits = String(+num).split(''),
         key = [
@@ -39,7 +41,7 @@ function romanize(num) {
     return Array(+digits.join('') + 1).join('M') + roman;
 }
 
-function ordinal_suffix(i) {
+export function ordinal_suffix(i) {
     var j = i % 10,
         k = i % 100;
     if (j == 1 && k != 11) {
@@ -54,7 +56,7 @@ function ordinal_suffix(i) {
     return i + 'th';
 }
 
-function titleCase(string) {
+export function titleCase(string) {
     const SMALL_WORDS = /\b(?:an?d?|a[st]|because|but|by|en|for|i[fn]|neither|nor|o[fnr]|only|over|per|so|some|tha[tn]|the|to|up|upon|vs?\.?|versus|via|when|with|without|yet)\b/i;
     const TOKENS = /[^\s:–—-]+|./g;
     const WHITESPACE = /\s/;
@@ -87,7 +89,7 @@ function titleCase(string) {
     return result;
 }
 
-function randomArray(array) {
+export function randomArray(array) {
     var currentIndex = array.length,
         randomIndex;
     while (currentIndex != 0) {
@@ -99,9 +101,70 @@ function randomArray(array) {
     return array;
 }
 
-module.exports = {
-    romanize,
-    ordinal_suffix,
-    titleCase,
-    randomArray,
-};
+export function fakeData(format, amount = 1) {
+    let val = false;
+    switch (format) {
+        case 'Full Name':
+            val = faker.name.findName();
+            break;
+        case 'Name':
+            val = faker.name.firstName();
+            break;
+        case 'Lastname':
+            val = faker.name.lastName();
+            break;
+        case 'Email':
+            val = faker.internet.email();
+            break;
+        case 'Phone':
+            val = faker.phone.phoneNumber();
+            break;
+        case 'Credit Card':
+            val = faker.finance.creditCardNumber();
+            break;
+        case 'User Name':
+            val = faker.internet.userName();
+            break;
+        case 'URL':
+            val = faker.internet.url();
+            break;
+        case 'Full Address':
+            val = faker.address.streetAddress() + ', ' + faker.address.city() + ', ' + faker.address.country() + ', Zip Code ' + faker.address.zipCode();
+            break;
+        case 'Country':
+            val = faker.address.country();
+            break;
+        case 'City':
+            val = faker.address.city();
+            break;
+        case 'Street':
+            val = faker.address.streetAddress();
+            break;
+        case 'Zip Code':
+            val = faker.address.zipCode();
+            break;
+        case 'Company':
+            val = faker.company.companyName();
+            break;
+        case 'Lorem Paragraph':
+            val = faker.lorem.paragraph();
+            break;
+        case 'Lorem Paragraphs':
+            val = faker.lorem.paragraphs();
+            break;
+        case 'Number':
+            val = faker.datatype.number().toString();
+            break;
+        case 'JSON':
+            val = faker.datatype.json();
+            break;
+        case 'Array':
+            val = faker.random.arrayElements();
+            break;
+        case 'UUID':
+            val = faker.datatype.uuid();
+            break;
+        default:
+    }
+    return val;
+}
