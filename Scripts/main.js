@@ -1,4 +1,4 @@
-const NovaTextTools = require('./tools.js');
+import NovaTextTools from './tools.js';
 
 exports.activate = () => {
     console.log('Text Tools Activated');
@@ -36,6 +36,7 @@ exports.activate = () => {
         reverselines: 'reverseLines',
         randomlines: 'randomLines',
         joinlines: 'joinLines',
+        splittolines: 'splitToLines',
         addlinesnumber: 'addLinesNumbers',
 
         tobase64: 'base64Encode',
@@ -79,6 +80,19 @@ exports.activate = () => {
         nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
             const commandMethod = selectionCommands[scommand];
             return tools.select(editor, tools[commandMethod]);
+        });
+    }
+
+    // Insert commands
+    const insertionCommands = {
+        generateuuid: 'generateUUID',
+        fakedata: 'generateFakeData',
+    };
+
+    for (const scommand in insertionCommands) {
+        nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
+            const commandMethod = insertionCommands[scommand];
+            return tools.process(editor, tools[commandMethod], 'insert');
         });
     }
 };

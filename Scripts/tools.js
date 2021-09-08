@@ -1,8 +1,9 @@
-const matcher = require('matcher');
-const { snakeCase, camelCase, capitalCase, constantCase, dotCase, headerCase, noCase, paramCase, pascalCase, pathCase, sentenceCase } = require('change-case');
-const { romanize, ordinal_suffix, titleCase, randomArray } = require('./helpers.js');
-const { encode, decode } = require('html-entities');
-const unserialize = require('locutus/php/var/unserialize');
+import matcher from 'matcher';
+import { snakeCase, camelCase, capitalCase, constantCase, dotCase, headerCase, noCase, paramCase, pascalCase, pathCase, sentenceCase } from 'change-case';
+import { romanize, ordinal_suffix, titleCase, randomArray, fakeData } from './helpers.js';
+import { encode, decode } from 'html-entities';
+import unserialize from 'locutus/php/var/unserialize';
+import uuid from 'uuid-random';
 
 /**
  * Nova Text Tools
@@ -17,7 +18,7 @@ class NovaTextTools {
      * if no selection then the entire content will
      * be processed
      */
-    process(editor, fn) {
+    process(editor, fn, action = 'replace') {
         let fromSelection = true;
         let selectedRanges = editor.selectedRanges;
 
@@ -31,7 +32,13 @@ class NovaTextTools {
                     return false;
                 }
 
-                editor.edit((e) => e.replace(range, response));
+                if (action === 'replace') {
+                    editor.edit((e) => e.replace(range, response));
+                }
+                if (action === 'insert') {
+                    console.log('action', action, response);
+                    editor.insert(response);
+                }
             });
         }
     }
@@ -349,6 +356,28 @@ class NovaTextTools {
                         return;
                     }
                     resolve(text.split('\n').join(val));
+                }
+            );
+        });
+    }
+
+    /**
+     * Split Text to lines
+     */
+    splitToLines(text) {
+        return new Promise((resolve, reject) => {
+            // prettier-ignore
+            nova.workspace.showInputPalette('Split Text at Delimiter', {
+                    placeholder: 'Delimiter',
+                }, (val) => {
+                    if (!val) {
+                        resolve(false);
+                        return;
+                    }
+                    const splitted = text.split(val).map(line => {
+                        return line.trimStart();
+                    })
+                    resolve(splitted.join('\n'));
                 }
             );
         });
@@ -868,6 +897,10 @@ class NovaTextTools {
         let parsed = false;
         try {
             parsed = this.maybeUnserialize(text);
+
+            if (typeof parsed === 'string' && parsed.startsWith('{')) {
+                parsed = JSON.parse(parsed.replace(/\\/g, ''));
+            }
             if (!parsed) {
                 parsed = JSON.parse(text);
             }
@@ -884,11 +917,73 @@ class NovaTextTools {
      * Maybe Unserialize
      */
     maybeUnserialize(text) {
-        let str = text.trim();
-        if (!str || (str.startsWith('{') && str.endsWith('}'))) {
-            return false;
+        let unserialized = false;
+        try {
+            unserialized = unserialize(text);
+        } catch (error) {
+            console.error(error);
         }
-        return unserialize(text);
+        return unserialized;
+    }
+
+    /**
+     * Fake Data Types
+     */
+    fakeDataTypes() {
+        // prettier-ignore
+        return [
+            'Full Name',
+            'Name',
+            'Lastname',
+            'Email',
+            'Phone',
+            'Credit Card',
+            'User Name',
+            'Full Address',
+            'Country',
+            'City',
+            'Street',
+            'Zip Code',
+            'Company',
+            'URL',
+            'Lorem Paragraph',
+            'Lorem Paragraphs',
+            'Number',
+            'JSON',
+            'Array',
+        ];
+    }
+
+    /**
+     * Generate Fake Data
+     */
+    generateFakeData(text, format = false) {
+        return new Promise((resolve, reject) => {
+            if (!format) {
+                nova.workspace.showChoicePalette(this.fakeDataTypes(), { placeholder: '' }, (sel) => {
+                    if (!sel) {
+                        resolve(false);
+                        return false;
+                    }
+                    resolve(this.generateFakeData(text, sel));
+                });
+                return false;
+            }
+
+            let val = fakeData(format);
+            if (typeof val !== 'string') {
+                return false;
+            }
+
+            resolve(val);
+        });
+    }
+
+    /**
+     * Generate UUID
+     */
+    generateUUID() {
+        return uuid();
     }
 
     /**
@@ -902,4 +997,4 @@ class NovaTextTools {
     }
 }
 
-module.exports = NovaTextTools;
+export default NovaTextTools;

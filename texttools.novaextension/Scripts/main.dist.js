@@ -1,7 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var escapeStringRegexp = string => {
 	if (typeof string !== 'string') {
 		throw new TypeError('Expected a string');
@@ -164,9 +162,6 @@ function pascalCaseTransform(input, index) {
     }
     return "" + firstChar.toUpperCase() + lowerChars;
 }
-function pascalCaseTransformMerge(input) {
-    return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
-}
 function pascalCase(input, options) {
     if (options === void 0) { options = {}; }
     return noCase(input, __assign({ delimiter: "", transform: pascalCaseTransform }, options));
@@ -176,11 +171,6 @@ function camelCaseTransform(input, index) {
     if (index === 0)
         return input.toLowerCase();
     return pascalCaseTransform(input, index);
-}
-function camelCaseTransformMerge(input, index) {
-    if (index === 0)
-        return input.toLowerCase();
-    return pascalCaseTransformMerge(input);
 }
 function camelCase(input, options) {
     if (options === void 0) { options = {}; }
@@ -253,26 +243,7 @@ function snakeCase(input, options) {
     return dotCase(input, __assign({ delimiter: "_" }, options));
 }
 
-var dist_es2015 = /*#__PURE__*/Object.freeze({
-	__proto__: null,
-	camelCaseTransform: camelCaseTransform,
-	camelCaseTransformMerge: camelCaseTransformMerge,
-	camelCase: camelCase,
-	capitalCaseTransform: capitalCaseTransform,
-	capitalCase: capitalCase,
-	constantCase: constantCase,
-	dotCase: dotCase,
-	headerCase: headerCase,
-	noCase: noCase,
-	paramCase: paramCase,
-	pascalCaseTransform: pascalCaseTransform,
-	pascalCaseTransformMerge: pascalCaseTransformMerge,
-	pascalCase: pascalCase,
-	pathCase: pathCase,
-	sentenceCaseTransform: sentenceCaseTransform,
-	sentenceCase: sentenceCase,
-	snakeCase: snakeCase
-});
+//const faker = require('faker');
 
 function romanize(num) {
     if (isNaN(num)) return NaN;
@@ -375,14 +346,78 @@ function randomArray(array) {
     return array;
 }
 
-var helpers = {
-    romanize,
-    ordinal_suffix,
-    titleCase,
-    randomArray,
-};
+function fakeData(format, amount = 1) {
+    let val = false;
+    switch (format) {
+        case 'Full Name':
+            val = faker.name.findName();
+            break;
+        case 'Name':
+            val = faker.name.firstName();
+            break;
+        case 'Lastname':
+            val = faker.name.lastName();
+            break;
+        case 'Email':
+            val = faker.internet.email();
+            break;
+        case 'Phone':
+            val = faker.phone.phoneNumber();
+            break;
+        case 'Credit Card':
+            val = faker.finance.creditCardNumber();
+            break;
+        case 'User Name':
+            val = faker.internet.userName();
+            break;
+        case 'URL':
+            val = faker.internet.url();
+            break;
+        case 'Full Address':
+            val = faker.address.streetAddress() + ', ' + faker.address.city() + ', ' + faker.address.country() + ', Zip Code ' + faker.address.zipCode();
+            break;
+        case 'Country':
+            val = faker.address.country();
+            break;
+        case 'City':
+            val = faker.address.city();
+            break;
+        case 'Street':
+            val = faker.address.streetAddress();
+            break;
+        case 'Zip Code':
+            val = faker.address.zipCode();
+            break;
+        case 'Company':
+            val = faker.company.companyName();
+            break;
+        case 'Lorem Paragraph':
+            val = faker.lorem.paragraph();
+            break;
+        case 'Lorem Paragraphs':
+            val = faker.lorem.paragraphs();
+            break;
+        case 'Number':
+            val = faker.datatype.number().toString();
+            break;
+        case 'JSON':
+            val = faker.datatype.json();
+            break;
+        case 'Array':
+            val = faker.random.arrayElements();
+            break;
+        case 'UUID':
+            val = faker.datatype.uuid();
+            break;
+    }
+    return val;
+}
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+function unwrapExports (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
 
 function createCommonjsModule(fn, basedir, module) {
 	return module = {
@@ -392,6 +427,10 @@ function createCommonjsModule(fn, basedir, module) {
       return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
     }
 	}, fn(module, module.exports), module.exports;
+}
+
+function getCjsExportFromNamespace (n) {
+	return n && n['default'] || n;
 }
 
 function commonjsRequire () {
@@ -599,6 +638,8 @@ function decode(text, _a) {
 }
 exports.decode = decode;
 });
+
+var index = /*@__PURE__*/unwrapExports(lib);
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -1039,10 +1080,132 @@ var unserialize = function unserialize(str) {
   }
 };
 
-const { snakeCase: snakeCase$1, camelCase: camelCase$1, capitalCase: capitalCase$1, constantCase: constantCase$1, dotCase: dotCase$1, headerCase: headerCase$1, noCase: noCase$1, paramCase: paramCase$1, pascalCase: pascalCase$1, pathCase: pathCase$1, sentenceCase: sentenceCase$1 } = dist_es2015;
-const { romanize: romanize$1, ordinal_suffix: ordinal_suffix$1, titleCase: titleCase$1, randomArray: randomArray$1 } = helpers;
-const { encode, decode } = lib;
+var _nodeResolve_empty = {};
 
+var _nodeResolve_empty$1 = /*#__PURE__*/Object.freeze({
+	__proto__: null,
+	'default': _nodeResolve_empty
+});
+
+var require$$0 = getCjsExportFromNamespace(_nodeResolve_empty$1);
+
+var uuidRandom = createCommonjsModule(function (module) {
+
+(function(){
+
+  var
+    buf,
+    bufIdx = 0,
+    hexBytes = [],
+    i
+  ;
+
+  // Pre-calculate toString(16) for speed
+  for (i = 0; i < 256; i++) {
+    hexBytes[i] = (i + 0x100).toString(16).substr(1);
+  }
+
+  // Buffer random numbers for speed
+  // Reduce memory usage by decreasing this number (min 16)
+  // or improve speed by increasing this number (try 16384)
+  uuid.BUFFER_SIZE = 4096;
+
+  // Binary uuids
+  uuid.bin = uuidBin;
+
+  // Clear buffer
+  uuid.clearBuffer = function() {
+    buf = null;
+    bufIdx = 0;
+  };
+
+  // Test for uuid
+  uuid.test = function(uuid) {
+    if (typeof uuid === 'string') {
+      return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid);
+    }
+    return false;
+  };
+
+  // Node & Browser support
+  var crypt0;
+  if (typeof crypto !== 'undefined') {
+    crypt0 = crypto;
+  } else if( (typeof window !== 'undefined') && (typeof window.msCrypto !== 'undefined')) {
+    crypt0 = window.msCrypto; // IE11
+  }
+
+  if ( (typeof commonjsRequire === 'function')) {
+    crypt0 = crypt0 || require$$0;
+    module.exports = uuid;
+  } else if (typeof window !== 'undefined') {
+    window.uuid = uuid;
+  }
+
+  // Use best available PRNG
+  // Also expose this so you can override it.
+  uuid.randomBytes = (function(){
+    if (crypt0) {
+      if (crypt0.randomBytes) {
+        return crypt0.randomBytes;
+      }
+      if (crypt0.getRandomValues) {
+        if (typeof Uint8Array.prototype.slice !== 'function') {
+          return function(n) {
+            var bytes = new Uint8Array(n);
+            crypt0.getRandomValues(bytes);
+            return Array.from(bytes);
+          };
+        }
+        return function(n) {
+          var bytes = new Uint8Array(n);
+          crypt0.getRandomValues(bytes);
+          return bytes;
+        };
+      }
+    }
+    return function(n) {
+      var i, r = [];
+      for (i = 0; i < n; i++) {
+        r.push(Math.floor(Math.random() * 256));
+      }
+      return r;
+    };
+  })();
+
+  // Buffer some random bytes for speed
+  function randomBytesBuffered(n) {
+    if (!buf || ((bufIdx + n) > uuid.BUFFER_SIZE)) {
+      bufIdx = 0;
+      buf = uuid.randomBytes(uuid.BUFFER_SIZE);
+    }
+    return buf.slice(bufIdx, bufIdx += n);
+  }
+
+  // uuid.bin
+  function uuidBin() {
+    var b = randomBytesBuffered(16);
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    return b;
+  }
+
+  // String UUIDv4 (Random)
+  function uuid() {
+    var b = uuidBin();
+    return hexBytes[b[0]] + hexBytes[b[1]] +
+      hexBytes[b[2]] + hexBytes[b[3]] + '-' +
+      hexBytes[b[4]] + hexBytes[b[5]] + '-' +
+      hexBytes[b[6]] + hexBytes[b[7]] + '-' +
+      hexBytes[b[8]] + hexBytes[b[9]] + '-' +
+      hexBytes[b[10]] + hexBytes[b[11]] +
+      hexBytes[b[12]] + hexBytes[b[13]] +
+      hexBytes[b[14]] + hexBytes[b[15]]
+    ;
+  }
+
+})();
+});
 
 /**
  * Nova Text Tools
@@ -1057,7 +1220,7 @@ class NovaTextTools {
      * if no selection then the entire content will
      * be processed
      */
-    process(editor, fn) {
+    process(editor, fn, action = 'replace') {
         let selectedRanges = editor.selectedRanges;
 
         if (selectedRanges.length === 1 && selectedRanges[0].start === selectedRanges[0].end) {
@@ -1070,7 +1233,13 @@ class NovaTextTools {
                     return false;
                 }
 
-                editor.edit((e) => e.replace(range, response));
+                if (action === 'replace') {
+                    editor.edit((e) => e.replace(range, response));
+                }
+                if (action === 'insert') {
+                    console.log('action', action, response);
+                    editor.insert(response);
+                }
             });
         }
     }
@@ -1391,10 +1560,32 @@ class NovaTextTools {
     }
 
     /**
+     * Split Text to lines
+     */
+    splitToLines(text) {
+        return new Promise((resolve, reject) => {
+            // prettier-ignore
+            nova.workspace.showInputPalette('Split Text at Delimiter', {
+                    placeholder: 'Delimiter',
+                }, (val) => {
+                    if (!val) {
+                        resolve(false);
+                        return;
+                    }
+                    const splitted = text.split(val).map(line => {
+                        return line.trimStart();
+                    });
+                    resolve(splitted.join('\n'));
+                }
+            );
+        });
+    }
+
+    /**
      * Randomize Line
      */
     randomLines(text) {
-        return randomArray$1(text.split('\n')).join('\n');
+        return randomArray(text.split('\n')).join('\n');
     }
 
     /**
@@ -1418,7 +1609,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return snakeCase$1(this.normalizeText(line));
+                return snakeCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1442,7 +1633,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return camelCase$1(this.normalizeText(line));
+                return camelCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1454,7 +1645,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return constantCase$1(this.normalizeText(line));
+                return constantCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1466,7 +1657,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return dotCase$1(this.normalizeText(line));
+                return dotCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1478,7 +1669,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return headerCase$1(line);
+                return headerCase(line);
             })
             .join('\n');
     }
@@ -1490,7 +1681,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return noCase$1(this.normalizeText(line));
+                return noCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1502,7 +1693,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return paramCase$1(this.normalizeText(line));
+                return paramCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1514,7 +1705,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return pascalCase$1(this.normalizeText(line));
+                return pascalCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1526,7 +1717,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return pathCase$1(this.normalizeText(line));
+                return pathCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1538,7 +1729,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return sentenceCase$1(this.normalizeText(line));
+                return sentenceCase(this.normalizeText(line));
             })
             .join('\n');
     }
@@ -1566,7 +1757,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return titleCase$1(line);
+                return titleCase(line);
             })
             .join('\n');
     }
@@ -1611,11 +1802,11 @@ class NovaTextTools {
 
                     switch (format) {
                         case 'Ordinal':
-                            i = ordinal_suffix$1(i);
+                            i = ordinal_suffix(i);
                             line = `${i} ${line}`;
                             break;
                         case 'Roman Numerals':
-                            i = romanize$1(i);
+                            i = romanize(i);
                             line = `${i} ${line}`;
                             break;
                         default:
@@ -1675,14 +1866,14 @@ class NovaTextTools {
      * Spaces encode
      */
     htmlEncode(text) {
-        return encode(text);
+        return index.encode(text);
     }
 
     /**
      * Spaces decode
      */
     htmlDecode(text) {
-        return decode(text);
+        return index.decode(text);
     }
 
     /**
@@ -1903,6 +2094,10 @@ class NovaTextTools {
         let parsed = false;
         try {
             parsed = this.maybeUnserialize(text);
+
+            if (typeof parsed === 'string' && parsed.startsWith('{')) {
+                parsed = JSON.parse(parsed.replace(/\\/g, ''));
+            }
             if (!parsed) {
                 parsed = JSON.parse(text);
             }
@@ -1919,11 +2114,73 @@ class NovaTextTools {
      * Maybe Unserialize
      */
     maybeUnserialize(text) {
-        let str = text.trim();
-        if (!str || (str.startsWith('{') && str.endsWith('}'))) {
-            return false;
+        let unserialized = false;
+        try {
+            unserialized = unserialize(text);
+        } catch (error) {
+            console.error(error);
         }
-        return unserialize(text);
+        return unserialized;
+    }
+
+    /**
+     * Fake Data Types
+     */
+    fakeDataTypes() {
+        // prettier-ignore
+        return [
+            'Full Name',
+            'Name',
+            'Lastname',
+            'Email',
+            'Phone',
+            'Credit Card',
+            'User Name',
+            'Full Address',
+            'Country',
+            'City',
+            'Street',
+            'Zip Code',
+            'Company',
+            'URL',
+            'Lorem Paragraph',
+            'Lorem Paragraphs',
+            'Number',
+            'JSON',
+            'Array',
+        ];
+    }
+
+    /**
+     * Generate Fake Data
+     */
+    generateFakeData(text, format = false) {
+        return new Promise((resolve, reject) => {
+            if (!format) {
+                nova.workspace.showChoicePalette(this.fakeDataTypes(), { placeholder: '' }, (sel) => {
+                    if (!sel) {
+                        resolve(false);
+                        return false;
+                    }
+                    resolve(this.generateFakeData(text, sel));
+                });
+                return false;
+            }
+
+            let val = fakeData(format);
+            if (typeof val !== 'string') {
+                return false;
+            }
+
+            resolve(val);
+        });
+    }
+
+    /**
+     * Generate UUID
+     */
+    generateUUID() {
+        return uuidRandom();
     }
 
     /**
@@ -1937,11 +2194,9 @@ class NovaTextTools {
     }
 }
 
-var tools = NovaTextTools;
-
-var activate = () => {
+exports.activate = () => {
     console.log('Text Tools Activated');
-    const tools$1 = new tools();
+    const tools = new NovaTextTools();
 
     // Text commands
     const commands = {
@@ -1975,6 +2230,7 @@ var activate = () => {
         reverselines: 'reverseLines',
         randomlines: 'randomLines',
         joinlines: 'joinLines',
+        splittolines: 'splitToLines',
         addlinesnumber: 'addLinesNumbers',
 
         tobase64: 'base64Encode',
@@ -2003,7 +2259,7 @@ var activate = () => {
     for (const command in commands) {
         nova.commands.register(`biati.texttools.${command}`, (editor) => {
             const commandMethod = commands[command];
-            return tools$1.process(editor, tools$1[commandMethod]);
+            return tools.process(editor, tools[commandMethod]);
         });
     }
 
@@ -2017,18 +2273,22 @@ var activate = () => {
     for (const scommand in selectionCommands) {
         nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
             const commandMethod = selectionCommands[scommand];
-            return tools$1.select(editor, tools$1[commandMethod]);
+            return tools.select(editor, tools[commandMethod]);
+        });
+    }
+
+    // Insert commands
+    const insertionCommands = {
+        generateuuid: 'generateUUID',
+        fakedata: 'generateFakeData',
+    };
+
+    for (const scommand in insertionCommands) {
+        nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
+            const commandMethod = insertionCommands[scommand];
+            return tools.process(editor, tools[commandMethod], 'insert');
         });
     }
 };
 
-var deactivate = () => {};
-
-var main = {
-	activate: activate,
-	deactivate: deactivate
-};
-
-exports.activate = activate;
-exports.deactivate = deactivate;
-exports.default = main;
+exports.deactivate = () => {};
