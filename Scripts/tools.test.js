@@ -75,21 +75,39 @@ test('Text Decode %20 to Spaces', () => {
 });
 
 test('Text Add Slashes', () => {
+    // eslint-disable-next-line
     expect(tools.addSlashes("\"I don't know what, you. mean by 'glory'\"")).toBe("\\\"I don\\'t know what, you. mean by \\'glory\\'\\\"");
 });
 
 test('Text Strip Slashes', () => {
+    // eslint-disable-next-line
     expect(tools.stripSlashes("Might\\'s Test")).toBe("Might's Test");
 });
 
 test('Text Straighten Quotes', () => {
+    // eslint-disable-next-line
     expect(tools.straightenQuotes('“don’t know what you mean by ‘glory’”')).toBe("\"don't know what you mean by 'glory'\"");
 });
 
 test('Test Normalize for diacritics', () => {
+    // eslint-disable-next-line
     expect(tools.toParamCase("Nom donné à l'adresse")).toBe('nom-donne-a-l-adresse');
 });
 
 test('Test Normalize for accents', () => {
     expect(tools.toCapitalCase('maría muñoz')).toBe('María Muñoz');
+});
+
+test('Reverse Lines', () => {
+    expect(tools.reverseLines('Example 1\nExample 2\nExample 3')).toBe('Example 3\nExample 2\nExample 1');
+});
+
+//eslint-disable-next-line
+test("Sort Lines by it's length smaller to larger", () => {
+    expect(tools.sortLinesByLength('Michael\nMorphy Plertguies\nAdrianne Lay')).toBe('Michael\nAdrianne Lay\nMorphy Plertguies');
+});
+
+//eslint-disable-next-line
+test("Sort Lines by it's length larger to smaller", () => {
+    expect(tools.sortLinesByLengthReverse('Michael\nMorphy Plertguies\nAdrianne Lay')).toBe('Morphy Plertguies\nAdrianne Lay\nMichael');
 });
