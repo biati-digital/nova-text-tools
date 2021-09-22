@@ -30,6 +30,8 @@ exports.activate = () => {
         deleteemptylines: 'deleteEmptyLines',
         filterduplucates: 'filterDuplicates',
         filterduplucatesnew: 'filterDuplicatesNewDoc',
+        filteruniques: 'filterUniques',
+        filteruniquesnew: 'filterUniquesNewDoc',
         deletelinesmatching: 'deleteLinesMatching',
         filterlinesmatching: 'filterLinesMatching',
         filterlinesmatchingnew: 'filterLinesMatchingNewDoc',
@@ -51,6 +53,10 @@ exports.activate = () => {
         addslashes: 'addSlashes',
         smartquotes: 'smartQuotes',
         straightenquotes: 'straightenQuotes',
+        quotessingletodouble: 'quotesSingleToDouble',
+        quotessingletobackticks: 'quotesSingleToBackticks',
+        quotesdoubletosingle: 'quotesDoubleToSingle',
+        quotesdoubletobackticks: 'quotesDoubleToBackticks',
 
         wrapeachlinewith: 'wrapLinesWith',
         appendtolines: 'appendToLines',
@@ -59,7 +65,7 @@ exports.activate = () => {
         addallnumbers: 'addAllNumbers',
         substractallnumbers: 'substractAllNumbers',
 
-        jsonstringparse: 'jsonStringParse',
+        jsonstringparse: 'jsonStringParse'
     };
 
     for (const command in commands) {
@@ -72,14 +78,14 @@ exports.activate = () => {
     // Selection commands
     const selectionCommands = {
         selectlinesmatching: 'selectLinesMatching',
-        selectocurrencesmatching: 'selectOcurrencesMatching',
-        selectocurrences: 'selectOcurrences',
+        selectallocurrencesmatching: 'selectAllOcurrencesMatching',
+        selectocurrences: 'selectOcurrences'
     };
 
     for (const scommand in selectionCommands) {
         nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
             const commandMethod = selectionCommands[scommand];
-            return tools.select(editor, tools[commandMethod]);
+            tools.select(editor, tools[commandMethod]);
         });
     }
 
@@ -87,6 +93,7 @@ exports.activate = () => {
     const insertionCommands = {
         generateuuid: 'generateUUID',
         fakedata: 'generateFakeData',
+        generatedummyfile: 'generateDummyFile'
     };
 
     for (const scommand in insertionCommands) {
@@ -95,6 +102,10 @@ exports.activate = () => {
             return tools.process(editor, tools[commandMethod], 'insert');
         });
     }
+
+    nova.commands.register('biati.texttools.generatedummyfile', () => {
+        return tools.generateDummyFile();
+    });
 };
 
 exports.deactivate = () => {};
