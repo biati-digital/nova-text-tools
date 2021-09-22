@@ -1,93 +1,5 @@
 'use strict';
 
-var escapeStringRegexp = string => {
-	if (typeof string !== 'string') {
-		throw new TypeError('Expected a string');
-	}
-
-	// Escape characters with special meaning either inside or outside character sets.
-	// Use a simple backslash escape when it’s always valid, and a \unnnn escape when the simpler form would be disallowed by Unicode patterns’ stricter grammar.
-	return string
-		.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-		.replace(/-/g, '\\x2d');
-};
-
-const regexpCache = new Map();
-
-function makeRegexp(pattern, options) {
-	options = {
-		caseSensitive: false,
-		...options
-	};
-
-	const cacheKey = pattern + JSON.stringify(options);
-
-	if (regexpCache.has(cacheKey)) {
-		return regexpCache.get(cacheKey);
-	}
-
-	const negated = pattern[0] === '!';
-
-	if (negated) {
-		pattern = pattern.slice(1);
-	}
-
-	pattern = escapeStringRegexp(pattern).replace(/\\\*/g, '[\\s\\S]*');
-
-	const regexp = new RegExp(`^${pattern}$`, options.caseSensitive ? '' : 'i');
-	regexp.negated = negated;
-	regexpCache.set(cacheKey, regexp);
-
-	return regexp;
-}
-
-var matcher = (inputs, patterns, options) => {
-	if (!(Array.isArray(inputs) && Array.isArray(patterns))) {
-		throw new TypeError(`Expected two arrays, got ${typeof inputs} ${typeof patterns}`);
-	}
-
-	if (patterns.length === 0) {
-		return inputs;
-	}
-
-	const isFirstPatternNegated = patterns[0][0] === '!';
-
-	patterns = patterns.map(pattern => makeRegexp(pattern, options));
-
-	const result = [];
-
-	for (const input of inputs) {
-		// If first pattern is negated we include everything to match user expectation.
-		let matches = isFirstPatternNegated;
-
-		for (const pattern of patterns) {
-			if (pattern.test(input)) {
-				matches = !pattern.negated;
-			}
-		}
-
-		if (matches) {
-			result.push(input);
-		}
-	}
-
-	return result;
-};
-
-var isMatch = (input, pattern, options) => {
-	const inputArray = Array.isArray(input) ? input : [input];
-	const patternArray = Array.isArray(pattern) ? pattern : [pattern];
-
-	return inputArray.some(input => {
-		return patternArray.every(pattern => {
-			const regexp = makeRegexp(pattern, options);
-			const matches = regexp.test(input);
-			return regexp.negated ? !matches : matches;
-		});
-	});
-};
-matcher.isMatch = isMatch;
-
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -243,64 +155,11 @@ function snakeCase(input, options) {
     return dotCase(input, __assign({ delimiter: "_" }, options));
 }
 
-//const faker = require('faker');
-
-function romanize(num) {
-    if (isNaN(num)) return NaN;
-    var digits = String(+num).split(''),
-        key = [
-            '',
-            'C',
-            'CC',
-            'CCC',
-            'CD',
-            'D',
-            'DC',
-            'DCC',
-            'DCCC',
-            'CM',
-            '',
-            'X',
-            'XX',
-            'XXX',
-            'XL',
-            'L',
-            'LX',
-            'LXX',
-            'LXXX',
-            'XC',
-            '',
-            'I',
-            'II',
-            'III',
-            'IV',
-            'V',
-            'VI',
-            'VII',
-            'VIII',
-            'IX',
-        ],
-        roman = '',
-        i = 3;
-    while (i--) roman = (key[+digits.pop() + i * 10] || '') + roman;
-    return Array(+digits.join('') + 1).join('M') + roman;
-}
-
-function ordinal_suffix(i) {
-    var j = i % 10,
-        k = i % 100;
-    if (j == 1 && k != 11) {
-        return i + 'st';
-    }
-    if (j == 2 && k != 12) {
-        return i + 'nd';
-    }
-    if (j == 3 && k != 13) {
-        return i + 'rd';
-    }
-    return i + 'th';
-}
-
+/**
+ * To Title case
+ *
+ * @param {string}
+ */
 function titleCase(string) {
     const SMALL_WORDS = /\b(?:an?d?|a[st]|because|but|by|en|for|i[fn]|neither|nor|o[fnr]|only|over|per|so|some|tha[tn]|the|to|up|upon|vs?\.?|versus|via|when|with|without|yet)\b/i;
     const TOKENS = /[^\s:–—-]+|./g;
@@ -334,6 +193,84 @@ function titleCase(string) {
     return result;
 }
 
+/**
+ * Romanize
+ * convert number to it's roman counterpart
+ *
+ * @param {numberi}
+ */
+function romanize(num) {
+    if (isNaN(num)) {
+        return NaN;
+    }
+    var digits = String(+num).split(''),
+        key = [
+            '',
+            'C',
+            'CC',
+            'CCC',
+            'CD',
+            'D',
+            'DC',
+            'DCC',
+            'DCCC',
+            'CM',
+            '',
+            'X',
+            'XX',
+            'XXX',
+            'XL',
+            'L',
+            'LX',
+            'LXX',
+            'LXXX',
+            'XC',
+            '',
+            'I',
+            'II',
+            'III',
+            'IV',
+            'V',
+            'VI',
+            'VII',
+            'VIII',
+            'IX'
+        ],
+        roman = '',
+        i = 3;
+    while (i--) {
+        roman = (key[+digits.pop() + i * 10] || '') + roman;
+    }
+    return Array(+digits.join('') + 1).join('M') + roman;
+}
+
+/**
+ * Ordinal suffix
+ * example 1st, 2nd, etc.
+ *
+ * @param {numeric} i
+ */
+function ordinalSuffix(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + 'st';
+    }
+    if (j == 2 && k != 12) {
+        return i + 'nd';
+    }
+    if (j == 3 && k != 13) {
+        return i + 'rd';
+    }
+    return i + 'th';
+}
+
+/**
+ * Random Array
+ * randomize items order
+ *
+ * @param {array} array
+ */
 function randomArray(array) {
     var currentIndex = array.length,
         randomIndex;
@@ -411,6 +348,156 @@ function fakeData(format, amount = 1) {
             break;
     }
     return val;
+}
+
+/**
+ * Quote Transform
+ * convert quotes
+ *
+ * @param {string} input
+ * @param {string} toChange
+ * @param {string} changeTo
+ */
+function quotesTransform(input, toChange, changeTo) {
+    let result = '';
+    let isBetweenQuotes = false;
+    let quoteCharacter;
+
+    for (let index = 0; index < input.length; index++) {
+        const current = input[index];
+        const next = input[index + 1];
+
+        // Found double-quote or single-quote
+        // eslint-disable-next-line
+        if (current === '"' || current === "'") {
+            //eslint-disable-line
+            // If not processing in between quotes
+            if (!isBetweenQuotes) {
+                quoteCharacter = current;
+                isBetweenQuotes = true;
+                result += changeTo;
+            } else if (quoteCharacter === current) {
+                // If processing between quotes, close quotes
+                result += changeTo;
+                isBetweenQuotes = false;
+            } else {
+                // Still inside quotes
+                result += '\\' + changeTo;
+            }
+        } else if (current === '\\' && (next === "'" || next === '"')) {
+            // If escape character is found and double or single quote after
+            // Escape + quote to change to
+            if (next === changeTo) {
+                // If in between quotes and quote is equal to changeTo only escape once
+                result += isBetweenQuotes && quoteCharacter === changeTo ? '\\' + changeTo : '\\\\' + changeTo;
+                index++;
+            } else if (next === toChange) {
+                // Escape + quote to be changed
+                // If between quotes can mantain tochange
+                result += isBetweenQuotes ? toChange : changeTo;
+                index++;
+            } else {
+                result += current;
+            }
+        } else if (current === '\\' && next === '\\') {
+            // Don't touch backslashes
+            result += '\\\\';
+            index++;
+        } else {
+            result += current;
+        }
+    }
+
+    return result;
+}
+
+/**
+ * Escape string
+ *
+ * @param {string} string
+ */
+function escape(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Escape string
+ *
+ * @param {string} string
+ */
+function isRegexLike(string) {
+    return /\\w|\\s|\\d|\\b|\\.|\.\*|\.\+/.test(string);
+}
+
+/**
+ * Log
+ * print log in debug pane
+ *
+ * @param {mixed} message
+ */
+function log(message) {
+    const showLog = nova.workspace.config.get(nova.extension.identifier + '.log');
+    if (nova.inDevMode() || showLog) {
+        if (typeof message == 'object') {
+            message = JSON.stringify(message, null, 2);
+        }
+        console.log(message);
+    }
+}
+
+/**
+ * Performance starts
+ *
+ * @param {string} id
+ */
+function logPerformanceStart(id = '') {
+    const showLog = nova.workspace.config.get(nova.extension.identifier + '.log');
+    if (nova.inDevMode() || showLog) {
+        console.time(id);
+    }
+}
+
+/**
+ * Performance end
+ *
+ * @param {string} id
+ */
+function logPerformanceEnd(id = '') {
+    const showLog = nova.workspace.config.get(nova.extension.identifier + '.log');
+    if (nova.inDevMode() || showLog) {
+        if (typeof message == 'object') {
+            message = JSON.stringify(message, null, ' ');
+        }
+        console.timeEnd(id);
+    }
+}
+
+/**
+ * Show notifications
+ *
+ * @param {Object}
+ */
+function showNotification({ id = '', title, body, actions = false, type = '', cancellAll = true }) {
+    if (!id) {
+        id = nova.extension.identifier;
+    }
+    if (cancellAll) {
+        nova.notifications.cancel(id);
+    }
+
+    let request = new NotificationRequest(id);
+    request.title = nova.localize(title);
+    request.body = nova.localize(body);
+
+    if (actions) {
+        if (typeof actions === 'boolean') {
+            request.actions = [nova.localize('OK')];
+        } else {
+            request.actions = actions.map((action) => nova.localize(action));
+        }
+    }
+
+    nova.notifications.add(request).catch((err) => console.error(err, err.stack));
 }
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -640,6 +727,151 @@ exports.decode = decode;
 });
 
 var index = /*@__PURE__*/unwrapExports(lib);
+
+/**
+ * MK File
+ * create file using mkfile
+ *
+ * @author biati-digital
+ */
+function mkFile(filePath, size) {
+    return new Promise((resolve, reject) => {
+        const docurl = new Process('/usr/bin/env', {
+            args: ['mkfile', '-n', size.toString(), filePath]
+        });
+        let stdOut = '';
+        let stdErr = '';
+        docurl.onStdout((result) => {
+            stdOut += result;
+        });
+        docurl.onStderr((line) => {
+            stdErr += line;
+        });
+        docurl.onDidExit((status) => {
+            if (status === 0) {
+                resolve(stdOut);
+            } else {
+                reject(stdErr);
+            }
+        });
+        docurl.start();
+    });
+}
+
+/**
+ * Compress file
+ * used to compress the file
+ * in multiple formats
+ */
+function compressFile(command) {
+    return new Promise((resolve, reject) => {
+        const docurl = new Process('/usr/bin/env', {
+            args: command
+        });
+        let stdOut = '';
+        let stdErr = '';
+        docurl.onStdout((result) => {
+            stdOut += result;
+        });
+        docurl.onStderr((line) => {
+            stdErr += line;
+        });
+        docurl.onDidExit((status) => {
+            if (status === 0) {
+                resolve(stdOut);
+            } else {
+                reject(stdErr);
+            }
+        });
+        docurl.start();
+    });
+}
+
+/**
+ * Dumy file
+ *
+ * @param {string} filePath
+ * @param {string} fileName
+ * @param {string} size
+ * @returns {Promise}
+ */
+async function dummyFile(filePath, fileName, size) {
+    if (!filePath) {
+        throw new Error('File path must be provided');
+    }
+    if (!fileName) {
+        throw new Error('File name must be provided');
+    }
+
+    size = size.toLowerCase().replace(/\s/g, '').replace(/,/, '');
+    size = size.replace(/([0-9.]+)(gigabytes|gigas|giga|gbs|gb)/i, (r1, r2) => {
+        return r2 + 'gb';
+    });
+    size = size.replace(/([0-9.]+)(megabytes|megabyte|mbs|mb)/i, (r1, r2) => {
+        return r2 + 'mb';
+    });
+    size = size.replace(/([0-9.]+)(kilobytes|kilobyte|kbs|kb)/i, (r1, r2) => {
+        return r2 + 'kb';
+    });
+    size = size.replace(/([0-9.]+)(bytes|byte|bs|b)/i, (r1, r2) => {
+        return r2;
+    });
+
+    const bMatch = size.match(/^(\d+)$/i);
+    const kbMatch = size.match(/^(\d+)kb$/i);
+    const mbMatch = size.match(/^(\d+)mb/i);
+    const gbMatch = size.match(/^(\d+)gb/i);
+
+    let isZip = false;
+    let isTar = false;
+
+    // Handle Zip files
+    if (fileName.endsWith('.zip')) {
+        isZip = nova.path.join(filePath, fileName);
+        fileName = fileName.replace('.zip', '.txt');
+    }
+    // Handle Tar files
+    if (fileName.endsWith('.tar')) {
+        isTar = nova.path.join(filePath, fileName);
+        fileName = fileName.replace('.tar', '.txt');
+    }
+
+    filePath = nova.path.join(filePath, fileName);
+
+    if (bMatch) {
+        size = +bMatch[1];
+    }
+    if (kbMatch) {
+        size = +kbMatch[1] * 1000;
+    }
+    if (mbMatch) {
+        size = +mbMatch[1] * 1000 * 1000;
+    }
+    if (gbMatch) {
+        size = +gbMatch[1] * 1000 * 1000 * 1000;
+    }
+
+    if (size < 0) {
+        throw new Error('File size must be provided');
+    }
+
+    mkFile(filePath, size)
+        .then((res) => {
+            if (isZip) {
+                return compressFile(['zip', '-m', '-0', isZip, filePath]);
+            }
+            if (isTar) {
+                return compressFile(['tar', '-cf', isTar, filePath]);
+            }
+            return true;
+        })
+        .then(() => {
+            return true;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -1083,8 +1315,8 @@ var unserialize = function unserialize(str) {
 var _nodeResolve_empty = {};
 
 var _nodeResolve_empty$1 = /*#__PURE__*/Object.freeze({
-	__proto__: null,
-	'default': _nodeResolve_empty
+    __proto__: null,
+    'default': _nodeResolve_empty
 });
 
 var require$$0 = getCjsExportFromNamespace(_nodeResolve_empty$1);
@@ -1212,7 +1444,7 @@ var uuidRandom = createCommonjsModule(function (module) {
  * created by https://www.biati.digital
  */
 class NovaTextTools {
-    constructor() {}
+    constructor() {} //eslint-disable-line
 
     /**
      * Process
@@ -1283,17 +1515,7 @@ class NovaTextTools {
             }
         });
 
-        if (!nova.workspace) {
-            // TODO: add notification about no workspace
-            return false;
-        }
-
-        nova.workspace.openNewTextDocument({
-            content: [...new Set(duplicates)].join('\n'),
-            line: 0,
-            //syntax: ''
-        });
-
+        this.newDocument([...new Set(duplicates)].join('\n'));
         return false;
     }
 
@@ -1312,7 +1534,7 @@ class NovaTextTools {
         return new Promise((resolve, reject) => {
             // prettier-ignore
             nova.workspace.showInputPalette('Delete Lines Matching...', {
-                    placeholder: '',
+                    placeholder: ''
                 }, (val) => {
                     if (!val) {
                         resolve(false);
@@ -1325,13 +1547,42 @@ class NovaTextTools {
     }
 
     /**
+     * Remove values that are not unique
+     * remove all elements that occur more than once from array
+     * ['php', 'phython', 'javascript', 'rust', 'php', 'python'];
+     * after filtered will look
+     * ['javascript', 'rust'];
+     */
+    filterUniques(text) {
+        const lines = text.split('\n');
+        return lines
+            .filter((line) => {
+                return lines.lastIndexOf(line) == lines.indexOf(line);
+            })
+            .join('\n');
+    }
+
+    /**
+     * Filter uniques
+     * in a new document
+     * see filterUniques
+     *
+     * @param {null}
+     */
+    filterUniquesNewDoc(text) {
+        const filtered = this.filterUniques(text);
+        this.newDocument(filtered);
+        return false;
+    }
+
+    /**
      * Filter Lines Matching
      */
     filterLinesMatching(text) {
         return new Promise((resolve, reject) => {
             // prettier-ignore
-            nova.workspace.showInputPalette('Keep Lines Mtaching...', {
-                    placeholder: '',
+            nova.workspace.showInputPalette('Keep Lines Matching...', {
+                    placeholder: ''
                 }, (val) => {
                     if (!val) {
                         resolve(false);
@@ -1349,27 +1600,111 @@ class NovaTextTools {
     filterLinesMatchingNewDoc(text) {
         return new Promise((resolve, reject) => {
             // prettier-ignore
-            nova.workspace.showInputPalette('Keep Lines Mtaching...', {
-                    placeholder: '',
+            nova.workspace.showInputPalette('Keep Lines Matching...', {
+                    placeholder: ''
                 }, (val) => {
                     if (!val) {
                         resolve(false);
                         return;
                     }
-                    if (!nova.workspace) {
-                        // TODO: add notification about no workspace
-                        return false;
-                    }
-
-                    nova.workspace.openNewTextDocument({
-                        content: this.filterLines(text, val, true),
-                        line: 0,
-                        //syntax: ''
-                    });
+                    this.newDocument(this.filterLines(text, val, true));
                     resolve(false);
                 }
             );
         });
+    }
+
+    /**
+     * Filter lines
+     *
+     */
+    filterLines(text, search, keep = true, caseSensitive = false) {
+        const isFullRegex = search.match(/^([/~@;%#'])(.*?)\1([gimsuy]*)$/);
+        let isRegex = false;
+        let isMatchStart = search.startsWith('^');
+        let isMatchEnd = search.endsWith('$');
+        let isNot = search.startsWith('!');
+        let defaultModifier = caseSensitive ? 'g' : 'gi';
+
+        if (isFullRegex) {
+            let modifiers = isFullRegex[3];
+            if (!modifiers) {
+                modifiers = defaultModifier;
+            }
+            isRegex = new RegExp(isFullRegex[2], modifiers);
+        } else {
+            if (isMatchStart) {
+                let check = search.slice(1).toLowerCase();
+                let isStringRegexLike = isRegexLike(check);
+
+                if (isStringRegexLike) {
+                    isRegex = new RegExp(search, defaultModifier);
+                }
+                if (!isStringRegexLike) {
+                    search = search.slice(1);
+                }
+            } else if (isMatchEnd) {
+                let check = search.slice(0, -1).toLowerCase();
+                let isStringRegexLike = isRegexLike(check);
+
+                if (isStringRegexLike) {
+                    isRegex = new RegExp(search, defaultModifier);
+                }
+                if (!isStringRegexLike) {
+                    search = search.slice(0, -1);
+                }
+            } else if (isNot) {
+                let check = search.slice(1);
+                let isStringRegexLike = isRegexLike(check);
+
+                if (isStringRegexLike) {
+                    isRegex = new RegExp(search, defaultModifier);
+                }
+                if (!isStringRegexLike) {
+                    search = search.slice(1);
+                }
+            } else {
+                let isStringRegexLike = isRegexLike(search);
+                if (search.length > 1 && isStringRegexLike) {
+                    isRegex = new RegExp(search, defaultModifier);
+                }
+            }
+        }
+
+        const lines = text.split('\n');
+        return lines
+            .filter((line) => {
+                if (line.trim() === '') {
+                    return line;
+                }
+
+                let match = null;
+                if (isRegex) {
+                    if (isMatchStart) {
+                        line = line.trimStart();
+                    }
+                    if (isMatchEnd) {
+                        line = line.trimEnd();
+                    }
+
+                    try {
+                        match = line.match(isRegex);
+                    } catch (error) {}
+                } else if (isMatchStart) {
+                    match = line.trimStart().startsWith(search);
+                } else if (isMatchEnd) {
+                    match = line.trimEnd().endsWith(search);
+                } else {
+                    match = line.includes(search);
+                }
+
+                if ((match == true && isNot == true) || (match == false && isNot == true)) {
+                    match = !match;
+                }
+
+                return match;
+            })
+            .join('\n');
     }
 
     /**
@@ -1379,7 +1714,7 @@ class NovaTextTools {
         return new Promise((resolve, reject) => {
             // prettier-ignore
             nova.workspace.showInputPalette('Wrap Each Line With', {
-                    placeholder: '<li>$1</li>',
+                    placeholder: '<li>$1</li>'
                 }, (val) => {
                     if (!val) {
                         resolve(false);
@@ -1402,7 +1737,7 @@ class NovaTextTools {
         return new Promise((resolve, reject) => {
             // prettier-ignore
             nova.workspace.showInputPalette('Enter text to add at the beginning', {
-                    placeholder: '',
+                    placeholder: ''
                 }, (val) => {
                     if (!val) {
                         resolve(false);
@@ -1425,7 +1760,7 @@ class NovaTextTools {
         return new Promise((resolve, reject) => {
             // prettier-ignore
             nova.workspace.showInputPalette('Enter text to add at the end', {
-                    placeholder: '',
+                    placeholder: ''
                 }, (val) => {
                     if (!val) {
                         resolve(false);
@@ -1439,53 +1774,6 @@ class NovaTextTools {
                 }
             );
         });
-    }
-
-    /**
-     * Filter lines
-     *
-     */
-    filterLines(text, search, keep = true, caseSensitive = false) {
-        let isMatcher = /[!\*\/^|\\]/.test(search);
-        let isMatchStart = /^[\^]/.test(search);
-        let isMatchEnd = /[\$]$/.test(search);
-
-        if (isMatchStart) {
-            search = search.slice(1);
-        }
-        if (isMatchEnd) {
-            search = search.slice(0, -1);
-        }
-        if (search.startsWith('!') && !search.endsWith('*')) {
-            search = search + '*';
-        }
-
-        /*if (!isMatchStart && isMatchEnd && search.startsWith('/') && isMatcher) {
-            try {
-                isRegex = new RegExp(search.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&'));
-            } catch (e) {}
-        }*/
-
-        const lines = text.split('\n');
-        return lines
-            .filter((line) => {
-                if (isMatchStart) {
-                    return keep ? line.startsWith(search) : !line.startsWith(search);
-                }
-                if (isMatchEnd) {
-                    return keep ? line.endsWith(search) : !line.endsWith(search);
-                }
-                if (isMatcher) {
-                    return keep ? matcher.isMatch(line, search, { caseSensitive }) : !matcher.isMatch(line, search, { caseSensitive });
-                }
-
-                if (!caseSensitive) {
-                    line = line.toLowerCase();
-                    search = search.toLowerCase();
-                }
-                return keep ? line.includes(search) : !line.includes(search);
-            })
-            .join('\n');
     }
 
     /**
@@ -1547,7 +1835,7 @@ class NovaTextTools {
         return new Promise((resolve, reject) => {
             // prettier-ignore
             nova.workspace.showInputPalette('Join Lines Delimiter', {
-                    placeholder: 'Delimiter',
+                    placeholder: 'Delimiter'
                 }, (val) => {
                     if (!val) {
                         resolve(false);
@@ -1566,7 +1854,7 @@ class NovaTextTools {
         return new Promise((resolve, reject) => {
             // prettier-ignore
             nova.workspace.showInputPalette('Split Text at Delimiter', {
-                    placeholder: 'Delimiter',
+                    placeholder: 'Delimiter'
                 }, (val) => {
                     if (!val) {
                         resolve(false);
@@ -1757,7 +2045,7 @@ class NovaTextTools {
         const lines = text.split('\n');
         return lines
             .map((line) => {
-                return titleCase(line);
+                return titleCase(line.toLowerCase());
             })
             .join('\n');
     }
@@ -1802,7 +2090,7 @@ class NovaTextTools {
 
                     switch (format) {
                         case 'Ordinal':
-                            i = ordinal_suffix(i);
+                            i = ordinalSuffix(i);
                             line = `${i} ${line}`;
                             break;
                         case 'Roman Numerals':
@@ -1887,7 +2175,7 @@ class NovaTextTools {
      * Add Slashes
      */
     addSlashes(text) {
-        return text.replace(/'|\\'/g, "\\'").replace(/"|\\"/g, '\\"');
+        return text.replace(/'|\\'/g, "\\'").replace(/"|\\"/g, '\\"'); //eslint-disable-line
     }
 
     /**
@@ -1907,10 +2195,38 @@ class NovaTextTools {
      */
     straightenQuotes(text) {
         return text
-            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/[\u2018\u2019]/g, "'") // eslint-disable-line
             .replace(/[\u201C\u201D]/g, '"')
             .replace(/[\u2013\u2014]/g, '-')
             .replace(/[\u2026]/g, '...');
+    }
+
+    /**
+     * Single to double qutoes
+     */
+    quotesSingleToDouble(text) {
+        return quotesTransform(text, "'", '"'); //eslint-disable-line
+    }
+
+    /**
+     * Single to double qutoes
+     */
+    quotesSingleToBackticks(text) {
+        return quotesTransform(text, "'", '`'); //eslint-disable-line
+    }
+
+    /**
+     * Double qutoes to single quotes
+     */
+    quotesDoubleToSingle(text) {
+        return quotesTransform(text, '"', "'"); //eslint-disable-line
+    }
+
+    /**
+     * Double qutoes to backticks
+     */
+    quotesDoubleToBackticks(text) {
+        return quotesTransform(text, '"', '`');
     }
 
     /**
@@ -1922,12 +2238,13 @@ class NovaTextTools {
      * information about the ranges that
      * need to be selected
      */
-    select(editor, fn) {
-        let selectedRanges = editor.selectedRanges;
+    async select(editor, fn) {
+        let selectedRanges = [new Range(0, editor.document.length)];
+        /*let selectedRanges = editor.selectedRanges;
 
         if (selectedRanges.length === 1 && selectedRanges[0].start === selectedRanges[0].end) {
             selectedRanges = [new Range(0, editor.document.length)];
-        }
+        }*/
         for (const range of selectedRanges) {
             const text = editor.getTextInRange(range);
             Promise.resolve(fn.apply(this, [editor, text])).then((response) => {
@@ -1935,16 +2252,21 @@ class NovaTextTools {
                     return false;
                 }
 
-                // Move the cursor positio to the first matched range
+                log('Matches found ' + response.length);
+                logPerformanceStart('Nova select');
+
+                // Move the cursor position to the first matched range
                 editor.selectedRanges = [new Range(response[0].start, response[0].end)];
 
                 // Add selection ranges
-                for (const filteredRange of response) {
+                /*for (const filteredRange of response) {
                     editor.addSelectionForRange(filteredRange);
-                }
+                }*/
+                editor.selectedRanges = response;
 
                 // Scroll to the first change
                 editor.scrollToPosition(response[0].start);
+                logPerformanceEnd('Nova select');
             });
         }
     }
@@ -1956,12 +2278,14 @@ class NovaTextTools {
         return new Promise((resolve, reject) => {
             // prettier-ignore
             nova.workspace.showInputPalette('Select Lines Matching...', {
-                    placeholder: '',
+                    placeholder: ''
                 }, (val) => {
                     if (!val) {
                         resolve([]);
                         return;
                     }
+
+                    logPerformanceStart('select lines by match');
 
                     const matched = this.filterLines(text, val, true);
                     if (!matched || !matched.length) {
@@ -1974,16 +2298,42 @@ class NovaTextTools {
                     const newRanges = [];
 
                     for (let line of lines) {
-                        line = line.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        line = escape(line);
                         const regex = new RegExp('^' + line + '$', 'gm');
                         const matchedInDoc = [...allText.matchAll(regex)];
 
                         if (matchedInDoc && matchedInDoc.length) {
                             matchedInDoc.forEach(match => {
-                                newRanges.push(new Range(match.index, match.index + match[0].length));
+
+                                const matchStart = match.index;
+                                const matchEnd = matchStart + match[0].length;
+                                const matchedrange = new Range(matchStart, matchEnd);
+
+                                // This is the line containing the match
+                                const matchedLinerange = editor.getLineRangeForRange(matchedrange);
+
+                                // The entire text of the line
+                                //const lineText = editor.getTextInRange(matchedLinerange);
+                                const lineText = line;
+                                const leading = lineText.match(/^[\s]+/);
+
+                                // if we use matchedLinerange it will select the entire
+                                // line from start to end of the editor, we only want to select
+                                // the text in that line
+                                let lineStartRange = matchedLinerange.start;
+                                let lineEndRange = matchedLinerange.end - 1;
+
+                                if (leading && leading.length === 1 && typeof leading[0] === 'string') {
+                                    lineStartRange += leading[0].length;
+                                }
+
+                                newRanges.push(new Range(lineStartRange, lineEndRange));
+                                //newRanges.push(new Range(match.index, match.index + match[0].length));
                             });
                         }
                     }
+
+                    logPerformanceEnd('select lines by match');
 
                     resolve(newRanges);
                 }
@@ -1992,29 +2342,105 @@ class NovaTextTools {
     }
 
     /**
-     * Select Ocurrences matching
-     * check ocurrences that matches a specific query
+     * Select All Ocurrences matching
+     * check all ocurrences that matches a specific query
      */
-    selectOcurrencesMatching(editor, text) {
+    selectAllOcurrencesMatching(editor, text) {
         return new Promise((resolve, reject) => {
             // prettier-ignore
             nova.workspace.showInputPalette('Select Ocurrences Matching...', {
-                    placeholder: '',
+                    placeholder: ''
                 }, (val) => {
                     if (!val) {
                         resolve([]);
                         return;
                     }
+                    const isFullRegex = val.match(/^([/~@;%#'])(.*?)\1([gimsuy]*)$/);
+                    let regex = false;
+                    let isMatchStart = val.startsWith('^');
+                    let isMatchEnd = val.endsWith('$');
+                    let isNot = val.startsWith('!');
+                    let defaultModifier =  'gi';
 
-                    val = val.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    if (isFullRegex) {
+                        let modifiers = isFullRegex[3];
+                        if (!modifiers) {
+                            modifiers = defaultModifier;
+                        }
+                        if (modifiers) {
+                            regex = new RegExp(isFullRegex[2], modifiers);
+                        } else {
+                            regex = new RegExp(isFullRegex[2]);
+                        }
+                    } else {
+                        if (isMatchStart) {
+                            let check = val.slice(1).toLowerCase();
+                            let isStringRegexLike = isRegexLike(check);
+
+                            if (isStringRegexLike) {
+                                regex = new RegExp(val, defaultModifier);
+                            }
+                            if (!isStringRegexLike) {
+                                val = val.slice(1);
+                            }
+                        } else if (isMatchEnd) {
+                            let check = val.slice(0, -1).toLowerCase();
+                            let isStringRegexLike = isRegexLike(check);
+
+                            if (isStringRegexLike) {
+                                regex = new RegExp(val, defaultModifier);
+                            }
+                            if (!isStringRegexLike) {
+                                val = val.slice(0, -1);
+                            }
+                        } else if (isNot) {
+                            let check = val.slice(1);
+                            let isStringRegexLike = isRegexLike(check);
+
+                            if (isStringRegexLike) {
+                                regex = new RegExp(val, defaultModifier);
+                            }
+                            if (!isStringRegexLike) {
+                                val = val.slice(1);
+                            }
+                        } else {
+                            let isStringRegexLike = isRegexLike(val);
+                            if (val.length > 1 && isStringRegexLike) {
+                                console.log('defaultModifier', defaultModifier);
+                                regex = new RegExp(val, defaultModifier);
+                            }
+                            if (val.length > 1 && !isStringRegexLike) {
+                                regex = new RegExp(escape(val), defaultModifier);
+                            }
+                        }
+                    }
+
+
                     const allText = editor.getTextInRange(new Range(0, editor.document.length));
-                    const regex = new RegExp(val, 'gi');
                     const matchedInDoc = [...allText.matchAll(regex)];
                     const newRanges = [];
 
                     if (matchedInDoc && matchedInDoc.length) {
                         matchedInDoc.forEach(match => {
-                            newRanges.push(new Range(match.index, match.index + match[0].length));
+
+                            let fullMatch = match[0];
+                            let matchStart = match.index;
+                            let matchEnd = matchStart + match[0].length;
+
+                            if (match.length <= 1) {
+                                newRanges.push(new Range(matchStart, matchEnd));
+                            } else {
+                                // There's capture groups
+                                // If capture groups only select every group
+                                let groupsMatched = [...match];
+                                groupsMatched.shift();
+
+                                for (const imatch of groupsMatched) {
+                                    let groupStart = matchStart + fullMatch.indexOf(imatch);
+                                    let groupEnd = groupStart + imatch.length;
+                                    newRanges.push(new Range(groupStart, groupEnd));
+                                }
+                            }
                         });
                     }
                     resolve(newRanges);
@@ -2031,7 +2457,7 @@ class NovaTextTools {
         if (!selected) {
             return false;
         }
-        selected = selected.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        selected = escape(selected);
         const allText = editor.getTextInRange(new Range(0, editor.document.length));
         const regex = new RegExp(selected, 'gi');
         const matchedInDoc = [...allText.matchAll(regex)];
@@ -2103,8 +2529,12 @@ class NovaTextTools {
             }
             parsed = JSON.stringify(parsed, undefined, 2);
         } catch (error) {
-            // TODO: Nova Erro notification
-            console.error(error);
+            log(error);
+            showNotification({
+                title: 'Text Tools',
+                body: 'JSON Error: ' + error,
+                actions: true
+            });
         }
 
         return parsed;
@@ -2147,7 +2577,7 @@ class NovaTextTools {
             'Lorem Paragraphs',
             'Number',
             'JSON',
-            'Array',
+            'Array'
         ];
     }
 
@@ -2184,6 +2614,61 @@ class NovaTextTools {
     }
 
     /**
+     * Generate Dummy File
+     */
+    generateDummyFile(fileName, fileSize) {
+        if (!nova.workspace) {
+            showNotification({
+                title: 'Text Tools',
+                body: 'ERROR: a workspace is required to create a dummy file',
+                actions: true
+            });
+            return false;
+        }
+
+        return new Promise((resolve, reject) => {
+            // prettier-ignore
+            nova.workspace.showInputPalette('Enter file name with extension', {
+                    placeholder: 'filename.txt'
+                }, (filename) => {
+                    if (!filename) {
+                        resolve();
+                        return;
+                    }
+
+                    // prettier-ignore
+                    nova.workspace.showInputPalette('Enter file size, example: 10mb', {
+                            placeholder: 'filesize for example: 500kb, 10mb, 1gb'
+                        }, (filesize) => {
+                            if (!filesize) {
+                                resolve();
+                                return;
+                            }
+
+                            dummyFile(nova.workspace.path, filename, filesize)
+                            .then(() => {
+                                showNotification({
+                                    title: 'Text Tools',
+                                    body: 'File generated correctly'
+                                });
+                                resolve();
+                            }).catch(error => {
+                                log(error);
+                                showNotification({
+                                    title: 'Text Tools',
+                                    body: 'ERROR: ' + error,
+                                    actions: true
+                                });
+                                resolve();
+                            });
+                        }
+                    );
+                }
+            );
+        });
+    }
+
+    /**
      * Normalize text
      * resolve diacritics, accents, etc.
      *
@@ -2191,6 +2676,28 @@ class NovaTextTools {
      */
     normalizeText(text) {
         return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    /**
+     * Open in new document
+     *
+     * @param {string} text
+     */
+    newDocument(content) {
+        if (!nova.workspace) {
+            showNotification({
+                title: 'Text Tools',
+                body: 'ERROR: a workspace is required to create new documents',
+                actions: true
+            });
+            return false;
+        }
+
+        nova.workspace.openNewTextDocument({
+            content: content,
+            line: 0
+            //syntax: ''
+        });
     }
 }
 
@@ -2224,6 +2731,8 @@ exports.activate = () => {
         deleteemptylines: 'deleteEmptyLines',
         filterduplucates: 'filterDuplicates',
         filterduplucatesnew: 'filterDuplicatesNewDoc',
+        filteruniques: 'filterUniques',
+        filteruniquesnew: 'filterUniquesNewDoc',
         deletelinesmatching: 'deleteLinesMatching',
         filterlinesmatching: 'filterLinesMatching',
         filterlinesmatchingnew: 'filterLinesMatchingNewDoc',
@@ -2245,6 +2754,10 @@ exports.activate = () => {
         addslashes: 'addSlashes',
         smartquotes: 'smartQuotes',
         straightenquotes: 'straightenQuotes',
+        quotessingletodouble: 'quotesSingleToDouble',
+        quotessingletobackticks: 'quotesSingleToBackticks',
+        quotesdoubletosingle: 'quotesDoubleToSingle',
+        quotesdoubletobackticks: 'quotesDoubleToBackticks',
 
         wrapeachlinewith: 'wrapLinesWith',
         appendtolines: 'appendToLines',
@@ -2253,7 +2766,7 @@ exports.activate = () => {
         addallnumbers: 'addAllNumbers',
         substractallnumbers: 'substractAllNumbers',
 
-        jsonstringparse: 'jsonStringParse',
+        jsonstringparse: 'jsonStringParse'
     };
 
     for (const command in commands) {
@@ -2266,14 +2779,14 @@ exports.activate = () => {
     // Selection commands
     const selectionCommands = {
         selectlinesmatching: 'selectLinesMatching',
-        selectocurrencesmatching: 'selectOcurrencesMatching',
-        selectocurrences: 'selectOcurrences',
+        selectallocurrencesmatching: 'selectAllOcurrencesMatching',
+        selectocurrences: 'selectOcurrences'
     };
 
     for (const scommand in selectionCommands) {
         nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
             const commandMethod = selectionCommands[scommand];
-            return tools.select(editor, tools[commandMethod]);
+            tools.select(editor, tools[commandMethod]);
         });
     }
 
@@ -2281,6 +2794,7 @@ exports.activate = () => {
     const insertionCommands = {
         generateuuid: 'generateUUID',
         fakedata: 'generateFakeData',
+        generatedummyfile: 'generateDummyFile'
     };
 
     for (const scommand in insertionCommands) {
@@ -2289,6 +2803,10 @@ exports.activate = () => {
             return tools.process(editor, tools[commandMethod], 'insert');
         });
     }
+
+    nova.commands.register('biati.texttools.generatedummyfile', () => {
+        return tools.generateDummyFile();
+    });
 };
 
 exports.deactivate = () => {};
