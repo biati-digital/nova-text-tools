@@ -3,7 +3,7 @@
 </p>
 <h1 align="center">Nova Text Tools</h1>
 
-**Swiss Army knife for text manipulation and selection**. This extension provides 50+ commands to manipulate and select text in your files. The commands are available globally and ready to be used any time with any file. **If you have text selected it will perform the actions in the current selections otherwise it will perform the action in the entire file.**
+**Swiss Army knife for text manipulation and selection**. This extension provides 60+ commands to manipulate and select text in your files. The commands are available globally and ready to be used any time with any file. **If you have text selected it will perform the actions in the current selections otherwise it will perform the action in the entire file.**
 
 ### Text commands
 
@@ -15,6 +15,8 @@
 -  Delete Empty Lines
 -  Filter Duplicate Lines (In case you only want to know the duplicate values)
 -  Filter Duplicate Lines as New Document (same as above but result will be added in a new document)
+-  Filter Unique Lines (In case you only want to know the unique values and exclude duplicates: example:  `a, b, b, c` becomes `a, c`)
+-  Filter Unique Lines as New Document (same as above but result will be added in a new document)
 -  Delete Lines Matching... (Delete all lines that contains certain text or matches a regex)
 -  Filter Lines Matching...  (Filter all lines that contains certain text or matches a regex)
 -  Filter Lines Matching as New Document (same as above but result will be added in a new document)
@@ -38,8 +40,8 @@
 -  Make Lower Case: `Test string` becomes `test string`
 -  Make Upper Case: `Test string` becomes `TEST STRING`
 -  Make Title Case: `step-by-step instructions` becomes `Step-by-Step Instructions`
--  Encode Base64
--  Decode Base64
+-  Base64 Encode
+-  Base64 Decode
 -  URL Encode
 -  URL Decode
 -  Encode Spaces: converts spaces to `%20`
@@ -50,12 +52,17 @@
 -  Strip Slashes
 -  Smart Quotes `"I don't know you"` becomes `“I don’t know you”`
 -  Straighten Quotes `“don’t know what you mean by ‘glory’”` becomes `"don't know what you mean by 'glory'"`
+-  Single Quotes to Double Quotes
+-  Single Quotes to Backticks
+-  Double Quotes to Single Quotes
+-  Double Quotes to Backticks
+-  Quotes to Backticks
 
 ### Selection commands
 
 -  Select Lines Matching... (Selects lines that contains certain text or matches a regex)
--  Select Words Matching... (Select all words that contains certain text or matches a regex)
--  Select All Ocurrences (grabs your currently selected word and will select all ocurrences in the file)
+-  Select Words Matching... (Select all strings that contains certain text or matches a regex)
+-  Select All Ocurrences (grabs your currently selected text and will select all ocurrences in the file)
 
 To learn more please checkout the examples below.
 
@@ -69,6 +76,7 @@ To learn more please checkout the examples below.
 
 -  Generate UUID
 -  Generate Fake Data (Names, Emails, Phones, Credit Cards, etc. Still working on it but definetly will be added)
+-  Generate Dummy File (Quickly create any file with any extension and size, read more below.)
 
 ### Numbers
 
@@ -94,7 +102,7 @@ Easy, there are several ways.
 
 ## Mastering commands with Matching...
 
-This is an advanced way to filter by entering a simple query or a regular expression, this works for any command that includes in it's name `Matching...` for example: **Delete Lines Matching..., Filter Lines Matching..., Select Lines Matching**, etc.
+This is an advanced way to filter by entering a simple query or a regular expression, this works for command that includes in it's name `Matching...` for example: **Delete Lines Matching..., Filter Lines Matching..., Select Lines Matching**, etc.
 Here are some examples of how to use it.
 
 &nbsp;
@@ -178,6 +186,50 @@ result will be:
 miracle47@olson.org
 doggyhelp@welovedogs.org.xyz
 ```
+
+&nbsp;
+
+#### Filter lines with regular expressions:
+
+You can use the power of regular expressions to filter lines for example if you filter using `@we.+dogs\.org` we can return lines that have `@we` followed by any amount of characters followed by `dogs.org`
+
+```
+marquardt.gudrun@gmail.com
+doggyhelp@welovedogs.org
+miracle47@olson.org
+humanfrinds@wecarealotfordogs.org
+```
+
+result will be:
+
+```
+doggyhelp@welovedogs.org
+humanfrinds@wecarealotfordogs.org
+```
+
+&nbsp;
+
+#### Select Ocurrences Matching...
+
+You can use this to quickly make selections by using a regex or regular text for example:
+
+```
+# Given the following code
+class Foo(object):
+    def some(self, arg):
+        self.bar = arg
+        self.baz = arg + self.smth
+
+    def on_done(self, rx):
+        self.view = x
+
+    def on_change(self, rx):
+        self.view = x
+```
+
+We can invoque the "Select Ocurrences Matching..." and we can enter `def` to select all ocurrences of **def**, we can also use a regular expression for example `def (\w+)\(self, rx\)` this will select `on_done` and `on_change`
+
+If you use regex and there's capture groups then only the groups will be selected.
 
 &nbsp;
 
@@ -287,6 +339,33 @@ result will be:
 
 ```
 2170.23
+```
+
+&nbsp;
+
+### Generate Dummy File
+
+You can create dummy files to test API's, file uploads, etc. The file will be created at the root of your project, with the filename and size provided. You can call the command from the `command palette` or from the menu `Extensions -> Generate Dummy File`
+
+The file name can be anything for example:
+```
+myfile (with no extension)
+myfile.text
+myfile.mp4
+myfile.zip
+myfile.pdf
+myfile.csv
+...etc
+```
+
+The file size can be written in multiple ways, it's case insensitive and spaces are ignored.
+
+```
+1500 (if only a number it's entered it will be interpreted as bytes so in this case 1500 bytes)
+500kb or 500 kb or 500 kilobytes
+200mb or 200 mb or 200 megabytes
+2gb or 2 gb or 2 gigabytes
+...etc
 ```
 
 &nbsp;
