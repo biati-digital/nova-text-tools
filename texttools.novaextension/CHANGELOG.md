@@ -1,8 +1,20 @@
+## Version 2.0.0
+
+- New: Filter Unique Lines
+- New: Generate Dummy File
+- New: Regex support for "Select Ocurrences Matching...", "Select Lines Matching..." "Filter Lines Matching...", etc.
+- New: Single Quotes to Double Quotes
+- New: Single Quotes to Backticks
+- New: Double Quotes to Single Quotes
+- New: Double Quotes to Backticks
+- New: Added separators and group tools list to make it easier to identify them
+- Fixed: Make Title Case doesn't work on UPPERCASE string #4
+
 ## Version 1.1.1
 
-- Added: Split Text to Lines
-- Added: Fake Data Generator (Full Names, Address, Credit Cards, Emails, Phones and much more.)
-- Added: Generate UUID
+- New: Split Text to Lines
+- New: Fake Data Generator (Full Names, Address, Credit Cards, Emails, Phones and much more.)
+- New: Generate UUID
 - Updated ReadMe with more information about how to use the extension
 
 ## Version 1.1.0
