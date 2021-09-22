@@ -3,65 +3,26 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode and much more...",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
   "categories": ["commands"],
   "main": "main.dist.js",
   "activationEvents": ["*"],
-  "entitlements": {},
+  "entitlements": {
+    "process": true
+  },
   "keywords": ["nova", "sort", "filter", "generate", "randomize", "encode", "decode", "text tools", "uuid"],
   "commands": {
+    "extensions": [
+      {
+        "title": "Generate Dummy File",
+        "paletteTitle": "Generate Dummy File",
+        "command": "biati.texttools.generatedummyfile"
+      }
+    ],
     "editor": [
-      {
-        "title": "Sort Lines Alphanumerically",
-        "paletteTitle": "Sort Lines Alphanumerically",
-        "command": "biati.texttools.sortalphanumerically",
-        "when": "editorHasFocus"
-      },
-      {
-        "title": "Sort Lines Alphanumerically Reverse",
-        "paletteTitle": "Sort Lines Alphanumerically Reverse",
-        "command": "biati.texttools.sortalphanumericallyreverse",
-        "when": "editorHasFocus"
-      },
-      {
-        "title": "Sort by Lines length",
-        "paletteTitle": "Sort Lines by Length",
-        "command": "biati.texttools.sortbylength",
-        "when": "editorHasFocus"
-      },
-      {
-        "title": "Sort Lines by Length Reverse",
-        "paletteTitle": "Sort Lines by Length Reverse",
-        "command": "biati.texttools.sortbylengthreverse",
-        "when": "editorHasFocus"
-      },
-      {
-        "title": "Reverse Lines",
-        "paletteTitle": "Reverse Lines",
-        "command": "biati.texttools.reverselines",
-        "when": "editorHasFocus"
-      },
-      {
-        "title": "Randomize Lines",
-        "paletteTitle": "Randomize Lines",
-        "command": "biati.texttools.randomlines",
-        "when": "editorHasFocus"
-      },
-      {
-        "title": "Join Lines",
-        "paletteTitle": "Join Lines",
-        "command": "biati.texttools.joinlines",
-        "when": "editorHasFocus"
-      },
-      {
-        "title": "Split Text to Lines",
-        "paletteTitle": "Split Text to Lines",
-        "command": "biati.texttools.splittolines",
-        "when": "editorHasFocus"
-      },
       {
         "title": "Make Lower Case",
         "paletteTitle": "Make Lower Case",
@@ -153,20 +114,17 @@
         "when": "editorHasFocus"
       },
       {
-        "title": "Add lines number",
-        "paletteTitle": "Add lines number",
-        "command": "biati.texttools.addlinesnumber",
-        "when": "editorHasFocus"
+        "separator": true
       },
       {
-        "title": "To Base64",
-        "paletteTitle": "Encode to Base64",
+        "title": "Base64 Encode",
+        "paletteTitle": "Base64 Encode",
         "command": "biati.texttools.tobase64",
         "when": "editorHasFocus"
       },
       {
-        "title": "To Base64",
-        "paletteTitle": "Decode Base64",
+        "title": "Base64 Decode",
+        "paletteTitle": "Base64 Decode",
         "command": "biati.texttools.decodebase64",
         "when": "editorHasFocus"
       },
@@ -232,6 +190,87 @@
         "when": "editorHasFocus"
       },
       {
+        "title": "Single Quotes to Double Quotes",
+        "paletteTitle": "Single Quotes to Double Quotes",
+        "command": "biati.texttools.quotessingletodouble",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Single Quotes to Backticks",
+        "paletteTitle": "Single Quotes to Backticks",
+        "command": "biati.texttools.quotessingletobackticks",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Double Quotes to Single Quotes",
+        "paletteTitle": "Double Quotes to Single Quotes",
+        "command": "biati.texttools.quotesdoubletosingle",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Double Quotes to Backticks",
+        "paletteTitle": "Double Quotes to Backticks",
+        "command": "biati.texttools.quotesdoubletobackticks",
+        "when": "editorHasFocus"
+      },
+      {
+        "separator": true
+      },
+      {
+        "title": "Sort Lines Alphanumerically",
+        "paletteTitle": "Sort Lines Alphanumerically",
+        "command": "biati.texttools.sortalphanumerically",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Sort Lines Alphanumerically Reverse",
+        "paletteTitle": "Sort Lines Alphanumerically Reverse",
+        "command": "biati.texttools.sortalphanumericallyreverse",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Sort by Lines Length",
+        "paletteTitle": "Sort Lines by Length",
+        "command": "biati.texttools.sortbylength",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Sort Lines by Length Reverse",
+        "paletteTitle": "Sort Lines by Length Reverse",
+        "command": "biati.texttools.sortbylengthreverse",
+        "when": "editorHasFocus"
+      },
+      {
+        "separator": true
+      },
+      {
+        "title": "Reverse Lines",
+        "paletteTitle": "Reverse Lines",
+        "command": "biati.texttools.reverselines",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Randomize Lines",
+        "paletteTitle": "Randomize Lines",
+        "command": "biati.texttools.randomlines",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Join Lines",
+        "paletteTitle": "Join Lines",
+        "command": "biati.texttools.joinlines",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Split Text to Lines",
+        "paletteTitle": "Split Text to Lines",
+        "command": "biati.texttools.splittolines",
+        "when": "editorHasFocus"
+      },
+      {
+        "separator": true
+      },
+      {
         "title": "Delete Duplicate Lines",
         "paletteTitle": "Delete Duplicate Lines",
         "command": "biati.texttools.deleteduplicates",
@@ -250,6 +289,9 @@
         "when": "editorHasFocus"
       },
       {
+        "separator": true
+      },
+      {
         "title": "Filter Duplicate Lines",
         "paletteTitle": "Filter Duplicate Lines",
         "command": "biati.texttools.filterduplucates",
@@ -259,6 +301,18 @@
         "title": "Filter Duplicate Lines As New Document",
         "paletteTitle": "Filter Duplicate Lines As New Document",
         "command": "biati.texttools.filterduplucatesnew",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Filter Unique Lines",
+        "paletteTitle": "Filter Unique Lines",
+        "command": "biati.texttools.filteruniques",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Filter Unique Lines As New Document",
+        "paletteTitle": "Filter Unique Lines As New Document",
+        "command": "biati.texttools.filteruniquesnew",
         "when": "editorHasFocus"
       },
       {
@@ -273,7 +327,9 @@
         "command": "biati.texttools.filterlinesmatchingnew",
         "when": "editorHasFocus"
       },
-
+      {
+        "separator": true
+      },
       {
         "title": "Select Lines Matching...",
         "paletteTitle": "Select Lines Matching...",
@@ -283,7 +339,7 @@
       {
         "title": "Select Ocurrences Matching...",
         "paletteTitle": "Select Ocurrences Matching...",
-        "command": "biati.texttools.selectocurrencesmatching",
+        "command": "biati.texttools.selectallocurrencesmatching",
         "when": "editorHasFocus"
       },
       {
@@ -293,9 +349,18 @@
         "when": "editorHasFocus"
       },
       {
+        "separator": true
+      },
+      {
         "title": "Wrap Each Line With...",
         "paletteTitle": "Wrap Each Line With...",
         "command": "biati.texttools.wrapeachlinewith",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Add Lines Number",
+        "paletteTitle": "Add Lines Number",
+        "command": "biati.texttools.addlinesnumber",
         "when": "editorHasFocus"
       },
       {
@@ -309,6 +374,9 @@
         "paletteTitle": "Add Text At Ends of Lines",
         "command": "biati.texttools.prependtolines",
         "when": "editorHasFocus"
+      },
+      {
+        "separator": true
       },
       {
         "title": "Add All Numbers",
