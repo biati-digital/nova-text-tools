@@ -7,13 +7,13 @@ module.exports = {
     plugins: [
         commonjs(),
         nodeResolve({
-            browser: true,
+            browser: true
         }),
-        json(),
+        json()
     ],
     output: {
         file: 'texttools.novaextension/Scripts/main.dist.js',
         sourcemap: false,
-        format: 'cjs',
-    },
+        format: 'cjs'
+    }
 };
