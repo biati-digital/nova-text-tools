@@ -155,6 +155,10 @@ export async function dummyFile(filePath, fileName, size) {
         throw new Error('File size must be provided');
     }
 
+    if (size >= 30000000000) {
+        throw new Error('File size limit is 30GB just in case');
+    }
+
     mkFile(filePath, size)
         .then((res) => {
             if (isZip) {
