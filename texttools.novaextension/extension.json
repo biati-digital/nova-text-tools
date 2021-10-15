@@ -3,7 +3,7 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode and much more...",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
@@ -166,9 +166,39 @@
         "when": "editorHasFocus"
       },
       {
-        "title": "Add Slashes",
-        "paletteTitle": "Add Slashes",
-        "command": "biati.texttools.addslashes",
+        "title": "Decode HTML Entities",
+        "paletteTitle": "Decode HTML Entities",
+        "command": "biati.texttools.decodehtml",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "HTML to Decimal Entities",
+        "paletteTitle": "HTML to Decimal Entities",
+        "command": "biati.texttools.htmlasciitodecimal",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Text to Binary",
+        "paletteTitle": "Encode Text to Binary",
+        "command": "biati.texttools.texttobinary",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Binary to Text",
+        "paletteTitle": "Binary to Text",
+        "command": "biati.texttools.binarytotext",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "ASCII to Decimal",
+        "paletteTitle": "ASCII to Decimal",
+        "command": "biati.texttools.asciitodecimal",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "ASCII to Hex",
+        "paletteTitle": "ASCII to Hex",
+        "command": "biati.texttools.asciitohex",
         "when": "editorHasFocus"
       },
       {
@@ -377,6 +407,12 @@
       },
       {
         "separator": true
+      },
+      {
+        "title": "Insert Non-breaking Space",
+        "paletteTitle": "Insert Non-breaking Space",
+        "command": "biati.texttools.nonbreakingspace",
+        "when": "editorHasFocus"
       },
       {
         "title": "Add All Numbers",

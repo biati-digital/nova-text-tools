@@ -1,12 +1,15 @@
 {
   "name": "biati.texttools",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Nova Text Tools",
   "main": "main.js",
   "scripts": {
     "build": "npx rollup -c",
     "watch": "onchange -i \"Scripts/**/*.js\" -- npm run build",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "bump:patch": "bump patch package.json package-lock.json texttools.novaextension/extension.json texttools.novaextension/package.json",
+    "bump:minor": "bump minor package.json package-lock.json texttools.novaextension/extension.json texttools.novaextension/package.json",
+    "bump:major": "bump major package.json package-lock.json texttools.novaextension/extension.json texttools.novaextension/package.json"
   },
   "jest": {
     "testEnvironment": "jest-environment-node",
