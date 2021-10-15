@@ -430,6 +430,46 @@ function isRegexLike(string) {
 }
 
 /**
+ * To Binary
+ *
+ * @param {string} n
+ */
+function toBinary(n) {
+    let value = convertToBinary(n);
+    let length = value.length;
+    while (length < 8) {
+        value = '0' + value;
+        length++;
+    }
+    return value;
+}
+
+/**
+ * From Binary
+ *
+ * @param {string} binary
+ * @return {string}
+ */
+function fromBinary(binary) {
+    let out = '';
+    while (binary.length >= 8) {
+        var byte = binary.slice(0, 8);
+        binary = binary.slice(8);
+        out += String.fromCharCode(parseInt(byte, 2));
+    }
+
+    return decodeURIComponent(escape(out));
+}
+
+function convertToBinary(n) {
+    if (n <= 1) {
+        return String(n);
+    } else {
+        return convertToBinary(Math.floor(n / 2)) + String(n % 2);
+    }
+}
+
+/**
  * Log
  * print log in debug pane
  *
@@ -853,6 +893,10 @@ async function dummyFile(filePath, fileName, size) {
 
     if (size < 0) {
         throw new Error('File size must be provided');
+    }
+
+    if (size >= 30000000000) {
+        throw new Error('File size limit is 30GB just in case');
     }
 
     mkFile(filePath, size)
@@ -2165,6 +2209,71 @@ class NovaTextTools {
     }
 
     /**
+     * Get the decimal value of an ASCII character
+     */
+    asciiToDecimal(text, fn = null) {
+        let encoded = [];
+        for (const letter of text) {
+            let decimal = Number(letter.charCodeAt(0).toString(10));
+
+            if (fn) {
+                decimal = fn(decimal);
+            }
+
+            encoded.push(decimal);
+        }
+
+        return encoded.join(' ');
+    }
+
+    /**
+     * HTML ASCII to decimal
+     */
+    htmlAsciiToDecimal(text) {
+        let encoded = this.asciiToDecimal(text, (decimal) => {
+            decimal = decimal < 100 ? '0' + decimal : decimal;
+            return '&#' + decimal + ';';
+        });
+
+        return encoded.replace(/ /g, '');
+    }
+
+    /**
+     * ASCII to Hex (bytes)
+     */
+    asciiToHex(text) {
+        let encoded = [];
+        for (const letter of text) {
+            encoded.push(Number(letter.charCodeAt(0)).toString(16));
+        }
+
+        return encoded.join(' ').toUpperCase();
+    }
+
+    /**
+     * Text to binary
+     */
+    textToBinary(text) {
+        let binary = [];
+        for (const letter of text) {
+            binary.push(toBinary(letter.charCodeAt(0)));
+        }
+        return binary.join(' ');
+    }
+
+    /**
+     * Text to binary
+     */
+    binaryToText(text) {
+        let string = [];
+        text.split(' ').forEach((binary) => {
+            string.push(fromBinary(binary));
+        });
+
+        return string.join('');
+    }
+
+    /**
      * Strip Slashes
      */
     stripSlashes(text) {
@@ -2614,6 +2723,13 @@ class NovaTextTools {
     }
 
     /**
+     * Insert non-breaking space
+     */
+    nonBreakingSpace() {
+        return '&nbsp;';
+    }
+
+    /**
      * Generate Dummy File
      */
     generateDummyFile(fileName, fileSize) {
@@ -2702,8 +2818,11 @@ class NovaTextTools {
 }
 
 exports.activate = () => {
-    console.log('Text Tools Activated');
     const tools = new NovaTextTools();
+
+    if (nova.inDevMode()) {
+        console.log('Text Tools Activated');
+    }
 
     // Text commands
     const commands = {
@@ -2750,6 +2869,12 @@ exports.activate = () => {
         decodehtml: 'htmlDecode',
         encodespaces: 'spacesEncode',
         decodespaces: 'spacesDecode',
+        htmlasciitodecimal: 'htmlAsciiToDecimal',
+        asciitodecimal: 'asciiToDecimal',
+        asciitohex: 'asciiToHex',
+        texttobinary: 'textToBinary',
+        binarytotext: 'binaryToText',
+
         stripslashes: 'stripSlashes',
         addslashes: 'addSlashes',
         smartquotes: 'smartQuotes',
@@ -2794,6 +2919,7 @@ exports.activate = () => {
     const insertionCommands = {
         generateuuid: 'generateUUID',
         fakedata: 'generateFakeData',
+        nonbreakingspace: 'nonBreakingSpace',
         generatedummyfile: 'generateDummyFile'
     };
 

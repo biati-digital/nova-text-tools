@@ -3,7 +3,7 @@
 </p>
 <h1 align="center">Nova Text Tools</h1>
 
-**Swiss Army knife for text manipulation and selection**. This extension provides 60+ commands to manipulate and select text in your files. The commands are available globally and ready to be used any time with any file. **If you have text selected it will perform the actions in the current selections otherwise it will perform the action in the entire file.**
+**Swiss Army knife for text manipulation and selection**. This extension provides 65+ commands to manipulate and select text in your files. The commands are available globally and ready to be used any time with any file. **If you have text selected it will perform the actions in the current selections otherwise it will perform the action in the entire file.**
 
 ### Text commands
 
@@ -48,6 +48,11 @@
 -  Decode Spaces: converts `%20` to spaces
 -  Encode HTML Entities
 -  Decode HTML Entities
+-  HTML to Decimal Entities
+-  ASCII to decimal
+-  ASCII to Hex
+-  Text to Binary
+-  Binary to Text
 -  Add Slashes
 -  Strip Slashes
 -  Smart Quotes `"I don't know you"` becomes `“I don’t know you”`
@@ -57,6 +62,7 @@
 -  Double Quotes to Single Quotes
 -  Double Quotes to Backticks
 -  Quotes to Backticks
+-  Insert Non-breaking Space `&nbsp;`
 
 ### Selection commands
 
