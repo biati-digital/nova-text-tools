@@ -1,3 +1,13 @@
+## Version 2.0.1
+
+- New: Text to Binary
+- New: Binary to Text
+- New: HTML ASCII to decimal
+- New: ASCII to Decimal
+- New: ASCII to Hex
+- New: Insert Non-breaking space
+- Updated: Dummy File limit set to 30GB just in case
+
 ## Version 2.0.0
 
 - New: Filter Unique Lines
