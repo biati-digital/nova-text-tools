@@ -2,7 +2,7 @@
 
 - New: Text to Binary
 - New: Binary to Text
-- New: HTML ASCII to decimal
+- New: HTML to Decimal Entities
 - New: ASCII to Decimal
 - New: ASCII to Hex
 - New: Insert Non-breaking space
