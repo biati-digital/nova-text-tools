@@ -70,6 +70,26 @@ test('Text HTML Encode', () => {
     expect(tools.htmlEncode('<h1>My Test</h1>')).toBe('&lt;h1&gt;My Test&lt;/h1&gt;');
 });
 
+test('HTML to Decimal Entities', () => {
+    expect(tools.htmlAsciiToDecimal('test@test.com')).toBe('&#116;&#101;&#115;&#116;&#064;&#116;&#101;&#115;&#116;&#046;&#099;&#111;&#109;');
+});
+
+test('Text to Binary', () => {
+    expect(tools.textToBinary('hello')).toBe('01101000 01100101 01101100 01101100 01101111');
+});
+
+test('Binary to Text', () => {
+    expect(tools.binaryToText('01101000 01100101 01101100 01101100 01101111')).toBe('hello');
+});
+
+test('ASCII to Decimal', () => {
+    expect(tools.asciiToDecimal('test')).toBe('116 101 115 116');
+});
+
+test('ASCII to Hex', () => {
+    expect(tools.asciiToHex('test')).toBe('74 65 73 74');
+});
+
 test('Text Decode %20 to Spaces', () => {
     expect(tools.htmlDecode('&lt;h1&gt;My Test&lt;/h1&gt;')).toBe('<h1>My Test</h1>');
 });

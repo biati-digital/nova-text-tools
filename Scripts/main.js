@@ -1,8 +1,11 @@
 import NovaTextTools from './tools.js';
 
 exports.activate = () => {
-    console.log('Text Tools Activated');
     const tools = new NovaTextTools();
+
+    if (nova.inDevMode()) {
+        console.log('Text Tools Activated');
+    }
 
     // Text commands
     const commands = {
@@ -49,6 +52,12 @@ exports.activate = () => {
         decodehtml: 'htmlDecode',
         encodespaces: 'spacesEncode',
         decodespaces: 'spacesDecode',
+        htmlasciitodecimal: 'htmlAsciiToDecimal',
+        asciitodecimal: 'asciiToDecimal',
+        asciitohex: 'asciiToHex',
+        texttobinary: 'textToBinary',
+        binarytotext: 'binaryToText',
+
         stripslashes: 'stripSlashes',
         addslashes: 'addSlashes',
         smartquotes: 'smartQuotes',
@@ -93,6 +102,7 @@ exports.activate = () => {
     const insertionCommands = {
         generateuuid: 'generateUUID',
         fakedata: 'generateFakeData',
+        nonbreakingspace: 'nonBreakingSpace',
         generatedummyfile: 'generateDummyFile'
     };
 

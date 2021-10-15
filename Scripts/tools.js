@@ -1,5 +1,5 @@
 import { snakeCase, camelCase, constantCase, dotCase, headerCase, noCase, paramCase, pascalCase, pathCase, sentenceCase } from 'change-case';
-import { romanize, ordinalSuffix, titleCase, randomArray, fakeData, quotesTransform, escape, isRegexLike } from './utils.js';
+import { romanize, ordinalSuffix, titleCase, randomArray, fakeData, quotesTransform, escape, isRegexLike, toBinary, fromBinary } from './utils.js';
 import { logPerformanceStart, logPerformanceEnd, showNotification, log } from './nova.js';
 import { encode, decode } from 'html-entities';
 import { dummyFile } from './dummy-file.js';
@@ -732,6 +732,71 @@ class NovaTextTools {
     }
 
     /**
+     * Get the decimal value of an ASCII character
+     */
+    asciiToDecimal(text, fn = null) {
+        let encoded = [];
+        for (const letter of text) {
+            let decimal = Number(letter.charCodeAt(0).toString(10));
+
+            if (fn) {
+                decimal = fn(decimal);
+            }
+
+            encoded.push(decimal);
+        }
+
+        return encoded.join(' ');
+    }
+
+    /**
+     * HTML ASCII to decimal
+     */
+    htmlAsciiToDecimal(text) {
+        let encoded = this.asciiToDecimal(text, (decimal) => {
+            decimal = decimal < 100 ? '0' + decimal : decimal;
+            return '&#' + decimal + ';';
+        });
+
+        return encoded.replace(/ /g, '');
+    }
+
+    /**
+     * ASCII to Hex (bytes)
+     */
+    asciiToHex(text) {
+        let encoded = [];
+        for (const letter of text) {
+            encoded.push(Number(letter.charCodeAt(0)).toString(16));
+        }
+
+        return encoded.join(' ').toUpperCase();
+    }
+
+    /**
+     * Text to binary
+     */
+    textToBinary(text) {
+        let binary = [];
+        for (const letter of text) {
+            binary.push(toBinary(letter.charCodeAt(0)));
+        }
+        return binary.join(' ');
+    }
+
+    /**
+     * Text to binary
+     */
+    binaryToText(text) {
+        let string = [];
+        text.split(' ').forEach((binary) => {
+            string.push(fromBinary(binary));
+        });
+
+        return string.join('');
+    }
+
+    /**
      * Strip Slashes
      */
     stripSlashes(text) {
@@ -1180,6 +1245,13 @@ class NovaTextTools {
      */
     generateUUID() {
         return uuid();
+    }
+
+    /**
+     * Insert non-breaking space
+     */
+    nonBreakingSpace() {
+        return '&nbsp;';
     }
 
     /**

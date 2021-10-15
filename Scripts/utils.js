@@ -272,3 +272,43 @@ export function escape(string) {
 export function isRegexLike(string) {
     return /\\w|\\s|\\d|\\b|\\.|\.\*|\.\+/.test(string);
 }
+
+/**
+ * To Binary
+ *
+ * @param {string} n
+ */
+export function toBinary(n) {
+    let value = convertToBinary(n);
+    let length = value.length;
+    while (length < 8) {
+        value = '0' + value;
+        length++;
+    }
+    return value;
+}
+
+/**
+ * From Binary
+ *
+ * @param {string} binary
+ * @return {string}
+ */
+export function fromBinary(binary) {
+    let out = '';
+    while (binary.length >= 8) {
+        var byte = binary.slice(0, 8);
+        binary = binary.slice(8);
+        out += String.fromCharCode(parseInt(byte, 2));
+    }
+
+    return decodeURIComponent(escape(out));
+}
+
+export function convertToBinary(n) {
+    if (n <= 1) {
+        return String(n);
+    } else {
+        return convertToBinary(Math.floor(n / 2)) + String(n % 2);
+    }
+}
