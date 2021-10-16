@@ -1,4 +1,5 @@
 import NovaTextTools from './tools.js';
+import ExpanderManager from './expander/expander.js';
 
 exports.activate = () => {
     const tools = new NovaTextTools();
@@ -115,6 +116,14 @@ exports.activate = () => {
 
     nova.commands.register('biati.texttools.generatedummyfile', () => {
         return tools.generateDummyFile();
+    });
+
+    let slectionExpander = new ExpanderManager();
+    nova.commands.register('biati.texttools.expandselection', (editor) => {
+        slectionExpander.expand(editor);
+    });
+    nova.commands.register('biati.texttools.undoexpandselection', (editor) => {
+        slectionExpander.undo(editor);
     });
 };
 

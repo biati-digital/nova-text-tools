@@ -432,6 +432,18 @@
         "command": "biati.texttools.generateuuid",
         "when": "editorHasFocus"
       }
+    ],
+    "command-palette": [
+      {
+        "title": "Expand Selection",
+        "paletteTitle": "Expand Selection",
+        "command": "biati.texttools.expandselection"
+      },
+      {
+        "title": "Undo Expand Selection",
+        "paletteTitle": "Undo Expand Selection",
+        "command": "biati.texttools.undoexpandselection"
+      }
     ]
   }
 }
