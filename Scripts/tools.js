@@ -289,7 +289,14 @@ class NovaTextTools {
                     }
                     const lines = text.split('\n');
                     const wrapped = lines.map(line => {
-                        return val.replace('$1', line);
+                        const whitespace = line.match(/^[\s]*/g);
+                        let newLine = val;
+
+                        if (whitespace && whitespace[0]) {
+                            newLine = whitespace[0] + newLine;
+                        }
+
+                        return newLine.replace('$1', line.trim());
                     });
                     resolve(wrapped.join('\n'));
                 }
