@@ -48,7 +48,7 @@
 -  Decode Spaces: converts `%20` to spaces
 -  Encode HTML Entities
 -  Decode HTML Entities
--  HTML to Decimal Entities
+-  HTML to Decimal Entities: Useful to obfuscate emails in HTML. it can be decoded with `Decode HTML Entities`
 -  ASCII to decimal
 -  ASCII to Hex
 -  Text to Binary
