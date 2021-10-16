@@ -1766,7 +1766,14 @@ class NovaTextTools {
                     }
                     const lines = text.split('\n');
                     const wrapped = lines.map(line => {
-                        return val.replace('$1', line);
+                        const whitespace = line.match(/^[\s]*/g);
+                        let newLine = val;
+
+                        if (whitespace && whitespace[0]) {
+                            newLine = whitespace[0] + newLine;
+                        }
+
+                        return newLine.replace('$1', line.trim());
                     });
                     resolve(wrapped.join('\n'));
                 }
@@ -2817,6 +2824,63 @@ class NovaTextTools {
     }
 }
 
+class ExpandManager {
+    expand() {
+        let editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return;
+        }
+        let exp;
+        let doc = editor.document;
+        if (doc.languageId) {
+            switch (doc.languageId) {
+                case LanguageType.HTML:
+                    exp = new expander.html();
+                    break;
+                case LanguageType.PHP:
+                    exp = new expander.php();
+                    break;
+                default:
+                    exp = new expander.javascript();
+                    break;
+            }
+        }
+
+        let text = doc.getText();
+        //multiple selection
+        editor.selections = editor.selections.map((iSelection, selectionIdx) => {
+            try {
+                console.log('add position ' + selectionIdx);
+                let start = doc.offsetAt(iSelection.start);
+                let end = doc.offsetAt(iSelection.end);
+                let result = exp.expand(text, start, end);
+                if (result) {
+                    let startPos = doc.positionAt(result.end);
+                    let endPos = doc.positionAt(result.start);
+                    if (this.expandHistory[selectionIdx] && this.expandHistory[selectionIdx].length > 0) {
+                        let historyPosition = this.expandHistory[selectionIdx][this.expandHistory[selectionIdx].length - 1];
+                        if (historyPosition.resultStart.compareTo(iSelection.start) !== 0 || historyPosition.resultEnd.compareTo(iSelection.end) !== 0) {
+                            //move to new expand delete all history position of index
+                            console.log('remove all history position ' + selectionIdx);
+                            this.expandHistory[selectionIdx] = [];
+                        }
+                    }
+                    if (!this.expandHistory[selectionIdx]) {
+                        this.expandHistory[selectionIdx] = [];
+                    }
+                    this.expandHistory[selectionIdx].push({ start: iSelection.start, end: iSelection.end, resultEnd: endPos, resultStart: startPos, index: selectionIdx });
+                    iSelection = new vscode.Selection(startPos, endPos);
+                    // editor.selection = newselection;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            console.log(selectionIdx);
+            return iSelection;
+        });
+    }
+}
+
 exports.activate = () => {
     const tools = new NovaTextTools();
 
@@ -2932,6 +2996,14 @@ exports.activate = () => {
 
     nova.commands.register('biati.texttools.generatedummyfile', () => {
         return tools.generateDummyFile();
+    });
+
+    let slectionExpander = new ExpandManager();
+    nova.commands.register('biati.texttools.expandselection', (editor) => {
+        slectionExpander.expand(editor);
+    });
+    nova.commands.register('biati.texttools.expandselection', (editor) => {
+        slectionExpander.undo(editor);
     });
 };
 
