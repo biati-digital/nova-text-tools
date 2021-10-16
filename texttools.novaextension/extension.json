@@ -3,7 +3,7 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode and much more...",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
@@ -157,12 +157,6 @@
         "title": "Encode HTML Entities",
         "paletteTitle": "Encode HTML Entities",
         "command": "biati.texttools.encodehtml",
-        "when": "editorHasFocus"
-      },
-      {
-        "title": "Decode HTML Entities",
-        "paletteTitle": "Decode HTML Entities",
-        "command": "biati.texttools.decodehtml",
         "when": "editorHasFocus"
       },
       {
