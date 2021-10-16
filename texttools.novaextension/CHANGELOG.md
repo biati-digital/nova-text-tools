@@ -1,4 +1,9 @@
-## Version 2.0.1
+## Version 2.1.1
+
+- Fixed: Removed duplicate command
+- Fixed: Respect left whitespace in Wrap Each Line With command
+
+## Version 2.1.0
 
 - New: Text to Binary
 - New: Binary to Text
