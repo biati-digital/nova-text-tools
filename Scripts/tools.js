@@ -319,8 +319,16 @@ class NovaTextTools {
                     }
                     const lines = text.split('\n');
                     const appended = lines.map(line => {
-                        return val + line;
+                        const whitespace = line.match(/^[\s]*/g);
+                        let newLine = val + line;
+
+                        if (whitespace && whitespace[0]) {
+                            newLine = whitespace[0] + val + line.trimStart();
+                        }
+
+                        return newLine;
                     });
+
                     resolve(appended.join('\n'));
                 }
             );

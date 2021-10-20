@@ -1,5 +1,5 @@
 import NovaTextTools from './tools.js';
-import ExpanderManager from './expander/expander.js';
+import SelectionExpander from './expander/expander.js';
 
 exports.activate = () => {
     const tools = new NovaTextTools();
@@ -118,12 +118,18 @@ exports.activate = () => {
         return tools.generateDummyFile();
     });
 
-    let slectionExpander = new ExpanderManager();
+    // Selection Expand/Shrink
+    let expander = new SelectionExpander();
     nova.commands.register('biati.texttools.expandselection', (editor) => {
-        slectionExpander.expand(editor);
+        expander.expand(editor);
     });
-    nova.commands.register('biati.texttools.undoexpandselection', (editor) => {
-        slectionExpander.undo(editor);
+    nova.commands.register('biati.texttools.shrinkselection', (editor) => {
+        expander.shrink(editor);
+    });
+    nova.workspace.onDidAddTextEditor((editor) => {
+        return editor.onDidChangeSelection(() => {
+            expander.maybeResetHistory(editor);
+        });
     });
 };
 

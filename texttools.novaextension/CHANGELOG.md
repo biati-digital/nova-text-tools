@@ -1,3 +1,9 @@
+## Version 3.0.0
+
+- New: Selection Expand (Still in progress) (Tested with HTML, CSS, Less, Sass, Javascript, Python, PHP)
+- New: Selection Shrink (Still in progress)
+- Fixed: Respect left whitespace in Add Text At Beginning of Lines command
+
 ## Version 2.1.1
 
 - Fixed: Removed duplicate command
