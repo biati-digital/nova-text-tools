@@ -5,6 +5,13 @@
 
 **Swiss Army knife for text manipulation and selection**. This extension provides 65+ commands to manipulate and select text in your files. The commands are available globally and ready to be used any time with any file. **If you have text selected it will perform the actions in the current selections otherwise it will perform the action in the entire file.**
 
+### What's New:
+There has been more than 15 new tools since the first release so make sure to always read the Changelog.
+
+In version 3.0 we have added:
+
+- **Selection Expand/Shrink**, we would love if you can try it and let us know if you find errors. This is still a work in progress, currently it supports HTML, CSS, Less, Sass, Javascript, Vue, PHP and Python. You can use the shortcut `command+option+right` to expand and `command+option+left` to shrink.
+
 ### Text commands
 
 -  Sort Lines Alphanumerically
@@ -69,6 +76,8 @@
 -  Select Lines Matching... (Selects lines that contains certain text or matches a regex)
 -  Select Words Matching... (Select all strings that contains certain text or matches a regex)
 -  Select All Ocurrences (grabs your currently selected text and will select all ocurrences in the file)
+-  Select Expand (Expand the current selection `command+option+right`)
+-  Select Shrink (Shrink the current selection `command+option+left`)
 
 To learn more please checkout the examples below.
 
@@ -378,3 +387,7 @@ The file size can be written in multiple ways, it's case insensitive and spaces 
 
 ### Have an idea for another tool?
 If you have one in mind do not hestiate to share it with us, if it can help a lot of people we'll surely implement it.
+
+
+###
+Expand selection is a modified version of the vscode extension [expand region](https://marketplace.visualstudio.com/items?itemName=letrieu.expand-region) and sublime [expand region](https://github.com/aronwoost/sublime-expand-region)
