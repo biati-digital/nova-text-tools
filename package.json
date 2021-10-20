@@ -1,6 +1,6 @@
 {
   "name": "biati.texttools",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "Nova Text Tools",
   "main": "main.js",
   "scripts": {

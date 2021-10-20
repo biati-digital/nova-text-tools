@@ -2,8 +2,8 @@
   "identifier": "biati.texttools",
   "name": "Text Tools",
   "organization": "biati",
-  "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode and much more...",
-  "version": "2.1.1",
+  "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode, Select, Expand Selection and much more...",
+  "version": "3.0.0",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
@@ -13,7 +13,7 @@
   "entitlements": {
     "process": true
   },
-  "keywords": ["nova", "sort", "filter", "generate", "randomize", "encode", "decode", "text tools", "uuid"],
+  "keywords": ["nova", "sort", "filter", "generate", "randomize", "encode", "decode", "text tools", "uuid", "expand", "dummy file", "wrap"],
   "commands": {
     "extensions": [
       {
@@ -373,6 +373,20 @@
         "when": "editorHasFocus"
       },
       {
+        "title": "Selection Expand",
+        "paletteTitle": "Selection Expand",
+        "command": "biati.texttools.expandselection",
+        "shortcut": "ctrl-opt-right",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Selection Shrink",
+        "paletteTitle": "Selection Shrink",
+        "command": "biati.texttools.shrinkselection",
+        "shortcut": "ctrl-opt-left",
+        "when": "editorHasFocus"
+      },
+      {
         "separator": true
       },
       {
@@ -431,18 +445,6 @@
         "paletteTitle": "Generate UUID",
         "command": "biati.texttools.generateuuid",
         "when": "editorHasFocus"
-      }
-    ],
-    "command-palette": [
-      {
-        "title": "Expand Selection",
-        "paletteTitle": "Expand Selection",
-        "command": "biati.texttools.expandselection"
-      },
-      {
-        "title": "Undo Expand Selection",
-        "paletteTitle": "Undo Expand Selection",
-        "command": "biati.texttools.undoexpandselection"
       }
     ]
   }
