@@ -1796,8 +1796,16 @@ class NovaTextTools {
                     }
                     const lines = text.split('\n');
                     const appended = lines.map(line => {
-                        return val + line;
+                        const whitespace = line.match(/^[\s]*/g);
+                        let newLine = val + line;
+
+                        if (whitespace && whitespace[0]) {
+                            newLine = whitespace[0] + val + line.trimStart();
+                        }
+
+                        return newLine;
                     });
+
                     resolve(appended.join('\n'));
                 }
             );
@@ -2824,6 +2832,1712 @@ class NovaTextTools {
     }
 }
 
+function escapeRegExp(str) {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'); //eslint-disable-line
+}
+
+function trim(text) {
+    const regStart = /^[ \t\n]*/;
+    const regEnd = /[ \t\n]*$/;
+    let rS = regStart.exec(text);
+    let rE = regEnd.exec(text);
+    let start = 0,
+        end = text.length;
+    if (rS) {
+        start = rS[0].length;
+    }
+    if (rE) {
+        end = rE.index;
+    }
+    if (rS && rE) {
+        return {
+            start: start,
+            end: end
+        };
+    }
+
+    return null;
+}
+
+function getLine(text, startIndex, endIndex) {
+    const linebreakRe = /\n/;
+    var newStartIndex = 0,
+        newEndIndex = 0;
+    var searchIndex = startIndex - 1;
+    while (true) {
+        if (searchIndex < 0) {
+            newStartIndex = searchIndex + 1;
+            break;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        if (linebreakRe.test(char)) {
+            newStartIndex = searchIndex + 1;
+            break;
+        } else {
+            searchIndex -= 1;
+        }
+    }
+    searchIndex = endIndex;
+    while (true) {
+        if (searchIndex > text.length - 1) {
+            newEndIndex = searchIndex;
+            break;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        if (linebreakRe.test(char)) {
+            newEndIndex = searchIndex;
+            break;
+        } else {
+            searchIndex += 1;
+        }
+    }
+    return { start: newStartIndex, end: newEndIndex };
+}
+
+function getResult(start, end, text, type) {
+    return {
+        end: end,
+        start: start,
+        selectionText: text.substring(start, end),
+        type: type
+    };
+}
+
+
+function isInsideTag(tag = '', text, startIndex, endIndex) {
+    if (!tag) {
+        return false;
+    }
+
+    //var tagRegex = /(<script\b[^>]*>)([\s\S]*?)(<\/script\b[^>]*>)/g;
+    let regexString = '(<' + tag + '\\b[^>]*>)([\\s\\S]*?)(<\/' + tag + '\\b[^>]*>)';
+    let tagRegex = new RegExp(regexString, 'gi');
+
+    var r;
+    while ((r = tagRegex.exec(text)) !== null) {
+        if (r.length < 4 || r[2].trim() === '') {
+            continue;
+        }
+
+        let tagStart = r.index + r[1].length;
+        let tagEnd = tagRegex.lastIndex - r[3].length;
+
+        //quotes pair end is before selection, stop here and continue loop
+        if (tagEnd < startIndex) {
+            continue;
+        }
+
+        // quotes pair start is after selection, return, no need to continue loop
+        if (tagStart > startIndex) {
+            return null;
+        }
+
+        if (startIndex == tagStart && endIndex == tagEnd) {
+            return null;
+        }
+
+        if (startIndex > tagStart && endIndex < tagEnd) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+function hasLineBreaks(text, startIndex, endIndex) {
+    let linebreakRe = /\n/;
+    let part = text.substring(startIndex, endIndex);
+    return linebreakRe.test(part);
+}
+
+
+function getIndent(text, line) {
+    let indentReg = /^(\s*)/;
+    let line_str = text.substring(line.start, line.end);
+    let m = line_str.match(indentReg);
+    if (m) {
+        return m[0].length;
+    }
+    return 0;
+}
+
+function expandToRegexSet(text, startIndex, endIndex, regex, type) {
+    //add modifier
+    const globalRegex = new RegExp(regex.source, 'g');
+    //if{there is a selection (and not only a blinking cursor)
+    if (startIndex != endIndex) {
+        let selection = text.substring(startIndex, endIndex);
+        // make sure, that every character of the selection meets the regex rules,
+        // if not return here
+        if ((selection.match(globalRegex) || []).length != selection.length) {
+            return null;
+        }
+    }
+    // look back
+    let searchIndex = startIndex - 1;
+    var newStartIndex = 0,
+        newEndIndex = 0;
+    while (true) {
+        // begin of text is reached
+        if (searchIndex < 0) {
+            newStartIndex = searchIndex + 1;
+            break;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        // character found, that does not fit into the search set
+        if (!regex.test(char)) {
+            newStartIndex = searchIndex + 1;
+            break;
+        } else {
+            searchIndex -= 1;
+        }
+    }
+    // look forward
+    searchIndex = endIndex;
+    while (true) {
+        // end of text reached
+        if (searchIndex > text.length - 1) {
+            newEndIndex = searchIndex;
+            break;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        // character found, that does not fit into the search set
+        if (!regex.test(char)) {
+            newEndIndex = searchIndex;
+            break;
+        } else {
+            searchIndex += 1;
+        }
+    }
+
+    if (startIndex == newStartIndex && endIndex == newEndIndex) {
+        return null;
+    }
+
+    return getResult(newStartIndex, newEndIndex, text, type);
+}
+
+function expandToQuotes(text, startIndex, endIndex) {
+    var quotesRegex = /(['\"\`])(?:\\.|.)*?\1/g;
+    var r;
+    // iterate over all found quotes pairs
+    while ((r = quotesRegex.exec(text)) !== null) {
+        let quotesStart = r.index;
+        let quotesEnd = quotesRegex.lastIndex;
+        //quotes pair end is before selection, stop here and continue loop
+        if (quotesEnd < startIndex) {
+            continue;
+        }
+
+        // quotes pair start is after selection, return, no need to continue loop
+        if (quotesStart > startIndex) {
+            return null;
+        }
+
+        if (startIndex == quotesStart && endIndex == quotesEnd) {
+            return null;
+        }
+
+        // the string w/o the quotes, "quotes content"
+        let quotesContentStart = quotesStart + 1;
+        let quotesContentEnd = quotesEnd - 1;
+        // "quotes content" is selected, return with quotes
+        if (startIndex == quotesContentStart && endIndex == quotesContentEnd) {
+            return getResult(quotesStart, quotesEnd, text, 'quotes');
+        }
+
+        //# selection is within the found quote pairs, return "quotes content"
+        if (startIndex > quotesStart && endIndex < quotesEnd) {
+            return getResult(quotesContentStart, quotesContentEnd, text, 'quotes');
+        }
+    }
+
+    return null;
+}
+
+function expandToXMLNode(text, start, end) {
+    let tagProperties = getTagProperties(text.substring(start, end));
+    //if we are selecting a tag, then select the matching tag
+
+    let tagName;
+    if (tagProperties) {
+        tagName = tagProperties['name'];
+        if (tagProperties['type'] == 'closing') {
+            let stringStartToTagStart = text.substring(0, start);
+
+            let openingTagPosition = findTag(stringStartToTagStart, 'backward', tagName);
+            if (openingTagPosition) {
+                return getResult(openingTagPosition['start'], end, text, 'complete_node');
+            }
+        }
+        //if it's a opening tag, find opening tag and return positions
+        else if (tagProperties['type'] == 'opening') {
+            // check this tag already have closing tag inside
+            if (!isTextCloseTag(text.substring(start, end), tagName)) {
+                let stringNodeEndToStringEnd = text.substring(end, text.length);
+                let closingTagPosition = findTag(stringNodeEndToStringEnd, 'forward', tagName);
+                if (closingTagPosition) {
+                    return getResult(start, end + closingTagPosition['end'], text, 'complete_node');
+                }
+            }
+        } //else it's self closing and there is no matching tag
+    }
+
+    //check if current selection is within a tag, if it is expand to the tag
+    //first expand to inside the tag and then to the whole tag
+    let isWithinTagResult = isWithinTag(text, start, end);
+    if (isWithinTagResult) {
+        let inner_start = isWithinTagResult['start'] + 1;
+        let inner_end = isWithinTagResult['end'] - 1;
+
+        if (start == inner_start && end == inner_end) {
+            return getResult(isWithinTagResult['start'], isWithinTagResult['end'], text, 'complete_node');
+        } else {
+            return getResult(inner_start, inner_end, text, 'inner_node');
+        }
+    }
+
+    //expand selection to the "parent" node of the current selection
+    let stringStartToSelectionStart = text.substring(0, start);
+    let parent_opening_tag = findTag(stringStartToSelectionStart, 'backward');
+    let newStart = 0,
+        newEnd = 0;
+
+
+    if (parent_opening_tag) {
+        //find closing tag
+        let stringNodeEndToStringEnd = text.substring(parent_opening_tag['end'], text.length);
+        //console.log('stringNodeEndToStringEnd', stringNodeEndToStringEnd);
+        let closingTagPosition = findTag(stringNodeEndToStringEnd, 'forward', parent_opening_tag['name']);
+        if (closingTagPosition) {
+            //set positions to content of node, w / o the node tags
+            newStart = parent_opening_tag['end'];
+            newEnd = parent_opening_tag['end'] + closingTagPosition['start'];
+        }
+
+        //if this is the current selection, set positions to content of node including start and end tags
+        if (newStart == start && newEnd == end) {
+            newStart = parent_opening_tag['start'];
+            newEnd = parent_opening_tag['end'] + closingTagPosition['end'];
+        }
+
+        return getResult(newStart, newEnd, text, 'parent_node_content');
+    }
+
+    return null;
+}
+
+function isWithinTag(text, startIndex, endIndex) {
+    let openingRe = /</;
+    let closingRe = />/;
+
+    //// look back
+    let searchIndex = startIndex - 1;
+    let newStartIndex = 0;
+    while (true) {
+        ////begin of text is reached, let's return here
+        if (searchIndex < 0) {
+            return false;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        //# tag start found!
+        if (openingRe.test(char)) {
+            newStartIndex = searchIndex;
+            break;
+        }
+        //# closing tag found, let's return here
+        if (closingRe.test(char)) {
+            return false;
+        }
+        searchIndex -= 1;
+    }
+    //# look forward
+    searchIndex = endIndex;
+    while (true) {
+        //# end of text is reached, let's return here
+        if (searchIndex > text.length - 1) {
+            return false;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        //# tag start found!
+        if (closingRe.test(char)) {
+            return { start: newStartIndex, end: searchIndex + 1 };
+        }
+        //# closing tag found, let's return here
+        if (openingRe.test(char)) {
+            return false;
+        }
+        searchIndex += 1;
+    }
+}
+
+
+
+function getTagProperties(text) {
+    text = text.replace(/\s\s+/g, ' ').trim();
+
+    var regex = /<\s*(\/?)\s*([^\s\/]*)\s*(?:.*?)(\/?)\s*>/;
+    var tagName, tag_type;
+    let void_elements = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+
+    var result = regex.exec(text);
+    if (!result) {
+        return null;
+    }
+
+    tagName = result[2];
+    if (result[1]) {
+        tag_type = 'closing';
+    } else if (result[3]) {
+        tag_type = 'self_closing';
+    } else if (void_elements.indexOf(tagName) !== -1) {
+        tag_type = 'self_closing';
+    } else {
+        tag_type = 'opening';
+    }
+
+    return { name: tagName, type: tag_type };
+}
+
+function findTag(text, direction, tagName = '') {
+    // search for opening and closing tag with a tagName.If tagName = "", search
+    // for all tags.
+    //let regexString = '<s*' + tagName + '.*?>|</s*' + tagName + 's*>';
+    let regexString = '<s*[\\s\\S]+?>|<\/s*s*>';
+
+    if (tagName) {
+        regexString = '<s*' + tagName + '[\\s\\S]+?>|</s*' + tagName + 's*>';
+    }
+
+    let regex = new RegExp(regexString, 'g');
+    // direction == "forward" implies that we are looking for closing tags (and
+    // vice versa
+    let targetTagType = direction == 'forward' ? 'closing' : 'opening';
+    // set counterpart
+    let targetTagTypeCounterpart = direction == 'forward' ? 'opening' : 'closing';
+
+    // found tags will be added/ removed from the stack to eliminate complete nodes
+    // (opening tag + closing tag).
+    let symbolStack = [];
+    // since regex can't run backwards, we reverse the result
+    var tArr = [];
+    var r;
+    while ((r = regex.exec(text)) !== null) {
+        let tagName = r[0];
+        let start = r.index;
+        let end = regex.lastIndex;
+        tArr.push({
+            name: tagName,
+            start: start,
+            end: end
+        });
+    }
+
+    if (direction == 'backward') {
+        tArr.reverse();
+    }
+
+    //console.log('reverse', JSON.stringify(tArr, null, ' '));
+
+    var result = null;
+    tArr.forEach((value) => {
+        let tag_string = value.name;
+        // ignore comments
+        if (result) {
+            return;
+        }
+
+        if (tag_string.includes('<!--') || tag_string.includes('<![')) {
+            return;
+        }
+
+        let tag_type = getTagProperties(tag_string)['type'];
+
+        if (tag_type == targetTagType) {
+            if (symbolStack.length === 0) {
+                result = {
+                    start: value.start,
+                    end: value.end,
+                    name: getTagProperties(tag_string)['name']
+                };
+                return;
+            }
+
+            symbolStack.pop();
+        } else if (tag_type == targetTagTypeCounterpart) {
+            symbolStack.push(tag_type);
+        }
+    });
+
+    return result;
+}
+
+
+
+
+// check is text string have xml node closing ex:<div>aaa</div>
+function isTextCloseTag(text, tagName = '') {
+    // search for opening and closing tag with a tagName.If tagName = "", search
+    // for all tags.
+    let regexString = '<s*' + tagName + '.*?>|</s*' + tagName + 's*>';
+    let regex = new RegExp(regexString, 'g');
+    // direction == "forward" implies that we are looking for closing tags (and
+    // vice versa
+    let targetTagType = 'closing';
+    // set counterpart
+    let targetTagTypeCounterpart = 'opening';
+    // found tags will be added/ removed from the stack to eliminate complete nodes
+    // (opening tag + closing tag).
+    let symbolStack = [];
+    // since regex can't run backwards, we reverse the result
+    var tArr = [];
+    var r;
+    while ((r = regex.exec(text)) !== null) {
+        let tagName = r[0];
+        let start = r.index;
+        let end = regex.lastIndex;
+        tArr.push({ name: tagName, start: start, end: end });
+    }
+    tArr.forEach((value) => {
+        let tag_string = value.name;
+        if (tag_string.indexOf('<!--') === 0 || tag_string.indexOf('<![') === 0) {
+            return;
+        }
+        let tag_type = getTagProperties(tag_string)['type'];
+        if (tag_type == targetTagType) {
+            symbolStack.pop();
+        } else if (tag_type == targetTagTypeCounterpart) {
+            symbolStack.push(tag_type);
+        }
+    });
+
+    return symbolStack.length == 0;
+}
+
+function expandToWord(text, startIndex, endIndex) {
+    const regex = /[\u00BF-\u1FFF\u2C00-\uD7FF\w$]/;
+    return expandToRegexSet(text, startIndex, endIndex, regex, 'word');
+}
+
+function expandToSemanticUnit(text, startIndex, endIndex) {
+    const symbols = '([{)]}';
+    const breakSymbols = ':|,;=&|\n\r';
+    const lookBackBreakSymbols = breakSymbols + '([{';
+    const lookForwardBreakSymbols = breakSymbols + ')]}';
+    const symbolsRe = new RegExp(`[${escapeRegExp(symbols)}${escapeRegExp(breakSymbols)}]`);
+    const counterparts = {
+        '(': ')',
+        '{': '}',
+        '[': ']',
+        ')': '(',
+        '}': '{',
+        ']': '['
+    };
+    let symbolStack = [];
+
+    let searchIndex = startIndex - 1;
+    let newStartIndex, newEndIndex;
+    while (true) {
+        if (searchIndex < 0) {
+            newStartIndex = searchIndex + 1;
+            break;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        let result = symbolsRe.exec(char);
+        if (result) {
+            let symbol = result[0];
+            if (lookBackBreakSymbols.indexOf(symbol) != -1 && symbolStack.length == 0) {
+                newStartIndex = searchIndex + 1;
+                break;
+            }
+            if (symbols.indexOf(symbol) != -1) {
+                if (symbolStack.length > 0 && symbolStack[symbolStack.length - 1] == counterparts[symbol]) {
+                    symbolStack.pop();
+                } else {
+                    symbolStack.push(symbol);
+                }
+            }
+        }
+        searchIndex -= 1;
+    }
+
+    searchIndex = endIndex;
+
+    while (true) {
+        let char = text.substring(searchIndex, searchIndex + 1);
+        let result = symbolsRe.exec(char);
+        if (result) {
+            let symbol = result[0];
+            if (symbolStack.length == 0 && lookForwardBreakSymbols.indexOf(symbol) != -1) {
+                newEndIndex = searchIndex;
+                break;
+            }
+            if (symbols.indexOf(symbol) != -1) {
+                if (symbolStack.length > 0 && symbolStack[symbolStack.length - 1] == counterparts[symbol]) {
+                    symbolStack.pop();
+                } else {
+                    symbolStack.push(symbol);
+                }
+            }
+        }
+        if (searchIndex >= text.length - 1) {
+            return null;
+        }
+        searchIndex += 1;
+    }
+    let s = text.substring(newStartIndex, newEndIndex);
+    let trimResult = trim(s);
+
+    if (trimResult) {
+        newStartIndex = newStartIndex + trimResult.start;
+        newEndIndex = newEndIndex - (s.length - trimResult.end);
+    }
+    if (newStartIndex == startIndex && newEndIndex == endIndex) {
+        return null;
+    }
+    if (newStartIndex > startIndex || newEndIndex < endIndex) {
+        return null;
+    }
+
+    // Handle arrow funtions =>
+    if (s.charAt(0) == '>') {
+        if (text.substring(newStartIndex - 1, newStartIndex) == '=') {
+            newStartIndex = newStartIndex - 1;
+        }
+    }
+
+    return getResult(newStartIndex, newEndIndex, text, 'semantic_unit');
+}
+
+function expandToSymbols(text, startIndex, endIndex) {
+    const openingSymbols = '([{';
+    const closingSymbols = ')]}';
+    const symbolsRegex = /[\(\[\{\)\]\}]/;
+    const symbolsRegexGlobal = /[\(\[\{\)\]\}]/g;
+    const quotesRegex = /(['\"])(?:\\.|.)*?\1/g;
+    let quotesBlacklist = {};
+    //   # get all quoted strings and create dict with key of index = True
+    //   # Example: f+"oob"+bar
+    //   # quotesBlacklist = {
+    //   #   2: true, 3: true, 4: true, 5: true, 6: true
+    //   # }
+    var r;
+    while ((r = quotesRegex.exec(text)) != null) {
+        let quotes_start = r.index;
+        let quotes_end = quotesRegex.lastIndex;
+        let i = 0;
+        while (i < text.length) {
+            quotesBlacklist[quotes_start + i] = true;
+            i += 1;
+            if (quotes_start + i == quotes_end) {
+                break;
+            }
+        }
+    }
+    const counterparts = {
+        '(': ')',
+        '{': '}',
+        '[': ']',
+        ')': '(',
+        '}': '{',
+        ']': '['
+    };
+    //# find symbols in selection that are "not closed"
+    let selectionString = text.substring(startIndex, endIndex);
+    let selectionQuotes = selectionString.match(symbolsRegexGlobal) || [];
+    let backwardSymbolsStack = [];
+    let forwardSymbolsStack = [];
+
+    if (selectionQuotes.length != 0) {
+        let inspect_index = 0;
+        // # remove symbols that have a counterpart, i.e. that are "closed"
+        while (true) {
+            let item = selectionQuotes[inspect_index];
+            if (item && selectionQuotes.indexOf(counterparts[item]) != -1) {
+                selectionQuotes.splice(inspect_index, 1);
+                selectionQuotes.splice(selectionQuotes.indexOf(counterparts[item]), 1);
+            } else {
+                inspect_index = inspect_index + 1;
+                if (inspect_index >= selectionQuotes.length) {
+                    break;
+                }
+            }
+        }
+        //# put the remaining "open" symbols in the stack lists depending if they are
+        ///# opening or closing symbols
+        selectionQuotes.forEach((item) => {
+            if (openingSymbols.indexOf(item) !== -1) {
+                forwardSymbolsStack.push(item);
+            } else if (closingSymbols.indexOf(item) !== -1) {
+                backwardSymbolsStack.push(item);
+            }
+        });
+    }
+    let search_index = startIndex - 1;
+    let symbolsStart = 0,
+        symbolsEnd = 0;
+    var symbol;
+    //# look back from begin of selection
+    while (true) {
+        //# begin of string reached
+        if (search_index < 0) {
+            return null;
+        }
+        //# skip if current index is within a quote
+        if (quotesBlacklist[search_index]) {
+            search_index -= 1;
+            continue;
+        }
+
+        let char = text.substring(search_index, search_index + 1);
+
+        let r = symbolsRegex.exec(char);
+        if (r) {
+            symbol = r[0];
+            if (openingSymbols.indexOf(symbol) !== -1 && backwardSymbolsStack.length == 0) {
+                symbolsStart = search_index + 1;
+                break;
+            }
+            if (backwardSymbolsStack.length > 0 && backwardSymbolsStack[backwardSymbolsStack.length - 1] === counterparts[symbol]) {
+                //# last symbol in the stack is the counterpart of the found one
+                backwardSymbolsStack.pop();
+            } else {
+                backwardSymbolsStack.push(symbol);
+            }
+        }
+        search_index -= 1;
+    }
+    let symbol_pair_regex = new RegExp(`[${escapeRegExp(symbol + counterparts[symbol])}]`);
+    forwardSymbolsStack.push(symbol);
+    search_index = endIndex;
+    //# look forward from end of selection
+    while (true) {
+        //# skip if current index is within a quote
+        if (quotesBlacklist[search_index]) {
+            search_index += 1;
+            continue;
+        }
+        let character = text.substring(search_index, search_index + 1);
+        let result = symbol_pair_regex.exec(character);
+        if (result) {
+            symbol = result[0];
+            if (forwardSymbolsStack[forwardSymbolsStack.length - 1] == counterparts[symbol]) {
+                //# counterpart of found symbol is the last one in stack, remove it
+                forwardSymbolsStack.pop();
+            } else {
+                forwardSymbolsStack.push(symbol);
+            }
+
+            if (forwardSymbolsStack.length == 0) {
+                symbolsEnd = search_index;
+                break;
+            }
+        }
+        //# end of string reached
+        if (search_index == text.length) {
+            return;
+        }
+        search_index += 1;
+    }
+
+
+    if (startIndex == symbolsStart && endIndex == symbolsEnd) {
+        return getResult(symbolsStart - 1, symbolsEnd + 1, text, 'symbol');
+    } else {
+
+        // Handle expansion inside objects properties
+        // {
+        //    example: {
+        //       anotherelm: true
+        //    }
+        // }
+        let line = getLine(text, startIndex, endIndex);
+        let lineText = text.substring(line.start, line.end);
+        let firstLine = lineText.split('\n');
+        let currentSelectedFirstLine = selectionString.split('\n');
+        if (currentSelectedFirstLine.length) {
+            currentSelectedFirstLine = currentSelectedFirstLine[0].trim();
+        }
+        if (firstLine.length) {
+            firstLine = firstLine[0].trim();
+            if (/^\w+:.*{$/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
+                return null;
+            }
+        }
+
+        return getResult(symbolsStart, symbolsEnd, text, 'symbol');
+    }
+}
+
+function expandToLine(text, startIndex, endIndex) {
+    const lineReg = /\n/;
+    const spacesAndTabsRe = /(\s|\t)*/;
+    var newStartIndex = 0,
+        newEndIndex = 0;
+
+    let searchIndex = startIndex - 1;
+    while (true) {
+        if (searchIndex < 0) {
+            newStartIndex = searchIndex + 1;
+            break;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        if (lineReg.test(char)) {
+            newStartIndex = searchIndex + 1;
+            break;
+        } else {
+            searchIndex -= 1;
+        }
+    }
+
+    searchIndex = endIndex;
+
+    while (true) {
+        if (searchIndex > text.length - 1) {
+            newEndIndex = searchIndex;
+            break;
+        }
+        let char = text.substring(searchIndex, searchIndex + 1);
+        if (lineReg.test(char)) {
+            newEndIndex = searchIndex;
+            break;
+        } else {
+            searchIndex += 1;
+        }
+    }
+
+    //remove blank space in top
+    var s = text.substring(newStartIndex, newEndIndex);
+    var r = spacesAndTabsRe.exec(s);
+    if (r && r[0].length <= startIndex) {
+        newStartIndex += r[0].length;
+    }
+
+    // Stop at line end delimiter
+    const lineEndingChars = [';', ','];
+    const lastChar = text.substring(newEndIndex - 1, newEndIndex);
+
+    if (lineEndingChars.includes(lastChar)) {
+        if (startIndex == newStartIndex && endIndex < newEndIndex - 1) {
+            newEndIndex = newEndIndex - 1;
+        } else if (newStartIndex < startIndex && endIndex + 1 == newEndIndex) {
+            newEndIndex = newEndIndex - 1;
+        }
+    }
+
+    if (startIndex == newStartIndex && endIndex == newEndIndex) {
+        return null;
+    }
+
+    return getResult(newStartIndex, newEndIndex, text, 'line');
+}
+
+function expandToBackticks(text, startIndex, endIndex) {
+    var quotesRegex = /([\`])(?:[\w\s\S])*?\1/g;
+    var r;
+
+    // iterate over all found backticks pairs
+    while ((r = quotesRegex.exec(text)) !== null) {
+        let quotesStart = r.index;
+        let quotesEnd = quotesRegex.lastIndex;
+        //quotes pair end is before selection, stop here and continue loop
+        if (quotesEnd < startIndex) {
+            continue;
+        }
+
+        // quotes pair start is after selection, return, no need to continue loop
+        if (quotesStart > startIndex) {
+            return null;
+        }
+
+        if (startIndex == quotesStart && endIndex == quotesEnd) {
+            return null;
+        }
+
+        // the string w/o the quotes, "quotes content"
+        let quotesContentStart = quotesStart + 1;
+        let quotesContentEnd = quotesEnd - 1;
+
+        // "quotes content" is selected, return with quotes
+        if (startIndex == quotesContentStart && endIndex == quotesContentEnd) {
+            return getResult(quotesStart, quotesEnd, text, 'backticks');
+        }
+
+        //# selection is within the found quote pairs, return "quotes content"
+        if (startIndex > quotesStart && endIndex < quotesEnd) {
+            return getResult(quotesContentStart, quotesContentEnd, text, 'backticks');
+        }
+    }
+
+    return null;
+}
+
+class JavascriptExpander {
+
+    constructor(editor) {
+        this.editor = editor;
+    }
+
+    expand(text, start, end, data = {}) {
+        let selectionInString = expandToQuotes(text, start, end);
+        if (selectionInString) {
+            let stringResult = this.expandAgainsString(selectionInString.selectionText, start - selectionInString.end, end - selectionInString.end);
+
+            if (stringResult) {
+                stringResult.end = stringResult.end + selectionInString.end;
+                stringResult.start = stringResult.start + selectionInString.end;
+                stringResult.selectionText = text.substring(stringResult.end, stringResult.start);
+
+                return stringResult;
+            }
+        }
+
+        if (!hasLineBreaks(text, start, end)) {
+            //let line = getLine(text, start, end);
+            //let lineString = text.substring(line.start, line.end);
+            let line = data.lineRange;
+            let lineString = this.editor.getTextInRange(new Range(line.start, line.end));
+            let lineResult = this.expandAgainsLine(lineString, start - line.start, end - line.start, data);
+
+            if (lineResult) {
+                lineResult.end = lineResult.end + line.start;
+                lineResult.start = lineResult.start + line.start;
+                lineResult.selectionText = this.editor.getTextInRange(new Range(lineResult.start, lineResult.end));
+                return lineResult;
+            }
+        }
+
+        let expandStack = [];
+        let result = null;
+
+        result = expandToSemanticUnit(text, start, end);
+        if (result) {
+            expandStack.push('semantic_unit');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToBackticks(text, start, end);
+        if (result) {
+            expandStack.push('backticks');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToSymbols(text, start, end);
+        if (result) {
+            expandStack.push('symbols');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToLine(text, start, end);
+        if (result) {
+            expandStack.push('line');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        // TODO: JS expand above will fails if there are comments
+
+        return null;
+    }
+
+    expandAgainsLine(text, start, end, data) {
+        let expandStack = [];
+        let result = null;
+
+        /*let result = expandToSubword(text, start, end);
+        if (result) {
+            expandStack.push('subword');
+            result['expandStack'] = expandStack;
+            return result;
+        }*/
+
+        result = expandToWord(text, start, end);
+        if (result) {
+            expandStack.push('word');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToQuotes(text, start, end);
+        if (result) {
+            expandStack.push('quotes');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToBackticks(text, start, end);
+        if (result) {
+            expandStack.push('backticks');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToSemanticUnit(text, start, end);
+        if (result) {
+            expandStack.push('semantic_unit');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToSymbols(text, start, end);
+        if (result) {
+            expandStack.push('symbols');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToLine(text, start, end);
+        if (result) {
+            expandStack.push('line');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        return null;
+    }
+
+    expandAgainsString(text, start, end) {
+        let expandStack = [];
+        let result = expandToSemanticUnit(text, start, end);
+        if (result) {
+            expandStack.push('semantic_unit');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+        result = expandToSymbols(text, start, end);
+        if (result) {
+            expandStack.push('symbols');
+            result['expandStack'] = expandStack;
+        }
+
+        return result;
+    }
+}
+
+class HTMLExpander {
+    constructor(editor) {
+        this.editor = editor;
+    }
+
+    expand(text, start, end, data = {}) {
+        let expandStack = [];
+        let result = null;
+
+        // Check if inside a script tag
+        if (isInsideTag('script', text, start, end)) {
+            const jsExpander = new JavascriptExpander(this.editor);
+            const expand = jsExpander.expand(text, start, end, data);
+            if (expand) {
+                return expand;
+            }
+        }
+
+        // Check if inside a style tag
+        if (isInsideTag('style', text, start, end)) {
+            const jsExpander = new JavascriptExpander(this.editor);
+            const expand = jsExpander.expand(text, start, end, data);
+            if (expand) {
+                return expand;
+            }
+        }
+
+        /*let result = expandToSubword(text, start, end);
+        if (result) {
+            expandStack.push('subword');
+            result['expandStack'] = expandStack;
+            return result;
+        }*/
+
+        result = expandToWord(text, start, end);
+        if (result) {
+            expandStack.push('word');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToQuotes(text, start, end);
+        if (result) {
+            expandStack.push('quotes');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        expandStack.push('xml_node');
+        result = expandToXMLNode(text, start, end);
+
+        if (result) {
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        return null;
+    }
+}
+
+const indentReg = /^(\s*)/;
+
+function empty_line(text, line) {
+    return text.substring(line.start, line.end).trim() === '';
+}
+
+function getIndent$1(text, line) {
+    let line_str = text.substring(line.start, line.end);
+    let m = line_str.match(indentReg);
+    if (m) {
+        return m[0].length;
+    }
+    return 0;
+}
+
+function expandToIndent(text, startIndex, endIndex) {
+    let line = getLine(text, startIndex, endIndex);
+    let indent = getIndent$1(text, line);
+    let start = line.start;
+    let end = line.end;
+    let before_line = line;
+    while (true) {
+        let pos = before_line.start - 1;
+        if (pos <= 0) {
+            break;
+        }
+
+        before_line = getLine(text, pos, pos);
+        let before_indent = getIndent$1(text, before_line);
+        //done if the line has a lower indent
+        if (!(indent <= before_indent) && !empty_line(text, before_line)) {
+            break;
+        }
+        if (!empty_line(text, before_line) && indent == before_indent) {
+            start = before_line.start;
+        }
+    }
+    let after_line = line;
+    while (true) {
+        //get the line after_line
+        let pos = after_line.end + 1;
+        if (pos >= text.length) {
+            break;
+        }
+        after_line = getLine(text, pos, pos);
+        let after_indent = getIndent$1(text, after_line);
+        //done if the line has a lower indent
+        if (!(indent <= after_indent) && !empty_line(text, after_line)) {
+            break;
+        }
+        //move the end
+        if (!empty_line(text, after_line)) {
+            end = after_line.end;
+        }
+    }
+
+    return getResult(start, end, text, 'indent');
+}
+
+class PythonExpander {
+    constructor(editor) {
+        this.editor = editor;
+    }
+
+    expand(text, start, end, data = {}) {
+        let expandStack = [];
+        let result = null;
+
+        const jsExpander = new JavascriptExpander(this.editor);
+        const expand = jsExpander.expand(text, start, end, data);
+
+        if (expand) {
+            return expand;
+        }
+
+        result = this.expandLineWithoutIndent(text, start, end);
+        if (result) {
+            console.log('line_no_indent');
+            expandStack.push('line_no_indent');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = this.expandOverLineContinuation(text, start, end);
+        if (result) {
+            console.log('line_continuation');
+            expandStack.push('line_continuation');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = this.expandPythonBlockFromStart(text, start, end);
+        if (result) {
+            console.log('py_block_start');
+            expandStack.push('py_block_start');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+
+        result = this.pyExpandToIndent(text, start, end);
+        if (result) {
+            console.log('py_indent');
+            console.log(JSON.stringify(result, null, ' '));
+
+
+            expandStack.push('py_indent');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        if (result) {
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        return null;
+    }
+
+
+    expandLineWithoutIndent(text, start, end) {
+        const line = getLine(text, start, end);
+        //const line = this.editor.getLineRangeForRange(new Range(start, end));
+        const indent = getIndent$1(text, line);
+        let lstart = Math.min(start, line.start + indent);
+        let lend = Math.max(end, line.end);
+
+        if (lstart !== start || lend !== end) {
+            return getResult(lstart, lend, text, 'line_no_indent');
+        }
+
+        return null;
+    }
+
+    expandOverLineContinuation(text, start, end) {
+        if (text.substring(end - 1, end) !== '\\') {
+            return null;
+        }
+
+        const line = this.editor.getLineRangeForRange(new Range(start, end));
+        const nextLine = this.editor.getLineRangeForRange(new Range(start + 1, end + 1));
+
+        start = line.start;
+        end = nextLine.end;
+
+        const nextResult = this.expandOverLineContinuation(text, start, end);
+        if (nextResult) {
+            start = nextResult.start;
+            end = nextResult.end;
+        }
+
+        return getResult(start, end, text, 'line_continuation');
+    }
+
+    expandPythonBlockFromStart(text, start, end) {
+        if (text.substring(end - 1, end) !== ':') {
+            return null;
+        }
+
+        const result = expandToIndent(text, end + 1, end + 1);
+        if (result) {
+            const line = this.editor.getLineRangeForRange(new Range(start, end));
+            const indent = getIndent$1(text, line);
+
+            start = line.start + indent;
+            end = result.end;
+            return getResult(start, end, text, 'py_block_start');
+        }
+
+        return null;
+    }
+
+
+
+    pyExpandToIndent(text, start, end) {
+        //const line = this.editor.getLineRangeForRange(new Range(start, end));
+        const line = getLine(text, start, end);
+        const indent = getIndent$1(text, line);
+
+        // we don't expand to indent 0 (whole document)
+        if (indent == 0) {
+            return null;
+        }
+
+        // expand to indent
+        let result = expandToIndent(text, start + indent, end);
+        if (!result) {
+            console.log(2);
+            return null;
+        }
+
+        let pos = result.start + indent - 1;
+
+        while (true) {
+            if (pos < 0) {
+                break;
+            }
+
+            // get the indent of the line before
+            let before_line = getLine(text, pos, pos);
+            let before_indent = getIndent$1(text, before_line);
+
+            if (!empty_line(text, before_line) && before_indent < indent) {
+                start = before_line.start;
+                end = result.end;
+                return getResult(start + before_indent, end, text, 'py_indent');
+            }
+
+            // goto the line before the line befor
+            pos = before_line.start - 1;
+        }
+
+        return null;
+    }
+}
+
+class PHPExpander {
+    constructor(editor) {
+        this.editor = editor;
+    }
+
+
+    expand(text, start, end, data = {}) {
+        let expandStack = [];
+        let result = null;
+
+
+        // Check if inside a script tag
+        if (isInsideTag('script', text, start, end)) {
+            const jsExpander = new JavascriptExpander(this.editor);
+            const expand = jsExpander.expand(text, start, end, data);
+            if (expand) {
+                return expand;
+            }
+        }
+
+        // Check if inside a style tag
+        if (isInsideTag('style', text, start, end)) {
+            const jsExpander = new JavascriptExpander(this.editor);
+            const expand = jsExpander.expand(text, start, end, data);
+            if (expand) {
+                return expand;
+            }
+        }
+
+
+        let selectionInString = expandToQuotes(text, start, end);
+        if (selectionInString) {
+            let stringResult = this.expandAgainsString(selectionInString.selectionText, start - selectionInString.end, end - selectionInString.end);
+
+            if (stringResult) {
+                stringResult.end = stringResult.end + selectionInString.end;
+                stringResult.start = stringResult.start + selectionInString.end;
+                stringResult.selectionText = text.substring(stringResult.end, stringResult.start);
+
+                return stringResult;
+            }
+        }
+
+
+        if (!hasLineBreaks(text, start, end)) {
+            //let line = getLine(text, start, end);
+            //let lineString = text.substring(line.start, line.end);
+            let line = data.lineRange;
+            let lineString = this.editor.getTextInRange(new Range(line.start, line.end));
+            let lineResult = this.expandAgainsLine(lineString, start - line.start, end - line.start, data);
+
+            if (lineResult) {
+                lineResult.end = lineResult.end + line.start;
+                lineResult.start = lineResult.start + line.start;
+                lineResult.selectionText = this.editor.getTextInRange(new Range(lineResult.start, lineResult.end));
+                return lineResult;
+            }
+        }
+
+        /*expandStack.push('subword');
+        let result = expandToSubword(text, start, end);
+        if (result) {
+            result['expandStack'] = expandStack;
+            return result;
+        }*/
+
+        result = expandToWord(text, start, end);
+        if (result) {
+            expandStack.push('word');
+            console.log('word');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToQuotes(text, start, end);
+        if (result) {
+            expandStack.push('quotes');
+            console.log('quotes');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToSemanticUnit(text, start, end);
+        if (result) {
+            expandStack.push('semantic_unit');
+            console.log('semantic_unit');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = this.expandToFunction(text, start, end);
+        if (result) {
+            expandStack.push('function');
+            console.log('function');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToSymbols(text, start, end);
+        if (result) {
+            expandStack.push('symbols');
+            console.log('symbols');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToXMLNode(text, start, end);
+        if (result) {
+            expandStack.push('xml_node');
+            console.log('xml_node');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToLine(text, start, end);
+        if (result) {
+            expandStack.push('line');
+            console.log('line');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        return null;
+    }
+
+
+
+    expandAgainsLine(text, start, end, data) {
+        let expandStack = [];
+        let result = null;
+
+        /*let result = expandToSubword(text, start, end);
+        if (result) {
+            expandStack.push('subword');
+            result['expandStack'] = expandStack;
+            return result;
+        }*/
+
+        result = expandToWord(text, start, end);
+        if (result) {
+            expandStack.push('word');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToQuotes(text, start, end);
+        if (result) {
+            expandStack.push('quotes');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToSemanticUnit(text, start, end);
+        if (result) {
+            expandStack.push('semantic_unit');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToSymbols(text, start, end);
+        if (result) {
+            expandStack.push('symbols');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        result = expandToLine(text, start, end);
+        if (result) {
+            expandStack.push('line');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+
+        return null;
+    }
+
+    expandAgainsString(text, start, end) {
+        let expandStack = [];
+        let result = expandToSemanticUnit(text, start, end);
+        if (result) {
+            expandStack.push('semantic_unit');
+            result['expandStack'] = expandStack;
+            return result;
+        }
+        result = expandToSymbols(text, start, end);
+        if (result) {
+            expandStack.push('symbols');
+            result['expandStack'] = expandStack;
+        }
+
+        return result;
+    }
+
+
+    expandToFunction(text, start, end) {
+        const currentSelection = text.substring(start, end);
+        if (currentSelection.trim().startsWith('{')) {
+
+            const line = this.editor.getLineRangeForRange(new Range(start, end));
+            const prevLine = this.editor.getLineRangeForRange(new Range(line.start - 2, line.start - 1));
+            const prevLineText = text.substring(prevLine.start, prevLine.end);
+
+            if (/^(?:\w+).+function.+\w+\(.*\)/.test(prevLineText.trim())) {
+                let indent = getIndent(text, prevLine);
+                return getResult(prevLine.start + indent, end, text, 'function');
+            }
+        }
+
+        return null;
+    }
+}
+
+class SelectionExpander {
+    expandHistory = new Map();
+
+    /**
+     * Return file extension
+     */
+    getExtension(editor) {
+        let filePath = editor.document.path;
+        let extension = nova.path.extname(filePath).substring(1);
+
+        if (filePath.endsWith('.blade.php')) {
+            extension = 'html';
+        } else if (extension == 'vue') {
+            extension = 'html';
+        }
+
+        return extension;
+    }
+
+    /**
+     * Expand
+     * expand the active selections
+     */
+    expand(editor) {
+        if (!editor) {
+            return;
+        }
+
+        let exp;
+        let path = editor.document.path;
+        let extension = this.getExtension(editor);
+        let text = editor.getTextInRange(new Range(0, editor.document.length));
+        let selectedRanges = editor.selectedRanges;
+
+        if (extension) {
+            switch (extension) {
+                case 'html':
+                    exp = new HTMLExpander(editor);
+                    break;
+                case 'php':
+                    exp = new PHPExpander(editor);
+                    break;
+                case 'py':
+                    exp = new PythonExpander(editor);
+                    break;
+                default:
+                    exp = new JavascriptExpander(editor);
+                    break;
+            }
+        }
+
+        const history = this.getHistory(path);
+
+        const newRanges = selectedRanges.map((range, index) => {
+            let start = range.start;
+            let end = range.end;
+            let lineRange = editor.getLineRangeForRange(new Range(start, end));
+
+            let additionalData = {
+                lineRange: {
+                    start: lineRange.start,
+                    end: lineRange.end - 1 >= lineRange.start ? lineRange.end - 1 : lineRange.end,
+                },
+                selectedText: editor.getTextInRange(new Range(start, end)),
+            };
+
+            let result = exp.expand(text, start, end, additionalData);
+
+            if (result) {
+                if (!history.steps[index]) {
+                    history.steps[index] = [];
+                }
+
+                if (this.allowHistoryStep(path, range)) {
+                    history.steps[index].push({
+                        start: range.start,
+                        end: range.end,
+                        resultStart: result.start,
+                        resultEnd: result.end,
+                        index: index
+                    });
+                    history.lastSelected = result;
+                }
+
+                start = result.start;
+                end = result.end;
+            }
+
+            if (start < end) {
+                editor.addSelectionForRange(new Range(start, end));
+                return new Range(start, end);
+            }
+        });
+
+        history.selectedRanges = selectedRanges;
+
+        if (newRanges.length) ;
+    }
+
+    /**
+     * Shink selection
+     * shrinks the active selection(s)
+     * using the ranges stored in expandHistory
+     */
+    shrink(editor) {
+        const path = editor.document.path;
+        const history = this.getHistory(path);
+
+        if (!history || !history.steps.length) {
+            return;
+        }
+
+        let newRanges = history.selectedRanges.map((range, index) => {
+            if (history.steps[index].length > 0) {
+                let historyPosition = history.steps[index].pop();
+                if (historyPosition && historyPosition.start && historyPosition.end) {
+                    return new Range(historyPosition.start, historyPosition.end);
+                }
+            }
+        });
+
+        newRanges = newRanges.filter(Boolean);
+
+        if (newRanges.length) {
+            editor.selectedRanges = newRanges;
+        }
+    }
+
+    /**
+     * Get steps history
+     *
+     * @param {string} path
+     */
+    getHistory(path) {
+        if (!this.expandHistory.has(path)) {
+            this.expandHistory.set(path, {
+                steps: [],
+                selectedRanges: [],
+                lastSelected: null
+            });
+        }
+
+        return this.expandHistory.get(path);
+    }
+
+    /**
+     * Get last step
+     *
+     * @param {string} path - current file path
+     */
+    getHistoryLastSetp(path) {
+        const history = this.getHistory(path);
+        if (!history.steps || !history.steps[history.steps.length - 1]) {
+            return false;
+        }
+
+        const steps = history.steps[history.steps.length - 1];
+        if (steps && steps.length) {
+            const lastStep = steps[steps.length - 1];
+            if (lastStep?.start && lastStep?.end) {
+                return lastStep;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if we can push
+     * the step into the history array
+     *
+     * @param {string} path
+     * @param {Range} range
+     */
+    allowHistoryStep(path, range) {
+        const lastStep = this.getHistoryLastSetp(path);
+        if (!lastStep) {
+            return true;
+        }
+
+        // Same as previous step, do not push otherwise undo
+        // will do the same step multiple times
+        if (lastStep.start === range.start && lastStep.end === range.end) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Maybe Reset History
+     * the editor will reset
+     * the selection history
+     * once the user clears the
+     * active selection
+     */
+    maybeResetHistory(editor) {
+        const path = editor.document.path;
+        const history = this.expandHistory.get(path);
+        const selected = editor.selectedRanges;
+
+        if (!history) {
+            return false;
+        }
+
+        // Selection cleared, reset history
+        if (history.lastSelected && selected[0].start == selected[0].end) {
+            this.resetHistory(editor);
+        }
+    }
+
+    /**
+     * Reset history
+     */
+    resetHistory(editor) {
+        const path = editor.document.path;
+
+        if (this.expandHistory.has(path)) {
+            this.expandHistory.set(path, {
+                steps: [],
+                selectedRanges: [],
+                lastSelected: null
+            });
+
+            if (nova.inDevMode()) {
+                console.log('reset selection data');
+            }
+        }
+    }
+}
+
 exports.activate = () => {
     const tools = new NovaTextTools();
 
@@ -2939,6 +4653,20 @@ exports.activate = () => {
 
     nova.commands.register('biati.texttools.generatedummyfile', () => {
         return tools.generateDummyFile();
+    });
+
+    // Selection Expand/Shrink
+    let expander = new SelectionExpander();
+    nova.commands.register('biati.texttools.expandselection', (editor) => {
+        expander.expand(editor);
+    });
+    nova.commands.register('biati.texttools.shrinkselection', (editor) => {
+        expander.shrink(editor);
+    });
+    nova.workspace.onDidAddTextEditor((editor) => {
+        return editor.onDidChangeSelection(() => {
+            expander.maybeResetHistory(editor);
+        });
     });
 };
 
