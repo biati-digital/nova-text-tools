@@ -1,3 +1,8 @@
+## Version 3.0.1
+
+- Improved: Python and Js Objects Expand selection
+- Updated: README
+
 ## Version 3.0.0
 
 - New: Selection Expand (Still in progress) (Tested with HTML, CSS, Less, Sass, Javascript, Python, PHP)

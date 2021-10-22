@@ -6,11 +6,14 @@
 **Swiss Army knife for text manipulation and selection**. This extension provides 65+ commands to manipulate and select text in your files. The commands are available globally and ready to be used any time with any file. **If you have text selected it will perform the actions in the current selections otherwise it will perform the action in the entire file.**
 
 ### What's New:
-There has been more than 15 new tools since the first release so make sure to always read the Changelog.
+We've added more than 15 new tools since the first release so make sure to always read the CHANGELOG.
 
-In version 3.0 we have added:
+New in version 3.0:
 
-- **Selection Expand/Shrink**, we would love if you can try it and let us know if you find errors. This is still a work in progress, currently it supports HTML, CSS, Less, Sass, Javascript, Vue, PHP and Python. You can use the shortcut `command+option+right` to expand and `command+option+left` to shrink.
+- **Selection Expand/Shrink**, we would love if you try it and let us know if you find errors. This is still a work in progress, currently it supports HTML, CSS, Less, Sass, Javascript, Vue, PHP and Python. You can use the shortcut `command+option+right` to expand and `command+option+left` to shrink.
+
+### What's Planned:
+- Selection Align.
 
 ### Text commands
 
@@ -76,8 +79,9 @@ In version 3.0 we have added:
 -  Select Lines Matching... (Selects lines that contains certain text or matches a regex)
 -  Select Words Matching... (Select all strings that contains certain text or matches a regex)
 -  Select All Ocurrences (grabs your currently selected text and will select all ocurrences in the file)
--  Select Expand (Expand the current selection `command+option+right`)
--  Select Shrink (Shrink the current selection `command+option+left`)
+-  Selection Expand (Expand the current selection `command+option+right`)
+-  Selection Shrink (Shrink the current selection `command+option+left`)
+-  Selection Align (Planned)
 
 To learn more please checkout the examples below.
 
