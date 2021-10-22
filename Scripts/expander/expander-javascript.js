@@ -46,6 +46,7 @@ export default class JavascriptExpander {
         let expandStack = [];
         let result = null;
 
+
         result = expandToSemanticUnit(text, start, end);
         if (result) {
             expandStack.push('semantic_unit');

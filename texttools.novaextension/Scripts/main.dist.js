@@ -3411,6 +3411,15 @@ function expandToSemanticUnit(text, startIndex, endIndex) {
 }
 
 function expandToSymbols(text, startIndex, endIndex) {
+    // Do not expand to next symbol if the selection the prev
+    // selection is followed by ; or , for example a closing bracket };
+    const breakSymbols = [';', ','];
+    const beforeBreak = ['}', ']', ')'];
+
+    if (breakSymbols.includes(text.substring(endIndex, endIndex + 1)) && beforeBreak.includes(text.substring(endIndex - 1, endIndex))) {
+        return null;
+    }
+
     const openingSymbols = '([{';
     const closingSymbols = ')]}';
     const symbolsRegex = /[\(\[\{\)\]\}]/;
@@ -3559,9 +3568,17 @@ function expandToSymbols(text, startIndex, endIndex) {
         if (currentSelectedFirstLine.length) {
             currentSelectedFirstLine = currentSelectedFirstLine[0].trim();
         }
+
         if (firstLine.length) {
             firstLine = firstLine[0].trim();
+
+            // Do not jump to parent symbol if there's an object property. myprop: {
             if (/^\w+:.*{$/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
+                return null;
+            }
+
+            // Do not jump to parent symbol if there's an variable definition. const myvar = {
+            if (/^\w+?[\s+]?\w+[\s+]?=[\s+]?{/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
                 return null;
             }
         }
@@ -3710,6 +3727,7 @@ class JavascriptExpander {
 
         let expandStack = [];
         let result = null;
+
 
         result = expandToSemanticUnit(text, start, end);
         if (result) {
@@ -3898,39 +3916,45 @@ function expandToIndent(text, startIndex, endIndex) {
     let indent = getIndent$1(text, line);
     let start = line.start;
     let end = line.end;
-    let before_line = line;
+    let beforeLine = line;
+
     while (true) {
-        let pos = before_line.start - 1;
+        let pos = beforeLine.start - 1;
         if (pos <= 0) {
             break;
         }
 
-        before_line = getLine(text, pos, pos);
-        let before_indent = getIndent$1(text, before_line);
+        beforeLine = getLine(text, pos, pos);
+
+        let beforeIndent = getIndent$1(text, beforeLine);
+
         //done if the line has a lower indent
-        if (!(indent <= before_indent) && !empty_line(text, before_line)) {
+        if (!(indent <= beforeIndent) && !empty_line(text, beforeLine)) {
             break;
         }
-        if (!empty_line(text, before_line) && indent == before_indent) {
-            start = before_line.start;
+
+        if (!empty_line(text, beforeLine) && indent == beforeIndent) {
+            start = beforeLine.start;
         }
     }
-    let after_line = line;
+
+    let afterLine = line;
+
     while (true) {
-        //get the line after_line
-        let pos = after_line.end + 1;
+        //get the line afterLine
+        let pos = afterLine.end + 1;
         if (pos >= text.length) {
             break;
         }
-        after_line = getLine(text, pos, pos);
-        let after_indent = getIndent$1(text, after_line);
+        afterLine = getLine(text, pos, pos);
+        let afterIndent = getIndent$1(text, afterLine);
         //done if the line has a lower indent
-        if (!(indent <= after_indent) && !empty_line(text, after_line)) {
+        if (!(indent <= afterIndent) && !empty_line(text, afterLine)) {
             break;
         }
         //move the end
-        if (!empty_line(text, after_line)) {
-            end = after_line.end;
+        if (!empty_line(text, afterLine)) {
+            end = afterLine.end;
         }
     }
 
@@ -3953,17 +3977,17 @@ class PythonExpander {
             return expand;
         }
 
+
         result = this.expandLineWithoutIndent(text, start, end);
         if (result) {
-            console.log('line_no_indent');
             expandStack.push('line_no_indent');
             result['expandStack'] = expandStack;
             return result;
         }
 
+
         result = this.expandOverLineContinuation(text, start, end);
         if (result) {
-            console.log('line_continuation');
             expandStack.push('line_continuation');
             result['expandStack'] = expandStack;
             return result;
@@ -3971,7 +3995,6 @@ class PythonExpander {
 
         result = this.expandPythonBlockFromStart(text, start, end);
         if (result) {
-            console.log('py_block_start');
             expandStack.push('py_block_start');
             result['expandStack'] = expandStack;
             return result;
@@ -3980,14 +4003,11 @@ class PythonExpander {
 
         result = this.pyExpandToIndent(text, start, end);
         if (result) {
-            console.log('py_indent');
-            console.log(JSON.stringify(result, null, ' '));
-
-
             expandStack.push('py_indent');
             result['expandStack'] = expandStack;
             return result;
         }
+
 
         if (result) {
             result['expandStack'] = expandStack;
@@ -4018,10 +4038,11 @@ class PythonExpander {
         }
 
         const line = this.editor.getLineRangeForRange(new Range(start, end));
-        const nextLine = this.editor.getLineRangeForRange(new Range(start + 1, end + 1));
+        const lineIndent = getIndent$1(text, line);
+        const nextLine = this.editor.getLineRangeForRange(new Range(end + 1, end + 2));
 
-        start = line.start;
-        end = nextLine.end;
+        start = line.start + lineIndent;
+        end = nextLine.end - 1;
 
         const nextResult = this.expandOverLineContinuation(text, start, end);
         if (nextResult) {
@@ -4063,11 +4084,17 @@ class PythonExpander {
         }
 
         // expand to indent
-        let result = expandToIndent(text, start + indent, end);
+        //let result = expandToIndent(text, start - indent, end);
+        let result = expandToIndent(text, start - indent, end);
         if (!result) {
-            console.log(2);
             return null;
         }
+
+        // get the indent of the first line
+        // if the expansion changed return the result increased
+        /*if (result.start !== start || result.end !== end) {
+            //return result;
+        }*/
 
         let pos = result.start + indent - 1;
 
@@ -4077,17 +4104,17 @@ class PythonExpander {
             }
 
             // get the indent of the line before
-            let before_line = getLine(text, pos, pos);
-            let before_indent = getIndent$1(text, before_line);
+            let beforeLine = getLine(text, pos, pos);
+            let beforeIndent = getIndent$1(text, beforeLine);
 
-            if (!empty_line(text, before_line) && before_indent < indent) {
-                start = before_line.start;
+            if (!empty_line(text, beforeLine) && beforeIndent < indent) {
+                start = beforeLine.start;
                 end = result.end;
-                return getResult(start + before_indent, end, text, 'py_indent');
+                return getResult(start + beforeIndent, end, text, 'py_indent');
             }
 
             // goto the line before the line befor
-            pos = before_line.start - 1;
+            pos = beforeLine.start - 1;
         }
 
         return null;

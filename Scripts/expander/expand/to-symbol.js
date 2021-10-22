@@ -1,6 +1,15 @@
 import { escapeRegExp, getResult, getLine } from '../expander-utils.js';
 
 export function expandToSymbols(text, startIndex, endIndex) {
+    // Do not expand to next symbol if the selection the prev
+    // selection is followed by ; or , for example a closing bracket };
+    const breakSymbols = [';', ','];
+    const beforeBreak = ['}', ']', ')'];
+
+    if (breakSymbols.includes(text.substring(endIndex, endIndex + 1)) && beforeBreak.includes(text.substring(endIndex - 1, endIndex))) {
+        return null;
+    }
+
     const openingSymbols = '([{';
     const closingSymbols = ')]}';
     const symbolsRegex = /[\(\[\{\)\]\}]/;
@@ -149,9 +158,17 @@ export function expandToSymbols(text, startIndex, endIndex) {
         if (currentSelectedFirstLine.length) {
             currentSelectedFirstLine = currentSelectedFirstLine[0].trim();
         }
+
         if (firstLine.length) {
             firstLine = firstLine[0].trim();
+
+            // Do not jump to parent symbol if there's an object property. myprop: {
             if (/^\w+:.*{$/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
+                return null;
+            }
+
+            // Do not jump to parent symbol if there's an variable definition. const myvar = {
+            if (/^\w+?[\s+]?\w+[\s+]?=[\s+]?{/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
                 return null;
             }
         }

@@ -19,39 +19,45 @@ export function expandToIndent(text, startIndex, endIndex) {
     let indent = getIndent(text, line);
     let start = line.start;
     let end = line.end;
-    let before_line = line;
+    let beforeLine = line;
+
     while (true) {
-        let pos = before_line.start - 1;
+        let pos = beforeLine.start - 1;
         if (pos <= 0) {
             break;
         }
 
-        before_line = getLine(text, pos, pos);
-        let before_indent = getIndent(text, before_line);
+        beforeLine = getLine(text, pos, pos);
+
+        let beforeIndent = getIndent(text, beforeLine);
+
         //done if the line has a lower indent
-        if (!(indent <= before_indent) && !empty_line(text, before_line)) {
+        if (!(indent <= beforeIndent) && !empty_line(text, beforeLine)) {
             break;
         }
-        if (!empty_line(text, before_line) && indent == before_indent) {
-            start = before_line.start;
+
+        if (!empty_line(text, beforeLine) && indent == beforeIndent) {
+            start = beforeLine.start;
         }
     }
-    let after_line = line;
+
+    let afterLine = line;
+
     while (true) {
-        //get the line after_line
-        let pos = after_line.end + 1;
+        //get the line afterLine
+        let pos = afterLine.end + 1;
         if (pos >= text.length) {
             break;
         }
-        after_line = getLine(text, pos, pos);
-        let after_indent = getIndent(text, after_line);
+        afterLine = getLine(text, pos, pos);
+        let afterIndent = getIndent(text, afterLine);
         //done if the line has a lower indent
-        if (!(indent <= after_indent) && !empty_line(text, after_line)) {
+        if (!(indent <= afterIndent) && !empty_line(text, afterLine)) {
             break;
         }
         //move the end
-        if (!empty_line(text, after_line)) {
-            end = after_line.end;
+        if (!empty_line(text, afterLine)) {
+            end = afterLine.end;
         }
     }
 
