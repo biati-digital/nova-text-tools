@@ -1,6 +1,11 @@
+## Version 3.0.2
+
+- Improved: PHP selection expand
+- Fixed: Extension stopped working on some Nova Installations
+
 ## Version 3.0.1
 
-- Improved: Python and Js Objects Expand selection
+- Improved: Python and JS Objects selection expand
 - Updated: README
 
 ## Version 3.0.0

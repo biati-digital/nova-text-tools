@@ -4150,7 +4150,6 @@ class PHPExpander {
             }
         }
 
-
         let selectionInString = expandToQuotes(text, start, end);
         if (selectionInString) {
             let stringResult = this.expandAgainsString(selectionInString.selectionText, start - selectionInString.end, end - selectionInString.end);
@@ -4190,7 +4189,6 @@ class PHPExpander {
         result = expandToWord(text, start, end);
         if (result) {
             expandStack.push('word');
-            console.log('word');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -4198,7 +4196,6 @@ class PHPExpander {
         result = expandToQuotes(text, start, end);
         if (result) {
             expandStack.push('quotes');
-            console.log('quotes');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -4206,7 +4203,6 @@ class PHPExpander {
         result = expandToSemanticUnit(text, start, end);
         if (result) {
             expandStack.push('semantic_unit');
-            console.log('semantic_unit');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -4214,7 +4210,6 @@ class PHPExpander {
         result = this.expandToFunction(text, start, end);
         if (result) {
             expandStack.push('function');
-            console.log('function');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -4222,23 +4217,20 @@ class PHPExpander {
         result = expandToSymbols(text, start, end);
         if (result) {
             expandStack.push('symbols');
-            console.log('symbols');
             result['expandStack'] = expandStack;
             return result;
         }
 
-        result = expandToXMLNode(text, start, end);
+        /*result = expandToXMLNode(text, start, end);
         if (result) {
             expandStack.push('xml_node');
-            console.log('xml_node');
             result['expandStack'] = expandStack;
             return result;
-        }
+        }*/
 
         result = expandToLine(text, start, end);
         if (result) {
             expandStack.push('line');
-            console.log('line');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -4323,7 +4315,7 @@ class PHPExpander {
             const prevLine = this.editor.getLineRangeForRange(new Range(line.start - 2, line.start - 1));
             const prevLineText = text.substring(prevLine.start, prevLine.end);
 
-            if (/^(?:\w+).+function.+\w+\(.*\)/.test(prevLineText.trim())) {
+            if (/^(?:\w+).+function.+\w+\(.*\)/.test(prevLineText.trim()) || /\s*class\s+.*/.test(prevLineText.trim())) {
                 let indent = getIndent(text, prevLine);
                 return getResult(prevLine.start + indent, end, text, 'function');
             }
@@ -4333,8 +4325,10 @@ class PHPExpander {
     }
 }
 
+const expandHistory = new Map();
+
 class SelectionExpander {
-    expandHistory = new Map();
+    //expandHistory = new Map();
 
     /**
      * Return file extension
@@ -4467,15 +4461,15 @@ class SelectionExpander {
      * @param {string} path
      */
     getHistory(path) {
-        if (!this.expandHistory.has(path)) {
-            this.expandHistory.set(path, {
+        if (!expandHistory.has(path)) {
+            expandHistory.set(path, {
                 steps: [],
                 selectedRanges: [],
                 lastSelected: null
             });
         }
 
-        return this.expandHistory.get(path);
+        return expandHistory.get(path);
     }
 
     /**
@@ -4532,7 +4526,7 @@ class SelectionExpander {
      */
     maybeResetHistory(editor) {
         const path = editor.document.path;
-        const history = this.expandHistory.get(path);
+        const history = expandHistory.get(path);
         const selected = editor.selectedRanges;
 
         if (!history) {
@@ -4551,8 +4545,8 @@ class SelectionExpander {
     resetHistory(editor) {
         const path = editor.document.path;
 
-        if (this.expandHistory.has(path)) {
-            this.expandHistory.set(path, {
+        if (expandHistory.has(path)) {
+            expandHistory.set(path, {
                 steps: [],
                 selectedRanges: [],
                 lastSelected: null
@@ -4562,6 +4556,231 @@ class SelectionExpander {
                 console.log('reset selection data');
             }
         }
+    }
+}
+
+class SelectionAlign {
+    align(editor) {
+        let selectedRanges = editor.selectedRanges;
+        let extension = this.getExtension(editor);
+
+        for (const range of selectedRanges) {
+            const aligned = this.process(range, editor.getTextInRange(range), extension);
+
+            if (aligned) {
+                editor.edit((e) => e.replace(range, aligned));
+            }
+        }
+    }
+
+    process(range, selectedText, extension) {
+        const groups = this.getGroups(range, selectedText);
+
+        console.log(groups);
+
+        const tokens = this.parseText(selectedText, extension);
+        if (!tokens) {
+            return false;
+        }
+
+        return this.alignTokens(selectedText, tokens);
+    }
+
+    parseText(text) {
+        let pos = 0;
+        let tokens = [];
+        let skipChars = null;
+        let whiteSpaceBefore = 0;
+        let charsBeforeCharFound = '';
+        let isNewline = true;
+
+        while (pos < text.length) {
+            let type;
+            let char = text.charAt(pos);
+            let next = text.charAt(pos + 1);
+            let nextSeek = 1;
+            let stringStarts = ['"', "'", "`"]; //eslint-disable-line
+            let bracketStarts = ['{', '(', '['];
+            let bracketEnds = ['}', ')', ']'];
+
+            if (text.charCodeAt(pos) == 10) {
+                type = 'newline';
+            } else if (char.match(/\s/)) {
+                type = 'whitespace';
+            } else if (stringStarts.includes(char)) {
+                type = 'string';
+            } else if (bracketStarts.includes(char)) {
+                type = 'blockStart';
+            } else if (bracketEnds.includes(char)) {
+                type = 'blockEnd';
+            } else if (char == '/' && (
+                  (next == '/' && (pos > 0 ? text.charAt(pos - 1) : '') != ':')
+                || next == '*'
+            )) {
+                type = 'comment';
+            } else if ((char == '#' && next == ' ') || (char == '"' && next == '"' && text.charAt(pos + 2) == '"')) { // python style commets
+                type = 'comment';
+            } else if (char == ':' && next != ':') {
+                type = 'colon';
+            } else if (char == ':' && next == ':') {
+                type = 'word';
+            } else if (char == '=' && next == '>') {
+                type = 'arrow';
+                nextSeek = 2;
+            } else if ((char == '=' || char == '!' || char == '>' || char == '<') && next == '=') {
+                type = 'word';
+                nextSeek = 2;
+                if ((char == '=' || char == '!') && text.charAt(pos + nextSeek) == '=') {
+                      nextSeek = 3;
+                }
+            } else if ((
+                // Math operators
+                char == '+' || char == '-' || char == '*' || char == '/' || char == '%' || // FIXME: Find a way to work with the `**` operator
+                // Bitwise operators
+                char == '~' || char == '|' || char == '^' || // FIXME: Find a way to work with the `<<` and `>>` bitwise operators
+                // Other operators
+                char == '.'
+            ) && next == '=') {
+                type = 'assignment';
+                nextSeek = 2;
+            } else if (char == '=' && next != '=') {
+                type = 'assignment';
+            } else {
+                type = 'word';
+            }
+
+            //console.log('char', char, text.charCodeAt(pos));
+
+            if (type == 'newline') {
+                charsBeforeCharFound = '';
+                isNewline = true;
+            }
+
+            if (isNewline && type !== 'newline') {
+                charsBeforeCharFound += char;
+            }
+
+            if (type == 'whitespace') {
+                whiteSpaceBefore += 1;
+            }
+
+            // Skip content defined as strings
+            if (type == 'string' && !skipChars) {
+                skipChars = true;
+            } else if (type == 'string' && skipChars) {
+                skipChars = false;
+            }
+
+            // Skip inner blocks
+            if (type == 'blockStart' && !skipChars) {
+                skipChars = true;
+            } else if (type == 'blockEnd' && skipChars) {
+                skipChars = false;
+            }
+
+            if (skipChars) {
+                ++pos;
+                continue;
+            }
+
+            if (isNewline && type == 'assignment' || type == 'arrow' || type == 'colon') {
+                charsBeforeCharFound = charsBeforeCharFound.slice(0, -1);
+
+                isNewline = false;
+                tokens.push({
+                   char: char,
+                   whiteSpaceBefore: whiteSpaceBefore,
+                   charsBeforeCharFound: charsBeforeCharFound,
+                   pos: pos,
+                   type: type
+                });
+                charsBeforeCharFound = '';
+            }
+
+            if (type !== 'whitespace') {
+                whiteSpaceBefore = 0;
+            }
+
+            pos += nextSeek;
+        }
+
+        if (tokens && tokens.length > 1) {
+            return tokens;
+        }
+
+        return null;
+    }
+
+
+
+    alignTokens(text, tokens) {
+        // Find the biggest text before the found aligment character
+        const before = tokens.reduce((acc, token) => acc = acc > token.charsBeforeCharFound.trimStart().length ? acc : token.charsBeforeCharFound.trimStart().length, 0);
+        const originalText = text;
+        let offset = 0;
+
+        for (const token of tokens) {
+            let toAdd = 0;
+            let charsBefore = token.charsBeforeCharFound.trimStart().length;
+            if (charsBefore < before) {
+                toAdd = before - charsBefore;
+            }
+
+            if (toAdd > 0) {
+                let space = ' '.repeat(toAdd);
+                let pos = token.pos + offset;
+                text = text.substring(0, pos) + space + text.substring(pos);
+                offset += toAdd;
+            }
+            //console.log(JSON.stringify(token, null, ' '));
+        }
+
+        if (originalText == text) {
+            return null;
+        }
+
+        return text;
+    }
+
+
+
+    getGroups(range, text) {
+        let start = range.start;
+        let end = range.end;
+        let groups = [text];
+
+        //let bracketGroups = /(?:\[)([^\]]+)+/gm;
+        let bracketRegex = /(?:\[|{)([^\]}]+)+/gm;
+        const bracketMatchs = [...text.matchAll(bracketRegex)];
+
+        if (bracketMatchs && bracketMatchs.length) {
+            bracketMatchs.forEach(match => {
+                if (/\n/.test(match[1])) {
+                    groups.push(match[1]);
+                }
+            });
+        }
+
+        return groups;
+    }
+
+
+
+
+    /**
+     * Return file extension
+     */
+    getExtension(editor) {
+        let filePath = editor.document.path;
+        let extension = nova.path.extname(filePath).substring(1);
+
+        if (filePath.endsWith('.blade.php')) {
+            extension = 'html';
+        } else if (extension == 'vue') {
+            extension = 'html';
+        }
+
+        return extension;
     }
 }
 
@@ -4694,6 +4913,12 @@ exports.activate = () => {
         return editor.onDidChangeSelection(() => {
             expander.maybeResetHistory(editor);
         });
+    });
+
+    // Selection Align
+    let aligner = new SelectionAlign();
+    nova.commands.register('biati.texttools.alignselection', (editor) => {
+        aligner.align(editor);
     });
 };
 
