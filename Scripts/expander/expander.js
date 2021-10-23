@@ -3,8 +3,10 @@ import PythonExpander from './expander-python.js';
 import PHPExpander from './expander-php.js';
 import JavascriptExpander from './expander-javascript.js';
 
+const expandHistory = new Map();
+
 class SelectionExpander {
-    expandHistory = new Map();
+    //expandHistory = new Map();
 
     /**
      * Return file extension
@@ -139,15 +141,15 @@ class SelectionExpander {
      * @param {string} path
      */
     getHistory(path) {
-        if (!this.expandHistory.has(path)) {
-            this.expandHistory.set(path, {
+        if (!expandHistory.has(path)) {
+            expandHistory.set(path, {
                 steps: [],
                 selectedRanges: [],
                 lastSelected: null
             });
         }
 
-        return this.expandHistory.get(path);
+        return expandHistory.get(path);
     }
 
     /**
@@ -204,7 +206,7 @@ class SelectionExpander {
      */
     maybeResetHistory(editor) {
         const path = editor.document.path;
-        const history = this.expandHistory.get(path);
+        const history = expandHistory.get(path);
         const selected = editor.selectedRanges;
 
         if (!history) {
@@ -223,8 +225,8 @@ class SelectionExpander {
     resetHistory(editor) {
         const path = editor.document.path;
 
-        if (this.expandHistory.has(path)) {
-            this.expandHistory.set(path, {
+        if (expandHistory.has(path)) {
+            expandHistory.set(path, {
                 steps: [],
                 selectedRanges: [],
                 lastSelected: null
