@@ -37,7 +37,6 @@ export default class PHPExpander {
             }
         }
 
-
         let selectionInString = expandToQuotes(text, start, end);
         if (selectionInString) {
             let stringResult = this.expandAgainsString(selectionInString.selectionText, start - selectionInString.end, end - selectionInString.end);
@@ -77,7 +76,6 @@ export default class PHPExpander {
         result = expandToWord(text, start, end);
         if (result) {
             expandStack.push('word');
-            console.log('word');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -85,7 +83,6 @@ export default class PHPExpander {
         result = expandToQuotes(text, start, end);
         if (result) {
             expandStack.push('quotes');
-            console.log('quotes');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -93,7 +90,6 @@ export default class PHPExpander {
         result = expandToSemanticUnit(text, start, end);
         if (result) {
             expandStack.push('semantic_unit');
-            console.log('semantic_unit');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -101,7 +97,6 @@ export default class PHPExpander {
         result = this.expandToFunction(text, start, end);
         if (result) {
             expandStack.push('function');
-            console.log('function');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -109,23 +104,20 @@ export default class PHPExpander {
         result = expandToSymbols(text, start, end);
         if (result) {
             expandStack.push('symbols');
-            console.log('symbols');
             result['expandStack'] = expandStack;
             return result;
         }
 
-        result = expandToXMLNode(text, start, end);
+        /*result = expandToXMLNode(text, start, end);
         if (result) {
             expandStack.push('xml_node');
-            console.log('xml_node');
             result['expandStack'] = expandStack;
             return result;
-        }
+        }*/
 
         result = expandToLine(text, start, end);
         if (result) {
             expandStack.push('line');
-            console.log('line');
             result['expandStack'] = expandStack;
             return result;
         }
@@ -210,7 +202,7 @@ export default class PHPExpander {
             const prevLine = this.editor.getLineRangeForRange(new Range(line.start - 2, line.start - 1));
             const prevLineText = text.substring(prevLine.start, prevLine.end);
 
-            if (/^(?:\w+).+function.+\w+\(.*\)/.test(prevLineText.trim())) {
+            if (/^(?:\w+).+function.+\w+\(.*\)/.test(prevLineText.trim()) || /\s*class\s+.*/.test(prevLineText.trim())) {
                 let indent = getIndent(text, prevLine);
                 return getResult(prevLine.start + indent, end, text, 'function');
             }
