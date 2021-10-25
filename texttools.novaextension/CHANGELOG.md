@@ -1,7 +1,13 @@
+## Version 3.0.3
+
+- Improved: Added support for older Mac OS versions
+- Fixed: Respect left whitespace after sorting lines and adding line numbers, first and last line.
+
 ## Version 3.0.2
 
 - Improved: PHP selection expand
 - Fixed: Extension stopped working on some Nova Installations
+- Fixed: Respect left whitespace after reversing lines, first and last line.
 
 ## Version 3.0.1
 
