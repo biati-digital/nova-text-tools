@@ -363,9 +363,20 @@ class NovaTextTools {
      */
     sortLinesAlphanumerically(text) {
         const lines = text.split('\n');
+        const firstLineIndent = lines[0].match(/^[\s]*/g);
+        const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+
         const sorted = lines.sort((a, b) => {
             return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'case' });
         });
+
+        if (firstLineIndent) {
+            sorted[0] = sorted[0].replace(/^[\s]*/g, firstLineIndent[0]);
+        }
+        if (lastLineIndent) {
+            sorted[lines.length - 1] = sorted[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+        }
+
         return sorted.join('\n');
     }
 
@@ -374,11 +385,22 @@ class NovaTextTools {
      */
     sortLinesAlphanumericallyReverse(text) {
         const lines = text.split('\n');
+        const firstLineIndent = lines[0].match(/^[\s]*/g);
+        const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+
         const sorted = lines
             .sort((a, b) => {
                 return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'case' });
             })
             .reverse();
+
+        if (firstLineIndent) {
+            sorted[0] = sorted[0].replace(/^[\s]*/g, firstLineIndent[0]);
+        }
+        if (lastLineIndent) {
+            sorted[lines.length - 1] = sorted[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+        }
+
         return sorted.join('\n');
     }
 
@@ -387,27 +409,62 @@ class NovaTextTools {
      */
     sortLinesByLength(text) {
         const lines = text.split('\n');
-        return lines
-            .sort((a, b) => {
-                return a.length - b.length;
-            })
-            .join('\n');
+        const firstLineIndent = lines[0].match(/^[\s]*/g);
+        const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+
+        const sorted = lines.sort((a, b) => {
+            return a.length - b.length;
+        });
+
+        if (firstLineIndent) {
+            sorted[0] = sorted[0].replace(/^[\s]*/g, firstLineIndent[0]);
+        }
+        if (lastLineIndent) {
+            sorted[lines.length - 1] = sorted[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+        }
+
+        return sorted.join('\n');
     }
 
+    /**
+     * Sort Lines by length Reverse
+     */
     sortLinesByLengthReverse(text) {
         const lines = text.split('\n');
-        return lines
-            .sort((a, b) => {
-                return b.length - a.length;
-            })
-            .join('\n');
+        const firstLineIndent = lines[0].match(/^[\s]*/g);
+        const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+
+        const sorted = lines.sort((a, b) => {
+            return b.length - a.length;
+        });
+
+        if (firstLineIndent) {
+            sorted[0] = sorted[0].replace(/^[\s]*/g, firstLineIndent[0]);
+        }
+        if (lastLineIndent) {
+            sorted[lines.length - 1] = sorted[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+        }
+
+        return sorted.join('\n');
     }
 
     /**
      * Reverse Lines
      */
     reverseLines(text) {
-        return text.split('\n').reverse().join('\n');
+        const lines = text.split('\n');
+        const firstLineIndent = lines[0].match(/^[\s]*/g);
+        const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+
+        return lines.reverse().map((line, index) => {
+            if (index === 0 && firstLineIndent) {
+                line = line.replace(/^[\s]*/g, firstLineIndent[0]);
+            }
+            if (index === lines.length - 1 && lastLineIndent) {
+                line = line.replace(/^[\s]*/g, lastLineIndent[0]);
+            }
+            return line;
+        }).join('\n');
     }
 
     /**
@@ -665,28 +722,44 @@ class NovaTextTools {
                 return false;
             }
 
-            const lines = text
-                .split('\n')
-                .map((line, i) => {
-                    i = i + 1;
+            const lines = text.split('\n');
+            const firstLineIndent = lines[0].match(/^[\s]*/g);
+            const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
 
-                    switch (format) {
-                        case 'Ordinal':
-                            i = ordinalSuffix(i);
-                            line = `${i} ${line}`;
-                            break;
-                        case 'Roman Numerals':
-                            i = romanize(i);
-                            line = `${i} ${line}`;
-                            break;
-                        default:
-                            line = `${i}${format} ${line}`;
-                    }
+            const ordered = lines.map((line, i) => {
+                i = i + 1;
+                let whitespace = line.match(/^[\s]*/g);
+                let leading = '';
 
-                    return line;
-                })
-                .join('\n');
-            resolve(lines);
+                if (whitespace && whitespace[0]) {
+                    leading = whitespace[0];
+                }
+
+                switch (format) {
+                    case 'Ordinal':
+                        i = ordinalSuffix(i);
+                        line = `${leading}${i} ${line.trimStart()}`;
+                        break;
+                    case 'Roman Numerals':
+                        i = romanize(i);
+                        line = `${leading}${i} ${line.trimStart()}`;
+                        break;
+                    default:
+                        line = `${leading}${i}${format} ${line.trimStart()}`;
+                }
+
+                return line;
+            });
+
+            if (firstLineIndent) {
+                ordered[0] = ordered[0].replace(/^[\s]*/g, firstLineIndent[0]);
+            }
+            if (lastLineIndent) {
+                ordered[lines.length - 1] = ordered[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+            }
+
+
+            resolve(ordered.join('\n'));
         });
     }
 
@@ -1332,6 +1405,10 @@ class NovaTextTools {
      */
     normalizeText(text) {
         return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    normalizeLinesIndent(lines) {
+
     }
 
     /**
