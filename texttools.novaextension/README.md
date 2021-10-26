@@ -10,7 +10,7 @@ We've added more than 15 new tools since the first release so make sure to alway
 
 New in version 3.0:
 
-- **Selection Expand/Shrink**, we would love if you try it and let us know if you find errors. This is still a work in progress, currently it supports HTML, CSS, Less, Sass, Javascript, Vue, PHP and Python. You can use the shortcut `command+option+right` to expand and `command+option+left` to shrink.
+- **Selection Expand/Shrink**, we would love if you try it and let us know if you find errors. This is still a work in progress, currently it supports HTML, CSS, Less, Sass, Javascript, Vue, PHP and Python. You can use the shortcut `control+option+right` to expand and `control+option+left` to shrink.
 
 ### What's Planned:
 - Selection Align.
@@ -79,8 +79,8 @@ New in version 3.0:
 -  Select Lines Matching... (Selects lines that contains certain text or matches a regex)
 -  Select Words Matching... (Select all strings that contains certain text or matches a regex)
 -  Select All Ocurrences (grabs your currently selected text and will select all ocurrences in the file)
--  Selection Expand (Expand the current selection `command+option+right`)
--  Selection Shrink (Shrink the current selection `command+option+left`)
+-  Selection Expand (Expand the current selection `control+option+right`)
+-  Selection Shrink (Shrink the current selection `control+option+left`)
 -  Selection Align (Planned)
 
 To learn more please checkout the examples below.
@@ -394,4 +394,4 @@ If you have one in mind do not hestiate to share it with us, if it can help a lo
 
 
 ###
-Expand selection is a modified version of the vscode extension [expand region](https://marketplace.visualstudio.com/items?itemName=letrieu.expand-region) and sublime [expand region](https://github.com/aronwoost/sublime-expand-region)
+Expand selection is a heavily modified version of the vscode extension [expand region](https://marketplace.visualstudio.com/items?itemName=letrieu.expand-region) and sublime [expand region](https://github.com/aronwoost/sublime-expand-region)
