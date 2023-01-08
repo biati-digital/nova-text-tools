@@ -3,7 +3,7 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode, Expand and Shrink Selection, Align Selection and much more...",
-  "version": "3.0.4",
+  "version": "3.0.9",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
@@ -193,6 +193,12 @@
         "title": "ASCII to Hex",
         "paletteTitle": "ASCII to Hex",
         "command": "biati.texttools.asciitohex",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "ROT13",
+        "paletteTitle": "ROT13",
+        "command": "biati.texttools.rot13",
         "when": "editorHasFocus"
       },
       {
