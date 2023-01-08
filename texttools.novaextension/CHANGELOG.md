@@ -1,3 +1,33 @@
+## Version 3.1.0
+
+- New: Text to rot13
+- Updated: README
+
+## Version 3.0.9
+
+- Fixed: Camel Case not working correctly for multiple selections
+
+## Version 3.0.8
+
+- Fixed: Multiple selections stopped working after Nova 9
+- Updated: README
+
+## Version 3.0.7
+
+- updated: README
+
+## Version 3.0.6
+
+- updated: README
+
+## Version 3.0.5
+
+- Updated: Deactivated Align because it's not ready yet for public use.
+
+## Version 3.0.4
+
+- Updated: README Added coorect command for expand and shrink selection control+option+right and control+option+left
+
 ## Version 3.0.3
 
 - Improved: Added support for older Mac OS versions
