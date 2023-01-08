@@ -1,5 +1,6 @@
 import NovaTextTools from './tools.js';
 import SelectionExpander from './expander/expander.js';
+import SelectionAlign from './align/align.js';
 
 exports.activate = () => {
     const tools = new NovaTextTools();
@@ -58,6 +59,7 @@ exports.activate = () => {
         asciitohex: 'asciiToHex',
         texttobinary: 'textToBinary',
         binarytotext: 'binaryToText',
+        rot13: 'rot13',
 
         stripslashes: 'stripSlashes',
         addslashes: 'addSlashes',
@@ -81,7 +83,7 @@ exports.activate = () => {
     for (const command in commands) {
         nova.commands.register(`biati.texttools.${command}`, (editor) => {
             const commandMethod = commands[command];
-            return tools.process(editor, tools[commandMethod]);
+            return tools.process(command, editor, tools[commandMethod]);
         });
     }
 
@@ -110,7 +112,7 @@ exports.activate = () => {
     for (const scommand in insertionCommands) {
         nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
             const commandMethod = insertionCommands[scommand];
-            return tools.process(editor, tools[commandMethod], 'insert');
+            return tools.process(scommand, editor, tools[commandMethod], 'insert');
         });
     }
 
@@ -126,10 +128,19 @@ exports.activate = () => {
     nova.commands.register('biati.texttools.shrinkselection', (editor) => {
         expander.shrink(editor);
     });
-    nova.workspace.onDidAddTextEditor((editor) => {
-        return editor.onDidChangeSelection(() => {
-            expander.maybeResetHistory(editor);
-        });
+
+    function onChange(textEditor) {
+        expander.maybeResetHistory(textEditor);
+    }
+    function onSelectionChange(textEditor) {
+        nova.subscriptions.add(textEditor.onDidChangeSelection(onChange));
+    }
+    nova.subscriptions.add(nova.workspace.onDidAddTextEditor(onSelectionChange));
+
+    // Selection Align
+    let aligner = new SelectionAlign();
+    nova.commands.register('biati.texttools.alignselection', (editor) => {
+        aligner.align(editor);
     });
 };
 

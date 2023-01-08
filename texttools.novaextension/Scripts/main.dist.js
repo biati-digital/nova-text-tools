@@ -155,389 +155,264 @@ function snakeCase(input, options) {
     return dotCase(input, __assign({ delimiter: "_" }, options));
 }
 
-/**
- * To Title case
- *
- * @param {string}
- */
 function titleCase(string) {
-    const SMALL_WORDS = /\b(?:an?d?|a[st]|because|but|by|en|for|i[fn]|neither|nor|o[fnr]|only|over|per|so|some|tha[tn]|the|to|up|upon|vs?\.?|versus|via|when|with|without|yet)\b/i;
-    const TOKENS = /[^\s:–—-]+|./g;
-    const WHITESPACE = /\s/;
-    const IS_MANUAL_CASE = /.(?=[A-Z]|\..)/;
-    const ALPHANUMERIC_PATTERN = /[A-Za-z0-9\u00C0-\u00FF]/;
-
-    let result = '';
-    let m;
-
-    // tslint:disable-next-line
-    while ((m = TOKENS.exec(string)) !== null) {
-        const { 0: token, index } = m;
-
-        if (
-            // Ignore already capitalized words.
-            !IS_MANUAL_CASE.test(token) &&
-            // Ignore small words except at beginning or end.
-            (!SMALL_WORDS.test(token) || index === 0 || index + token.length === string.length) &&
-            // Ignore URLs.
-            (string.charAt(index + token.length) !== ':' || WHITESPACE.test(string.charAt(index + token.length + 1)))
-        ) {
-            // Find and uppercase first word character, skips over *modifiers*.
-            result += token.replace(ALPHANUMERIC_PATTERN, (m) => m.toUpperCase());
-            continue;
-        }
-
-        result += token;
+  const SMALL_WORDS = /\b(?:an?d?|a[st]|because|but|by|en|for|i[fn]|neither|nor|o[fnr]|only|over|per|so|some|tha[tn]|the|to|up|upon|vs?\.?|versus|via|when|with|without|yet)\b/i;
+  const TOKENS = /[^\s:–—-]+|./g;
+  const WHITESPACE = /\s/;
+  const IS_MANUAL_CASE = /.(?=[A-Z]|\..)/;
+  const ALPHANUMERIC_PATTERN = /[A-Za-z0-9\u00C0-\u00FF]/;
+  let result = "";
+  let m;
+  while ((m = TOKENS.exec(string)) !== null) {
+    const { 0: token, index } = m;
+    if (!IS_MANUAL_CASE.test(token) && (!SMALL_WORDS.test(token) || index === 0 || index + token.length === string.length) && (string.charAt(index + token.length) !== ":" || WHITESPACE.test(string.charAt(index + token.length + 1)))) {
+      result += token.replace(ALPHANUMERIC_PATTERN, (m2) => m2.toUpperCase());
+      continue;
     }
-
-    return result;
+    result += token;
+  }
+  return result;
 }
-
-/**
- * Romanize
- * convert number to it's roman counterpart
- *
- * @param {numberi}
- */
 function romanize(num) {
-    if (isNaN(num)) {
-        return NaN;
-    }
-    var digits = String(+num).split(''),
-        key = [
-            '',
-            'C',
-            'CC',
-            'CCC',
-            'CD',
-            'D',
-            'DC',
-            'DCC',
-            'DCCC',
-            'CM',
-            '',
-            'X',
-            'XX',
-            'XXX',
-            'XL',
-            'L',
-            'LX',
-            'LXX',
-            'LXXX',
-            'XC',
-            '',
-            'I',
-            'II',
-            'III',
-            'IV',
-            'V',
-            'VI',
-            'VII',
-            'VIII',
-            'IX'
-        ],
-        roman = '',
-        i = 3;
-    while (i--) {
-        roman = (key[+digits.pop() + i * 10] || '') + roman;
-    }
-    return Array(+digits.join('') + 1).join('M') + roman;
+  if (isNaN(num)) {
+    return NaN;
+  }
+  var digits = String(+num).split(""), key = [
+    "",
+    "C",
+    "CC",
+    "CCC",
+    "CD",
+    "D",
+    "DC",
+    "DCC",
+    "DCCC",
+    "CM",
+    "",
+    "X",
+    "XX",
+    "XXX",
+    "XL",
+    "L",
+    "LX",
+    "LXX",
+    "LXXX",
+    "XC",
+    "",
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+    "VI",
+    "VII",
+    "VIII",
+    "IX"
+  ], roman = "", i = 3;
+  while (i--) {
+    roman = (key[+digits.pop() + i * 10] || "") + roman;
+  }
+  return Array(+digits.join("") + 1).join("M") + roman;
 }
-
-/**
- * Ordinal suffix
- * example 1st, 2nd, etc.
- *
- * @param {numeric} i
- */
 function ordinalSuffix(i) {
-    var j = i % 10,
-        k = i % 100;
-    if (j == 1 && k != 11) {
-        return i + 'st';
-    }
-    if (j == 2 && k != 12) {
-        return i + 'nd';
-    }
-    if (j == 3 && k != 13) {
-        return i + 'rd';
-    }
-    return i + 'th';
+  var j = i % 10, k = i % 100;
+  if (j == 1 && k != 11) {
+    return i + "st";
+  }
+  if (j == 2 && k != 12) {
+    return i + "nd";
+  }
+  if (j == 3 && k != 13) {
+    return i + "rd";
+  }
+  return i + "th";
 }
-
-/**
- * Random Array
- * randomize items order
- *
- * @param {array} array
- */
 function randomArray(array) {
-    var currentIndex = array.length,
-        randomIndex;
-    while (currentIndex != 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
+  var currentIndex = array.length, randomIndex;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+  return array;
 }
-
 function fakeData(format, amount = 1) {
-    let val = false;
-    switch (format) {
-        case 'Full Name':
-            val = faker.name.findName();
-            break;
-        case 'Name':
-            val = faker.name.firstName();
-            break;
-        case 'Lastname':
-            val = faker.name.lastName();
-            break;
-        case 'Email':
-            val = faker.internet.email();
-            break;
-        case 'Phone':
-            val = faker.phone.phoneNumber();
-            break;
-        case 'Credit Card':
-            val = faker.finance.creditCardNumber();
-            break;
-        case 'User Name':
-            val = faker.internet.userName();
-            break;
-        case 'URL':
-            val = faker.internet.url();
-            break;
-        case 'Full Address':
-            val = faker.address.streetAddress() + ', ' + faker.address.city() + ', ' + faker.address.country() + ', Zip Code ' + faker.address.zipCode();
-            break;
-        case 'Country':
-            val = faker.address.country();
-            break;
-        case 'City':
-            val = faker.address.city();
-            break;
-        case 'Street':
-            val = faker.address.streetAddress();
-            break;
-        case 'Zip Code':
-            val = faker.address.zipCode();
-            break;
-        case 'Company':
-            val = faker.company.companyName();
-            break;
-        case 'Lorem Paragraph':
-            val = faker.lorem.paragraph();
-            break;
-        case 'Lorem Paragraphs':
-            val = faker.lorem.paragraphs();
-            break;
-        case 'Number':
-            val = faker.datatype.number().toString();
-            break;
-        case 'JSON':
-            val = faker.datatype.json();
-            break;
-        case 'Array':
-            val = faker.random.arrayElements();
-            break;
-        case 'UUID':
-            val = faker.datatype.uuid();
-            break;
-    }
-    return val;
+  let val = false;
+  switch (format) {
+    case "Full Name":
+      val = faker.name.findName();
+      break;
+    case "Name":
+      val = faker.name.firstName();
+      break;
+    case "Lastname":
+      val = faker.name.lastName();
+      break;
+    case "Email":
+      val = faker.internet.email();
+      break;
+    case "Phone":
+      val = faker.phone.phoneNumber();
+      break;
+    case "Credit Card":
+      val = faker.finance.creditCardNumber();
+      break;
+    case "User Name":
+      val = faker.internet.userName();
+      break;
+    case "URL":
+      val = faker.internet.url();
+      break;
+    case "Full Address":
+      val = faker.address.streetAddress() + ", " + faker.address.city() + ", " + faker.address.country() + ", Zip Code " + faker.address.zipCode();
+      break;
+    case "Country":
+      val = faker.address.country();
+      break;
+    case "City":
+      val = faker.address.city();
+      break;
+    case "Street":
+      val = faker.address.streetAddress();
+      break;
+    case "Zip Code":
+      val = faker.address.zipCode();
+      break;
+    case "Company":
+      val = faker.company.companyName();
+      break;
+    case "Lorem Paragraph":
+      val = faker.lorem.paragraph();
+      break;
+    case "Lorem Paragraphs":
+      val = faker.lorem.paragraphs();
+      break;
+    case "Number":
+      val = faker.datatype.number().toString();
+      break;
+    case "JSON":
+      val = faker.datatype.json();
+      break;
+    case "Array":
+      val = faker.random.arrayElements();
+      break;
+    case "UUID":
+      val = faker.datatype.uuid();
+      break;
+  }
+  return val;
 }
-
-/**
- * Quote Transform
- * convert quotes
- *
- * @param {string} input
- * @param {string} toChange
- * @param {string} changeTo
- */
 function quotesTransform(input, toChange, changeTo) {
-    let result = '';
-    let isBetweenQuotes = false;
-    let quoteCharacter;
-
-    for (let index = 0; index < input.length; index++) {
-        const current = input[index];
-        const next = input[index + 1];
-
-        // Found double-quote or single-quote
-        // eslint-disable-next-line
-        if (current === '"' || current === "'") {
-            //eslint-disable-line
-            // If not processing in between quotes
-            if (!isBetweenQuotes) {
-                quoteCharacter = current;
-                isBetweenQuotes = true;
-                result += changeTo;
-            } else if (quoteCharacter === current) {
-                // If processing between quotes, close quotes
-                result += changeTo;
-                isBetweenQuotes = false;
-            } else {
-                // Still inside quotes
-                result += '\\' + changeTo;
-            }
-        } else if (current === '\\' && (next === "'" || next === '"')) {
-            // If escape character is found and double or single quote after
-            // Escape + quote to change to
-            if (next === changeTo) {
-                // If in between quotes and quote is equal to changeTo only escape once
-                result += isBetweenQuotes && quoteCharacter === changeTo ? '\\' + changeTo : '\\\\' + changeTo;
-                index++;
-            } else if (next === toChange) {
-                // Escape + quote to be changed
-                // If between quotes can mantain tochange
-                result += isBetweenQuotes ? toChange : changeTo;
-                index++;
-            } else {
-                result += current;
-            }
-        } else if (current === '\\' && next === '\\') {
-            // Don't touch backslashes
-            result += '\\\\';
-            index++;
-        } else {
-            result += current;
-        }
-    }
-
-    return result;
-}
-
-/**
- * Escape string
- *
- * @param {string} string
- */
-function escape(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-/**
- * Escape string
- *
- * @param {string} string
- */
-function isRegexLike(string) {
-    return /\\w|\\s|\\d|\\b|\\.|\.\*|\.\+/.test(string);
-}
-
-/**
- * To Binary
- *
- * @param {string} n
- */
-function toBinary(n) {
-    let value = convertToBinary(n);
-    let length = value.length;
-    while (length < 8) {
-        value = '0' + value;
-        length++;
-    }
-    return value;
-}
-
-/**
- * From Binary
- *
- * @param {string} binary
- * @return {string}
- */
-function fromBinary(binary) {
-    let out = '';
-    while (binary.length >= 8) {
-        var byte = binary.slice(0, 8);
-        binary = binary.slice(8);
-        out += String.fromCharCode(parseInt(byte, 2));
-    }
-
-    return decodeURIComponent(escape(out));
-}
-
-function convertToBinary(n) {
-    if (n <= 1) {
-        return String(n);
+  let result = "";
+  let isBetweenQuotes = false;
+  let quoteCharacter;
+  for (let index = 0; index < input.length; index++) {
+    const current = input[index];
+    const next = input[index + 1];
+    if (current === '"' || current === "'") {
+      if (!isBetweenQuotes) {
+        quoteCharacter = current;
+        isBetweenQuotes = true;
+        result += changeTo;
+      } else if (quoteCharacter === current) {
+        result += changeTo;
+        isBetweenQuotes = false;
+      } else {
+        result += "\\" + changeTo;
+      }
+    } else if (current === "\\" && (next === "'" || next === '"')) {
+      if (next === changeTo) {
+        result += isBetweenQuotes && quoteCharacter === changeTo ? "\\" + changeTo : "\\\\" + changeTo;
+        index++;
+      } else if (next === toChange) {
+        result += isBetweenQuotes ? toChange : changeTo;
+        index++;
+      } else {
+        result += current;
+      }
+    } else if (current === "\\" && next === "\\") {
+      result += "\\\\";
+      index++;
     } else {
-        return convertToBinary(Math.floor(n / 2)) + String(n % 2);
+      result += current;
     }
+  }
+  return result;
+}
+function escape(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function isRegexLike(string) {
+  return /\\w|\\s|\\d|\\b|\\.|\.\*|\.\+/.test(string);
+}
+function toBinary(n) {
+  let value = convertToBinary(n);
+  let length = value.length;
+  while (length < 8) {
+    value = "0" + value;
+    length++;
+  }
+  return value;
+}
+function fromBinary(binary) {
+  let out = "";
+  while (binary.length >= 8) {
+    var byte = binary.slice(0, 8);
+    binary = binary.slice(8);
+    out += String.fromCharCode(parseInt(byte, 2));
+  }
+  return decodeURIComponent(escape(out));
+}
+function convertToBinary(n) {
+  if (n <= 1) {
+    return String(n);
+  } else {
+    return convertToBinary(Math.floor(n / 2)) + String(n % 2);
+  }
 }
 
-/**
- * Log
- * print log in debug pane
- *
- * @param {mixed} message
- */
-function log(message) {
-    const showLog = nova.workspace.config.get(nova.extension.identifier + '.log');
-    if (nova.inDevMode() || showLog) {
-        if (typeof message == 'object') {
-            message = JSON.stringify(message, null, 2);
-        }
-        console.log(message);
+function log(message2) {
+  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
+  if (nova.inDevMode() || showLog) {
+    if (typeof message2 == "object") {
+      message2 = JSON.stringify(message2, null, 2);
     }
+    console.log(message2);
+  }
 }
-
-/**
- * Performance starts
- *
- * @param {string} id
- */
-function logPerformanceStart(id = '') {
-    const showLog = nova.workspace.config.get(nova.extension.identifier + '.log');
-    if (nova.inDevMode() || showLog) {
-        console.time(id);
-    }
+function logPerformanceStart(id = "") {
+  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
+  if (nova.inDevMode() || showLog) {
+    console.time(id);
+  }
 }
-
-/**
- * Performance end
- *
- * @param {string} id
- */
-function logPerformanceEnd(id = '') {
-    const showLog = nova.workspace.config.get(nova.extension.identifier + '.log');
-    if (nova.inDevMode() || showLog) {
-        if (typeof message == 'object') {
-            message = JSON.stringify(message, null, ' ');
-        }
-        console.timeEnd(id);
+function logPerformanceEnd(id = "") {
+  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
+  if (nova.inDevMode() || showLog) {
+    if (typeof message == "object") {
+      message = JSON.stringify(message, null, " ");
     }
+    console.timeEnd(id);
+  }
 }
-
-/**
- * Show notifications
- *
- * @param {Object}
- */
-function showNotification({ id = '', title, body, actions = false, type = '', cancellAll = true }) {
-    if (!id) {
-        id = nova.extension.identifier;
+function showNotification({ id = "", title, body, actions = false, type = "", cancellAll = true }) {
+  if (!id) {
+    id = nova.extension.identifier;
+  }
+  if (cancellAll) {
+    nova.notifications.cancel(id);
+  }
+  let request = new NotificationRequest(id);
+  request.title = nova.localize(title);
+  request.body = nova.localize(body);
+  if (actions) {
+    if (typeof actions === "boolean") {
+      request.actions = [nova.localize("OK")];
+    } else {
+      request.actions = actions.map((action) => nova.localize(action));
     }
-    if (cancellAll) {
-        nova.notifications.cancel(id);
-    }
-
-    let request = new NotificationRequest(id);
-    request.title = nova.localize(title);
-    request.body = nova.localize(body);
-
-    if (actions) {
-        if (typeof actions === 'boolean') {
-            request.actions = [nova.localize('OK')];
-        } else {
-            request.actions = actions.map((action) => nova.localize(action));
-        }
-    }
-
-    nova.notifications.add(request).catch((err) => console.error(err, err.stack));
+  }
+  nova.notifications.add(request).catch((err) => console.error(err, err.stack));
 }
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -768,153 +643,140 @@ exports.decode = decode;
 
 var index = /*@__PURE__*/unwrapExports(lib);
 
-/**
- * MK File
- * create file using mkfile
- *
- * @author biati-digital
- */
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
 function mkFile(filePath, size) {
-    return new Promise((resolve, reject) => {
-        const docurl = new Process('/usr/bin/env', {
-            args: ['mkfile', '-n', size.toString(), filePath]
-        });
-        let stdOut = '';
-        let stdErr = '';
-        docurl.onStdout((result) => {
-            stdOut += result;
-        });
-        docurl.onStderr((line) => {
-            stdErr += line;
-        });
-        docurl.onDidExit((status) => {
-            if (status === 0) {
-                resolve(stdOut);
-            } else {
-                reject(stdErr);
-            }
-        });
-        docurl.start();
+  return new Promise((resolve, reject) => {
+    const docurl = new Process("/usr/bin/env", {
+      args: ["mkfile", "-n", size.toString(), filePath]
     });
+    let stdOut = "";
+    let stdErr = "";
+    docurl.onStdout((result) => {
+      stdOut += result;
+    });
+    docurl.onStderr((line) => {
+      stdErr += line;
+    });
+    docurl.onDidExit((status) => {
+      if (status === 0) {
+        resolve(stdOut);
+      } else {
+        reject(stdErr);
+      }
+    });
+    docurl.start();
+  });
 }
-
-/**
- * Compress file
- * used to compress the file
- * in multiple formats
- */
 function compressFile(command) {
-    return new Promise((resolve, reject) => {
-        const docurl = new Process('/usr/bin/env', {
-            args: command
-        });
-        let stdOut = '';
-        let stdErr = '';
-        docurl.onStdout((result) => {
-            stdOut += result;
-        });
-        docurl.onStderr((line) => {
-            stdErr += line;
-        });
-        docurl.onDidExit((status) => {
-            if (status === 0) {
-                resolve(stdOut);
-            } else {
-                reject(stdErr);
-            }
-        });
-        docurl.start();
+  return new Promise((resolve, reject) => {
+    const docurl = new Process("/usr/bin/env", {
+      args: command
     });
+    let stdOut = "";
+    let stdErr = "";
+    docurl.onStdout((result) => {
+      stdOut += result;
+    });
+    docurl.onStderr((line) => {
+      stdErr += line;
+    });
+    docurl.onDidExit((status) => {
+      if (status === 0) {
+        resolve(stdOut);
+      } else {
+        reject(stdErr);
+      }
+    });
+    docurl.start();
+  });
 }
-
-/**
- * Dumy file
- *
- * @param {string} filePath
- * @param {string} fileName
- * @param {string} size
- * @returns {Promise}
- */
-async function dummyFile(filePath, fileName, size) {
+function dummyFile(filePath, fileName, size) {
+  return __async(this, null, function* () {
     if (!filePath) {
-        throw new Error('File path must be provided');
+      throw new Error("File path must be provided");
     }
     if (!fileName) {
-        throw new Error('File name must be provided');
+      throw new Error("File name must be provided");
     }
-
-    size = size.toLowerCase().replace(/\s/g, '').replace(/,/, '');
+    size = size.toLowerCase().replace(/\s/g, "").replace(/,/, "");
     size = size.replace(/([0-9.]+)(gigabytes|gigas|giga|gbs|gb)/i, (r1, r2) => {
-        return r2 + 'gb';
+      return r2 + "gb";
     });
     size = size.replace(/([0-9.]+)(megabytes|megabyte|mbs|mb)/i, (r1, r2) => {
-        return r2 + 'mb';
+      return r2 + "mb";
     });
     size = size.replace(/([0-9.]+)(kilobytes|kilobyte|kbs|kb)/i, (r1, r2) => {
-        return r2 + 'kb';
+      return r2 + "kb";
     });
     size = size.replace(/([0-9.]+)(bytes|byte|bs|b)/i, (r1, r2) => {
-        return r2;
+      return r2;
     });
-
     const bMatch = size.match(/^(\d+)$/i);
     const kbMatch = size.match(/^(\d+)kb$/i);
     const mbMatch = size.match(/^(\d+)mb/i);
     const gbMatch = size.match(/^(\d+)gb/i);
-
     let isZip = false;
     let isTar = false;
-
-    // Handle Zip files
-    if (fileName.endsWith('.zip')) {
-        isZip = nova.path.join(filePath, fileName);
-        fileName = fileName.replace('.zip', '.txt');
+    if (fileName.endsWith(".zip")) {
+      isZip = nova.path.join(filePath, fileName);
+      fileName = fileName.replace(".zip", ".txt");
     }
-    // Handle Tar files
-    if (fileName.endsWith('.tar')) {
-        isTar = nova.path.join(filePath, fileName);
-        fileName = fileName.replace('.tar', '.txt');
+    if (fileName.endsWith(".tar")) {
+      isTar = nova.path.join(filePath, fileName);
+      fileName = fileName.replace(".tar", ".txt");
     }
-
     filePath = nova.path.join(filePath, fileName);
-
     if (bMatch) {
-        size = +bMatch[1];
+      size = +bMatch[1];
     }
     if (kbMatch) {
-        size = +kbMatch[1] * 1000;
+      size = +kbMatch[1] * 1e3;
     }
     if (mbMatch) {
-        size = +mbMatch[1] * 1000 * 1000;
+      size = +mbMatch[1] * 1e3 * 1e3;
     }
     if (gbMatch) {
-        size = +gbMatch[1] * 1000 * 1000 * 1000;
+      size = +gbMatch[1] * 1e3 * 1e3 * 1e3;
     }
-
     if (size < 0) {
-        throw new Error('File size must be provided');
+      throw new Error("File size must be provided");
     }
-
-    if (size >= 30000000000) {
-        throw new Error('File size limit is 30GB just in case');
+    if (size >= 3e10) {
+      throw new Error("File size limit is 30GB just in case");
     }
-
-    mkFile(filePath, size)
-        .then((res) => {
-            if (isZip) {
-                return compressFile(['zip', '-m', '-0', isZip, filePath]);
-            }
-            if (isTar) {
-                return compressFile(['tar', '-cf', isTar, filePath]);
-            }
-            return true;
-        })
-        .then(() => {
-            return true;
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    mkFile(filePath, size).then((res) => {
+      if (isZip) {
+        return compressFile(["zip", "-m", "-0", isZip, filePath]);
+      }
+      if (isTar) {
+        return compressFile(["tar", "-cf", isTar, filePath]);
+      }
+      return true;
+    }).then(() => {
+      return true;
+    }).catch((error) => {
+      console.error(error);
+    });
+  });
 }
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
@@ -1483,3443 +1345,2849 @@ var uuidRandom = createCommonjsModule(function (module) {
 })();
 });
 
-/**
- * Nova Text Tools
- * created by https://www.biati.digital
- */
+var __async$1 = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
 class NovaTextTools {
-    constructor() {} //eslint-disable-line
-
-    /**
-     * Process
-     * process action for each selected range
-     * if no selection then the entire content will
-     * be processed
-     */
-    process(editor, fn, action = 'replace') {
-        let selectedRanges = editor.selectedRanges;
-
-        if (selectedRanges.length === 1 && selectedRanges[0].start === selectedRanges[0].end) {
-            selectedRanges = [new Range(0, editor.document.length)];
+  constructor() {
+  }
+  process(command, editor, fn, action = "replace") {
+    let selectedRanges = editor.selectedRanges;
+    if (selectedRanges.length === 1 && selectedRanges[0].start === selectedRanges[0].end) {
+      selectedRanges = [new Range(0, editor.document.length)];
+    }
+    for (let range of selectedRanges) {
+      const text = editor.getTextInRange(range);
+      Promise.resolve(fn.apply(this, [text])).then((response) => {
+        if (!response && typeof response !== "string") {
+          return false;
         }
-        for (const range of selectedRanges) {
-            const text = editor.getTextInRange(range);
-            Promise.resolve(fn.apply(this, [text])).then((response) => {
-                if (!response && typeof response !== 'string') {
-                    return false;
-                }
-
-                if (action === 'replace') {
-                    editor.edit((e) => e.replace(range, response));
-                }
-                if (action === 'insert') {
-                    console.log('action', action, response);
-                    editor.insert(response);
-                }
-            });
+        if (action === "replace") {
+          if (response.length < range.end - range.start) {
+            range = new Range(range.start, range.start + response.length);
+          }
+          editor.edit((e) => e.replace(range, response));
         }
-    }
-
-    /**
-     * Delete duplicates from text
-     */
-    deleteDuplicates(text) {
-        const lines = text.split('\n');
-        return [...new Set(lines)].join('\n');
-    }
-
-    /**
-     * Filter duplicates
-     */
-    filterDuplicates(text) {
-        const lines = text.split('\n');
-        const set = new Set(lines);
-        const duplicates = lines.filter((line) => {
-            if (set.has(line)) {
-                set.delete(line);
-            } else {
-                return line;
-            }
-        });
-
-        return [...new Set(duplicates)].join('\n');
-    }
-
-    /**
-     * Filter duplicates new doc
-     */
-    filterDuplicatesNewDoc(text) {
-        const lines = text.split('\n');
-        const set = new Set(lines);
-        const duplicates = lines.filter((line) => {
-            if (set.has(line)) {
-                set.delete(line);
-            } else {
-                return line;
-            }
-        });
-
-        this.newDocument([...new Set(duplicates)].join('\n'));
-        return false;
-    }
-
-    /**
-     * Delete Empty Lines
-     */
-    deleteEmptyLines(text) {
-        const lines = text.split('\n');
-        return lines.filter((line) => line.trim() !== '').join('\n');
-    }
-
-    /**
-     * Delete Lines Matching
-     */
-    deleteLinesMatching(text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Delete Lines Matching...', {
-                    placeholder: ''
-                }, (val) => {
-                    if (!val) {
-                        resolve(false);
-                        return;
-                    }
-                    resolve(this.filterLines(text, val, false));
-                }
-            );
-        });
-    }
-
-    /**
-     * Remove values that are not unique
-     * remove all elements that occur more than once from array
-     * ['php', 'phython', 'javascript', 'rust', 'php', 'python'];
-     * after filtered will look
-     * ['javascript', 'rust'];
-     */
-    filterUniques(text) {
-        const lines = text.split('\n');
-        return lines
-            .filter((line) => {
-                return lines.lastIndexOf(line) == lines.indexOf(line);
-            })
-            .join('\n');
-    }
-
-    /**
-     * Filter uniques
-     * in a new document
-     * see filterUniques
-     *
-     * @param {null}
-     */
-    filterUniquesNewDoc(text) {
-        const filtered = this.filterUniques(text);
-        this.newDocument(filtered);
-        return false;
-    }
-
-    /**
-     * Filter Lines Matching
-     */
-    filterLinesMatching(text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Keep Lines Matching...', {
-                    placeholder: ''
-                }, (val) => {
-                    if (!val) {
-                        resolve(false);
-                        return;
-                    }
-                    resolve(this.filterLines(text, val, true));
-                }
-            );
-        });
-    }
-
-    /**
-     * Filter Lines Matching
-     */
-    filterLinesMatchingNewDoc(text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Keep Lines Matching...', {
-                    placeholder: ''
-                }, (val) => {
-                    if (!val) {
-                        resolve(false);
-                        return;
-                    }
-                    this.newDocument(this.filterLines(text, val, true));
-                    resolve(false);
-                }
-            );
-        });
-    }
-
-    /**
-     * Filter lines
-     *
-     */
-    filterLines(text, search, keep = true, caseSensitive = false) {
-        const isFullRegex = search.match(/^([/~@;%#'])(.*?)\1([gimsuy]*)$/);
-        let isRegex = false;
-        let isMatchStart = search.startsWith('^');
-        let isMatchEnd = search.endsWith('$');
-        let isNot = search.startsWith('!');
-        let defaultModifier = caseSensitive ? 'g' : 'gi';
-
-        if (isFullRegex) {
-            let modifiers = isFullRegex[3];
-            if (!modifiers) {
-                modifiers = defaultModifier;
-            }
-            isRegex = new RegExp(isFullRegex[2], modifiers);
-        } else {
-            if (isMatchStart) {
-                let check = search.slice(1).toLowerCase();
-                let isStringRegexLike = isRegexLike(check);
-
-                if (isStringRegexLike) {
-                    isRegex = new RegExp(search, defaultModifier);
-                }
-                if (!isStringRegexLike) {
-                    search = search.slice(1);
-                }
-            } else if (isMatchEnd) {
-                let check = search.slice(0, -1).toLowerCase();
-                let isStringRegexLike = isRegexLike(check);
-
-                if (isStringRegexLike) {
-                    isRegex = new RegExp(search, defaultModifier);
-                }
-                if (!isStringRegexLike) {
-                    search = search.slice(0, -1);
-                }
-            } else if (isNot) {
-                let check = search.slice(1);
-                let isStringRegexLike = isRegexLike(check);
-
-                if (isStringRegexLike) {
-                    isRegex = new RegExp(search, defaultModifier);
-                }
-                if (!isStringRegexLike) {
-                    search = search.slice(1);
-                }
-            } else {
-                let isStringRegexLike = isRegexLike(search);
-                if (search.length > 1 && isStringRegexLike) {
-                    isRegex = new RegExp(search, defaultModifier);
-                }
-            }
+        if (action === "insert") {
+          console.log("action", action, response);
+          editor.insert(response);
         }
-
-        const lines = text.split('\n');
-        return lines
-            .filter((line) => {
-                if (line.trim() === '') {
-                    return line;
-                }
-
-                let match = null;
-                if (isRegex) {
-                    if (isMatchStart) {
-                        line = line.trimStart();
-                    }
-                    if (isMatchEnd) {
-                        line = line.trimEnd();
-                    }
-
-                    try {
-                        match = line.match(isRegex);
-                    } catch (error) {}
-                } else if (isMatchStart) {
-                    match = line.trimStart().startsWith(search);
-                } else if (isMatchEnd) {
-                    match = line.trimEnd().endsWith(search);
-                } else {
-                    match = line.includes(search);
-                }
-
-                if ((match == true && isNot == true) || (match == false && isNot == true)) {
-                    match = !match;
-                }
-
-                return match;
-            })
-            .join('\n');
+      });
     }
-
-    /**
-     * Wrap lines with
-     */
-    wrapLinesWith(text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Wrap Each Line With', {
-                    placeholder: '<li>$1</li>'
-                }, (val) => {
-                    if (!val) {
-                        resolve(false);
-                        return;
-                    }
-                    const lines = text.split('\n');
-                    const wrapped = lines.map(line => {
-                        const whitespace = line.match(/^[\s]*/g);
-                        let newLine = val;
-
-                        if (whitespace && whitespace[0]) {
-                            newLine = whitespace[0] + newLine;
-                        }
-
-                        return newLine.replace('$1', line.trim());
-                    });
-                    resolve(wrapped.join('\n'));
-                }
-            );
-        });
-    }
-
-    /**
-     * Append to lines
-     */
-    appendToLines(text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Enter text to add at the beginning', {
-                    placeholder: ''
-                }, (val) => {
-                    if (!val) {
-                        resolve(false);
-                        return;
-                    }
-                    const lines = text.split('\n');
-                    const appended = lines.map(line => {
-                        const whitespace = line.match(/^[\s]*/g);
-                        let newLine = val + line;
-
-                        if (whitespace && whitespace[0]) {
-                            newLine = whitespace[0] + val + line.trimStart();
-                        }
-
-                        return newLine;
-                    });
-
-                    resolve(appended.join('\n'));
-                }
-            );
-        });
-    }
-
-    /**
-     * Prepend to lines
-     */
-    prependToLines(text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Enter text to add at the end', {
-                    placeholder: ''
-                }, (val) => {
-                    if (!val) {
-                        resolve(false);
-                        return;
-                    }
-                    const lines = text.split('\n');
-                    const prepended = lines.map(line => {
-                        return line + val;
-                    });
-                    resolve(prepended.join('\n'));
-                }
-            );
-        });
-    }
-
-    /**
-     * Sort Lines
-     */
-    sortLinesAlphanumerically(text) {
-        const lines = text.split('\n');
-        const sorted = lines.sort((a, b) => {
-            return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'case' });
-        });
-        return sorted.join('\n');
-    }
-
-    /**
-     * Sort Lines Reverse
-     */
-    sortLinesAlphanumericallyReverse(text) {
-        const lines = text.split('\n');
-        const sorted = lines
-            .sort((a, b) => {
-                return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'case' });
-            })
-            .reverse();
-        return sorted.join('\n');
-    }
-
-    /**
-     * Sort Lines by length
-     */
-    sortLinesByLength(text) {
-        const lines = text.split('\n');
-        return lines
-            .sort((a, b) => {
-                return a.length - b.length;
-            })
-            .join('\n');
-    }
-
-    sortLinesByLengthReverse(text) {
-        const lines = text.split('\n');
-        return lines
-            .sort((a, b) => {
-                return b.length - a.length;
-            })
-            .join('\n');
-    }
-
-    /**
-     * Reverse Lines
-     */
-    reverseLines(text) {
-        return text.split('\n').reverse().join('\n');
-    }
-
-    /**
-     * Joing Lines
-     */
-    joinLines(text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Join Lines Delimiter', {
-                    placeholder: 'Delimiter'
-                }, (val) => {
-                    if (!val) {
-                        resolve(false);
-                        return;
-                    }
-                    resolve(text.split('\n').join(val));
-                }
-            );
-        });
-    }
-
-    /**
-     * Split Text to lines
-     */
-    splitToLines(text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Split Text at Delimiter', {
-                    placeholder: 'Delimiter'
-                }, (val) => {
-                    if (!val) {
-                        resolve(false);
-                        return;
-                    }
-                    const splitted = text.split(val).map(line => {
-                        return line.trimStart();
-                    });
-                    resolve(splitted.join('\n'));
-                }
-            );
-        });
-    }
-
-    /**
-     * Randomize Line
-     */
-    randomLines(text) {
-        return randomArray(text.split('\n')).join('\n');
-    }
-
-    /**
-     * Lower Case
-     */
-    toLowercase(text) {
-        return text.toLowerCase();
-    }
-
-    /**
-     * Upper Case
-     */
-    toUpperCase(text) {
-        return text.toUpperCase();
-    }
-
-    /**
-     * Snake Case
-     */
-    toSnakeCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return snakeCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Captal Case
-     */
-    toCapitalCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return line.replace(/(^|\s)\S/g, (l) => l.toUpperCase());
-            })
-            .join('\n');
-    }
-
-    /**
-     * Camel Case
-     */
-    toCamelCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return camelCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Constant Case
-     */
-    toConstantCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return constantCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Dot Case
-     */
-    toDotCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return dotCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Header Case
-     */
-    toHeaderCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return headerCase(line);
-            })
-            .join('\n');
-    }
-
-    /**
-     * No Case
-     */
-    toNoCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return noCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Param Case
-     */
-    toParamCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return paramCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Param Case
-     */
-    toPascalCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return pascalCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Param Case
-     */
-    toPathCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return pathCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Sentence Case
-     */
-    toSentenceCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return sentenceCase(this.normalizeText(line));
-            })
-            .join('\n');
-    }
-
-    /**
-     * Sponge Case
-     */
-    toSpongeCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                let result = '';
-                for (let i = 0; i < line.length; i++) {
-                    result += Math.random() > 0.5 ? line[i].toUpperCase() : line[i].toLowerCase();
-                }
-                return result;
-            })
-            .join('\n');
-    }
-
-    /**
-     * Title Case
-     */
-    toTitleCase(text) {
-        const lines = text.split('\n');
-        return lines
-            .map((line) => {
-                return titleCase(line.toLowerCase());
-            })
-            .join('\n');
-    }
-
-    /**
-     * Add Lines Numbers
-     */
-    addLinesNumbers(text, format = false) {
-        return new Promise((resolve, reject) => {
-            if (!format) {
-                nova.workspace.showChoicePalette(
-                    // prettier-ignore
-                    [
-                        'Add Line Numbers with 1 ',
-                        'Add Line Numbers with 1.',
-                        'Add Line Numbers with 1)',
-                        'Add Line Numbers with 1.-',
-                        'Add Line Numbers with 1 -',
-                        'Add Line Numbers with 1:',
-                        'Add Line Numbers with Ordinal',
-                        'Add Line Numbers with Roman Numerals'
-                    ],
-                    { placeholder: '' },
-                    (sel) => {
-                        if (!sel) {
-                            resolve(false);
-                            return false;
-                        }
-
-                        sel = sel.replace('Add Line Numbers with 1', '');
-                        sel = sel.replace('Add Line Numbers with ', '');
-                        resolve(this.addLinesNumbers(text, sel));
-                    }
-                );
-                return false;
-            }
-
-            const lines = text
-                .split('\n')
-                .map((line, i) => {
-                    i = i + 1;
-
-                    switch (format) {
-                        case 'Ordinal':
-                            i = ordinalSuffix(i);
-                            line = `${i} ${line}`;
-                            break;
-                        case 'Roman Numerals':
-                            i = romanize(i);
-                            line = `${i} ${line}`;
-                            break;
-                        default:
-                            line = `${i}${format} ${line}`;
-                    }
-
-                    return line;
-                })
-                .join('\n');
-            resolve(lines);
-        });
-    }
-
-    /**
-     * Base 64 encode
-     */
-    base64Encode(text) {
-        return btoa(text);
-    }
-
-    /**
-     * Base 64 decode
-     */
-    base64Decode(text) {
-        return atob(text);
-    }
-
-    /**
-     * URL encode
-     */
-    urlEncode(text) {
-        return encodeURIComponent(text);
-    }
-
-    /**
-     * URL decode
-     */
-    urlDecode(text) {
-        return decodeURIComponent(text);
-    }
-
-    /**
-     * Spaces encode
-     */
-    spacesEncode(text) {
-        return text.replace(/ /g, '%20');
-    }
-
-    /**
-     * Spaces decode
-     */
-    spacesDecode(text) {
-        return text.replace(/%20/g, ' ');
-    }
-
-    /**
-     * Spaces encode
-     */
-    htmlEncode(text) {
-        return index.encode(text);
-    }
-
-    /**
-     * Spaces decode
-     */
-    htmlDecode(text) {
-        return index.decode(text);
-    }
-
-    /**
-     * Get the decimal value of an ASCII character
-     */
-    asciiToDecimal(text, fn = null) {
-        let encoded = [];
-        for (const letter of text) {
-            let decimal = Number(letter.charCodeAt(0).toString(10));
-
-            if (fn) {
-                decimal = fn(decimal);
-            }
-
-            encoded.push(decimal);
+  }
+  deleteDuplicates(text) {
+    const lines = text.split("\n");
+    return [...new Set(lines)].join("\n");
+  }
+  filterDuplicates(text) {
+    const lines = text.split("\n");
+    const set = new Set(lines);
+    const duplicates = lines.filter((line) => {
+      if (set.has(line)) {
+        set.delete(line);
+      } else {
+        return line;
+      }
+    });
+    return [...new Set(duplicates)].join("\n");
+  }
+  filterDuplicatesNewDoc(text) {
+    const lines = text.split("\n");
+    const set = new Set(lines);
+    const duplicates = lines.filter((line) => {
+      if (set.has(line)) {
+        set.delete(line);
+      } else {
+        return line;
+      }
+    });
+    this.newDocument([...new Set(duplicates)].join("\n"));
+    return false;
+  }
+  deleteEmptyLines(text) {
+    const lines = text.split("\n");
+    return lines.filter((line) => line.trim() !== "").join("\n");
+  }
+  deleteLinesMatching(text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Delete Lines Matching...", {
+        placeholder: ""
+      }, (val) => {
+        if (!val) {
+          resolve(false);
+          return;
         }
-
-        return encoded.join(' ');
-    }
-
-    /**
-     * HTML ASCII to decimal
-     */
-    htmlAsciiToDecimal(text) {
-        let encoded = this.asciiToDecimal(text, (decimal) => {
-            decimal = decimal < 100 ? '0' + decimal : decimal;
-            return '&#' + decimal + ';';
-        });
-
-        return encoded.replace(/ /g, '');
-    }
-
-    /**
-     * ASCII to Hex (bytes)
-     */
-    asciiToHex(text) {
-        let encoded = [];
-        for (const letter of text) {
-            encoded.push(Number(letter.charCodeAt(0)).toString(16));
+        resolve(this.filterLines(text, val, false));
+      });
+    });
+  }
+  filterUniques(text) {
+    const lines = text.split("\n");
+    return lines.filter((line) => {
+      return lines.lastIndexOf(line) == lines.indexOf(line);
+    }).join("\n");
+  }
+  filterUniquesNewDoc(text) {
+    const filtered = this.filterUniques(text);
+    this.newDocument(filtered);
+    return false;
+  }
+  filterLinesMatching(text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Keep Lines Matching...", {
+        placeholder: ""
+      }, (val) => {
+        if (!val) {
+          resolve(false);
+          return;
         }
-
-        return encoded.join(' ').toUpperCase();
-    }
-
-    /**
-     * Text to binary
-     */
-    textToBinary(text) {
-        let binary = [];
-        for (const letter of text) {
-            binary.push(toBinary(letter.charCodeAt(0)));
+        resolve(this.filterLines(text, val, true));
+      });
+    });
+  }
+  filterLinesMatchingNewDoc(text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Keep Lines Matching...", {
+        placeholder: ""
+      }, (val) => {
+        if (!val) {
+          resolve(false);
+          return;
         }
-        return binary.join(' ');
-    }
-
-    /**
-     * Text to binary
-     */
-    binaryToText(text) {
-        let string = [];
-        text.split(' ').forEach((binary) => {
-            string.push(fromBinary(binary));
-        });
-
-        return string.join('');
-    }
-
-    /**
-     * Strip Slashes
-     */
-    stripSlashes(text) {
-        return text.replace(/\\/g, '');
-    }
-
-    /**
-     * Add Slashes
-     */
-    addSlashes(text) {
-        return text.replace(/'|\\'/g, "\\'").replace(/"|\\"/g, '\\"'); //eslint-disable-line
-    }
-
-    /**
-     * Smart Punctuation
-     */
-    smartQuotes(text) {
-        return text
-            .replace(/(^|[-\u2014\s(\["])'/g, '$1\u2018')
-            .replace(/'/g, '\u2019')
-            .replace(/(^|[-\u2014/\[(\u2018\s])"/g, '$1\u201c')
-            .replace(/"/g, '\u201d')
-            .replace(/--/g, '\u2014');
-    }
-
-    /**
-     * Straighten Quotes
-     */
-    straightenQuotes(text) {
-        return text
-            .replace(/[\u2018\u2019]/g, "'") // eslint-disable-line
-            .replace(/[\u201C\u201D]/g, '"')
-            .replace(/[\u2013\u2014]/g, '-')
-            .replace(/[\u2026]/g, '...');
-    }
-
-    /**
-     * Single to double qutoes
-     */
-    quotesSingleToDouble(text) {
-        return quotesTransform(text, "'", '"'); //eslint-disable-line
-    }
-
-    /**
-     * Single to double qutoes
-     */
-    quotesSingleToBackticks(text) {
-        return quotesTransform(text, "'", '`'); //eslint-disable-line
-    }
-
-    /**
-     * Double qutoes to single quotes
-     */
-    quotesDoubleToSingle(text) {
-        return quotesTransform(text, '"', "'"); //eslint-disable-line
-    }
-
-    /**
-     * Double qutoes to backticks
-     */
-    quotesDoubleToBackticks(text) {
-        return quotesTransform(text, '"', '`');
-    }
-
-    /**
-     * Select
-     * this handles commands related
-     * with text selection
-     * it calls other function and they
-     * should return an array with the
-     * information about the ranges that
-     * need to be selected
-     */
-    async select(editor, fn) {
-        let selectedRanges = [new Range(0, editor.document.length)];
-        /*let selectedRanges = editor.selectedRanges;
-
-        if (selectedRanges.length === 1 && selectedRanges[0].start === selectedRanges[0].end) {
-            selectedRanges = [new Range(0, editor.document.length)];
-        }*/
-        for (const range of selectedRanges) {
-            const text = editor.getTextInRange(range);
-            Promise.resolve(fn.apply(this, [editor, text])).then((response) => {
-                if (!response || !response.length) {
-                    return false;
-                }
-
-                log('Matches found ' + response.length);
-                logPerformanceStart('Nova select');
-
-                // Move the cursor position to the first matched range
-                editor.selectedRanges = [new Range(response[0].start, response[0].end)];
-
-                // Add selection ranges
-                /*for (const filteredRange of response) {
-                    editor.addSelectionForRange(filteredRange);
-                }*/
-                editor.selectedRanges = response;
-
-                // Scroll to the first change
-                editor.scrollToPosition(response[0].start);
-                logPerformanceEnd('Nova select');
-            });
+        this.newDocument(this.filterLines(text, val, true));
+        resolve(false);
+      });
+    });
+  }
+  filterLines(text, search, keep = true, caseSensitive = false) {
+    const isFullRegex = search.match(/^([/~@;%#'])(.*?)\1([gimsuy]*)$/);
+    let isRegex = false;
+    let isMatchStart = search.startsWith("^");
+    let isMatchEnd = search.endsWith("$");
+    let isNot = search.startsWith("!");
+    let defaultModifier = caseSensitive ? "g" : "gi";
+    if (isFullRegex) {
+      let modifiers = isFullRegex[3];
+      if (!modifiers) {
+        modifiers = defaultModifier;
+      }
+      isRegex = new RegExp(isFullRegex[2], modifiers);
+    } else {
+      if (isMatchStart) {
+        let check = search.slice(1).toLowerCase();
+        let isStringRegexLike = isRegexLike(check);
+        if (isStringRegexLike) {
+          isRegex = new RegExp(search, defaultModifier);
         }
+        if (!isStringRegexLike) {
+          search = search.slice(1);
+        }
+      } else if (isMatchEnd) {
+        let check = search.slice(0, -1).toLowerCase();
+        let isStringRegexLike = isRegexLike(check);
+        if (isStringRegexLike) {
+          isRegex = new RegExp(search, defaultModifier);
+        }
+        if (!isStringRegexLike) {
+          search = search.slice(0, -1);
+        }
+      } else if (isNot) {
+        let check = search.slice(1);
+        let isStringRegexLike = isRegexLike(check);
+        if (isStringRegexLike) {
+          isRegex = new RegExp(search, defaultModifier);
+        }
+        if (!isStringRegexLike) {
+          search = search.slice(1);
+        }
+      } else {
+        let isStringRegexLike = isRegexLike(search);
+        if (search.length > 1 && isStringRegexLike) {
+          isRegex = new RegExp(search, defaultModifier);
+        }
+      }
     }
-
-    /**
-     * Select Lines Matching
-     */
-    selectLinesMatching(editor, text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Select Lines Matching...', {
-                    placeholder: ''
-                }, (val) => {
-                    if (!val) {
-                        resolve([]);
-                        return;
-                    }
-
-                    logPerformanceStart('select lines by match');
-
-                    const matched = this.filterLines(text, val, true);
-                    if (!matched || !matched.length) {
-                        resolve([]);
-                        return;
-                    }
-
-                    const lines = matched.split('\n');
-                    const allText = editor.getTextInRange(new Range(0, editor.document.length));
-                    const newRanges = [];
-
-                    for (let line of lines) {
-                        line = escape(line);
-                        const regex = new RegExp('^' + line + '$', 'gm');
-                        const matchedInDoc = [...allText.matchAll(regex)];
-
-                        if (matchedInDoc && matchedInDoc.length) {
-                            matchedInDoc.forEach(match => {
-
-                                const matchStart = match.index;
-                                const matchEnd = matchStart + match[0].length;
-                                const matchedrange = new Range(matchStart, matchEnd);
-
-                                // This is the line containing the match
-                                const matchedLinerange = editor.getLineRangeForRange(matchedrange);
-
-                                // The entire text of the line
-                                //const lineText = editor.getTextInRange(matchedLinerange);
-                                const lineText = line;
-                                const leading = lineText.match(/^[\s]+/);
-
-                                // if we use matchedLinerange it will select the entire
-                                // line from start to end of the editor, we only want to select
-                                // the text in that line
-                                let lineStartRange = matchedLinerange.start;
-                                let lineEndRange = matchedLinerange.end - 1;
-
-                                if (leading && leading.length === 1 && typeof leading[0] === 'string') {
-                                    lineStartRange += leading[0].length;
-                                }
-
-                                newRanges.push(new Range(lineStartRange, lineEndRange));
-                                //newRanges.push(new Range(match.index, match.index + match[0].length));
-                            });
-                        }
-                    }
-
-                    logPerformanceEnd('select lines by match');
-
-                    resolve(newRanges);
-                }
-            );
+    const lines = text.split("\n");
+    return lines.filter((line) => {
+      if (line.trim() === "") {
+        return line;
+      }
+      let match = null;
+      if (isRegex) {
+        if (isMatchStart) {
+          line = line.trimStart();
+        }
+        if (isMatchEnd) {
+          line = line.trimEnd();
+        }
+        try {
+          match = line.match(isRegex);
+        } catch (error) {
+        }
+      } else if (isMatchStart) {
+        match = line.trimStart().startsWith(search);
+      } else if (isMatchEnd) {
+        match = line.trimEnd().endsWith(search);
+      } else {
+        match = line.includes(search);
+      }
+      if (match == true && isNot == true || match == false && isNot == true) {
+        match = !match;
+      }
+      return match;
+    }).join("\n");
+  }
+  wrapLinesWith(text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Wrap Each Line With", {
+        placeholder: "<li>$1</li>"
+      }, (val) => {
+        if (!val) {
+          resolve(false);
+          return;
+        }
+        const lines = text.split("\n");
+        const wrapped = lines.map((line) => {
+          const whitespace = line.match(/^[\s]*/g);
+          let newLine = val;
+          if (whitespace && whitespace[0]) {
+            newLine = whitespace[0] + newLine;
+          }
+          return newLine.replace("$1", line.trim());
         });
-    }
-
-    /**
-     * Select All Ocurrences matching
-     * check all ocurrences that matches a specific query
-     */
-    selectAllOcurrencesMatching(editor, text) {
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Select Ocurrences Matching...', {
-                    placeholder: ''
-                }, (val) => {
-                    if (!val) {
-                        resolve([]);
-                        return;
-                    }
-                    const isFullRegex = val.match(/^([/~@;%#'])(.*?)\1([gimsuy]*)$/);
-                    let regex = false;
-                    let isMatchStart = val.startsWith('^');
-                    let isMatchEnd = val.endsWith('$');
-                    let isNot = val.startsWith('!');
-                    let defaultModifier =  'gi';
-
-                    if (isFullRegex) {
-                        let modifiers = isFullRegex[3];
-                        if (!modifiers) {
-                            modifiers = defaultModifier;
-                        }
-                        if (modifiers) {
-                            regex = new RegExp(isFullRegex[2], modifiers);
-                        } else {
-                            regex = new RegExp(isFullRegex[2]);
-                        }
-                    } else {
-                        if (isMatchStart) {
-                            let check = val.slice(1).toLowerCase();
-                            let isStringRegexLike = isRegexLike(check);
-
-                            if (isStringRegexLike) {
-                                regex = new RegExp(val, defaultModifier);
-                            }
-                            if (!isStringRegexLike) {
-                                val = val.slice(1);
-                            }
-                        } else if (isMatchEnd) {
-                            let check = val.slice(0, -1).toLowerCase();
-                            let isStringRegexLike = isRegexLike(check);
-
-                            if (isStringRegexLike) {
-                                regex = new RegExp(val, defaultModifier);
-                            }
-                            if (!isStringRegexLike) {
-                                val = val.slice(0, -1);
-                            }
-                        } else if (isNot) {
-                            let check = val.slice(1);
-                            let isStringRegexLike = isRegexLike(check);
-
-                            if (isStringRegexLike) {
-                                regex = new RegExp(val, defaultModifier);
-                            }
-                            if (!isStringRegexLike) {
-                                val = val.slice(1);
-                            }
-                        } else {
-                            let isStringRegexLike = isRegexLike(val);
-                            if (val.length > 1 && isStringRegexLike) {
-                                console.log('defaultModifier', defaultModifier);
-                                regex = new RegExp(val, defaultModifier);
-                            }
-                            if (val.length > 1 && !isStringRegexLike) {
-                                regex = new RegExp(escape(val), defaultModifier);
-                            }
-                        }
-                    }
-
-
-                    const allText = editor.getTextInRange(new Range(0, editor.document.length));
-                    const matchedInDoc = [...allText.matchAll(regex)];
-                    const newRanges = [];
-
-                    if (matchedInDoc && matchedInDoc.length) {
-                        matchedInDoc.forEach(match => {
-
-                            let fullMatch = match[0];
-                            let matchStart = match.index;
-                            let matchEnd = matchStart + match[0].length;
-
-                            if (match.length <= 1) {
-                                newRanges.push(new Range(matchStart, matchEnd));
-                            } else {
-                                // There's capture groups
-                                // If capture groups only select every group
-                                let groupsMatched = [...match];
-                                groupsMatched.shift();
-
-                                for (const imatch of groupsMatched) {
-                                    let groupStart = matchStart + fullMatch.indexOf(imatch);
-                                    let groupEnd = groupStart + imatch.length;
-                                    newRanges.push(new Range(groupStart, groupEnd));
-                                }
-                            }
-                        });
-                    }
-                    resolve(newRanges);
-                }
-            );
+        resolve(wrapped.join("\n"));
+      });
+    });
+  }
+  appendToLines(text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Enter text to add at the beginning", {
+        placeholder: ""
+      }, (val) => {
+        if (!val) {
+          resolve(false);
+          return;
+        }
+        const lines = text.split("\n");
+        const appended = lines.map((line) => {
+          const whitespace = line.match(/^[\s]*/g);
+          let newLine = val + line;
+          if (whitespace && whitespace[0]) {
+            newLine = whitespace[0] + val + line.trimStart();
+          }
+          return newLine;
         });
+        resolve(appended.join("\n"));
+      });
+    });
+  }
+  prependToLines(text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Enter text to add at the end", {
+        placeholder: ""
+      }, (val) => {
+        if (!val) {
+          resolve(false);
+          return;
+        }
+        const lines = text.split("\n");
+        const prepended = lines.map((line) => {
+          return line + val;
+        });
+        resolve(prepended.join("\n"));
+      });
+    });
+  }
+  sortLinesAlphanumerically(text) {
+    const lines = text.split("\n");
+    const firstLineIndent = lines[0].match(/^[\s]*/g);
+    const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+    const sorted = lines.sort((a, b) => {
+      return a.localeCompare(b, void 0, { numeric: true, sensitivity: "case" });
+    });
+    if (firstLineIndent) {
+      sorted[0] = sorted[0].replace(/^[\s]*/g, firstLineIndent[0]);
     }
-
-    /**
-     * Select All Ocurrences
-     */
-    selectOcurrences(editor, text) {
-        let selected = editor.selectedText;
-        if (!selected) {
+    if (lastLineIndent) {
+      sorted[lines.length - 1] = sorted[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+    }
+    return sorted.join("\n");
+  }
+  sortLinesAlphanumericallyReverse(text) {
+    const lines = text.split("\n");
+    const firstLineIndent = lines[0].match(/^[\s]*/g);
+    const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+    const sorted = lines.sort((a, b) => {
+      return a.localeCompare(b, void 0, { numeric: true, sensitivity: "case" });
+    }).reverse();
+    if (firstLineIndent) {
+      sorted[0] = sorted[0].replace(/^[\s]*/g, firstLineIndent[0]);
+    }
+    if (lastLineIndent) {
+      sorted[lines.length - 1] = sorted[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+    }
+    return sorted.join("\n");
+  }
+  sortLinesByLength(text) {
+    const lines = text.split("\n");
+    const firstLineIndent = lines[0].match(/^[\s]*/g);
+    const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+    const sorted = lines.sort((a, b) => {
+      return a.length - b.length;
+    });
+    if (firstLineIndent) {
+      sorted[0] = sorted[0].replace(/^[\s]*/g, firstLineIndent[0]);
+    }
+    if (lastLineIndent) {
+      sorted[lines.length - 1] = sorted[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+    }
+    return sorted.join("\n");
+  }
+  sortLinesByLengthReverse(text) {
+    const lines = text.split("\n");
+    const firstLineIndent = lines[0].match(/^[\s]*/g);
+    const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+    const sorted = lines.sort((a, b) => {
+      return b.length - a.length;
+    });
+    if (firstLineIndent) {
+      sorted[0] = sorted[0].replace(/^[\s]*/g, firstLineIndent[0]);
+    }
+    if (lastLineIndent) {
+      sorted[lines.length - 1] = sorted[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+    }
+    return sorted.join("\n");
+  }
+  reverseLines(text) {
+    const lines = text.split("\n");
+    const firstLineIndent = lines[0].match(/^[\s]*/g);
+    const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+    return lines.reverse().map((line, index) => {
+      if (index === 0 && firstLineIndent) {
+        line = line.replace(/^[\s]*/g, firstLineIndent[0]);
+      }
+      if (index === lines.length - 1 && lastLineIndent) {
+        line = line.replace(/^[\s]*/g, lastLineIndent[0]);
+      }
+      return line;
+    }).join("\n");
+  }
+  joinLines(text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Join Lines Delimiter", {
+        placeholder: "Delimiter"
+      }, (val) => {
+        if (!val) {
+          resolve(false);
+          return;
+        }
+        resolve(text.split("\n").join(val));
+      });
+    });
+  }
+  splitToLines(text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Split Text at Delimiter", {
+        placeholder: "Delimiter"
+      }, (val) => {
+        if (!val) {
+          resolve(false);
+          return;
+        }
+        const splitted = text.split(val).map((line) => {
+          return line.trimStart();
+        });
+        resolve(splitted.join("\n"));
+      });
+    });
+  }
+  randomLines(text) {
+    return randomArray(text.split("\n")).join("\n");
+  }
+  toLowercase(text) {
+    return text.toLowerCase();
+  }
+  toUpperCase(text) {
+    return text.toUpperCase();
+  }
+  toSnakeCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return snakeCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toCapitalCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return line.replace(/(^|\s)\S/g, (l) => l.toUpperCase());
+    }).join("\n");
+  }
+  toCamelCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return camelCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toConstantCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return constantCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toDotCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return dotCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toHeaderCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return headerCase(line);
+    }).join("\n");
+  }
+  toNoCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return noCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toParamCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return paramCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toPascalCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return pascalCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toPathCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return pathCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toSentenceCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return sentenceCase(this.normalizeText(line));
+    }).join("\n");
+  }
+  toSpongeCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      let result = "";
+      for (let i = 0; i < line.length; i++) {
+        result += Math.random() > 0.5 ? line[i].toUpperCase() : line[i].toLowerCase();
+      }
+      return result;
+    }).join("\n");
+  }
+  toTitleCase(text) {
+    const lines = text.split("\n");
+    return lines.map((line) => {
+      return titleCase(line.toLowerCase());
+    }).join("\n");
+  }
+  addLinesNumbers(text, format = false) {
+    return new Promise((resolve, reject) => {
+      if (!format) {
+        nova.workspace.showChoicePalette([
+          "Add Line Numbers with 1 ",
+          "Add Line Numbers with 1.",
+          "Add Line Numbers with 1)",
+          "Add Line Numbers with 1.-",
+          "Add Line Numbers with 1 -",
+          "Add Line Numbers with 1:",
+          "Add Line Numbers with Ordinal",
+          "Add Line Numbers with Roman Numerals"
+        ], { placeholder: "" }, (sel) => {
+          if (!sel) {
+            resolve(false);
             return false;
+          }
+          sel = sel.replace("Add Line Numbers with 1", "");
+          sel = sel.replace("Add Line Numbers with ", "");
+          resolve(this.addLinesNumbers(text, sel));
+        });
+        return false;
+      }
+      const lines = text.split("\n");
+      const firstLineIndent = lines[0].match(/^[\s]*/g);
+      const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
+      const ordered = lines.map((line, i) => {
+        i = i + 1;
+        let whitespace = line.match(/^[\s]*/g);
+        let leading = "";
+        if (whitespace && whitespace[0]) {
+          leading = whitespace[0];
         }
-        selected = escape(selected);
+        switch (format) {
+          case "Ordinal":
+            i = ordinalSuffix(i);
+            line = `${leading}${i} ${line.trimStart()}`;
+            break;
+          case "Roman Numerals":
+            i = romanize(i);
+            line = `${leading}${i} ${line.trimStart()}`;
+            break;
+          default:
+            line = `${leading}${i}${format} ${line.trimStart()}`;
+        }
+        return line;
+      });
+      if (firstLineIndent) {
+        ordered[0] = ordered[0].replace(/^[\s]*/g, firstLineIndent[0]);
+      }
+      if (lastLineIndent) {
+        ordered[lines.length - 1] = ordered[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
+      }
+      resolve(ordered.join("\n"));
+    });
+  }
+  base64Encode(text) {
+    return btoa(text);
+  }
+  base64Decode(text) {
+    return atob(text);
+  }
+  urlEncode(text) {
+    return encodeURIComponent(text);
+  }
+  urlDecode(text) {
+    return decodeURIComponent(text);
+  }
+  spacesEncode(text) {
+    return text.replace(/ /g, "%20");
+  }
+  spacesDecode(text) {
+    return text.replace(/%20/g, " ");
+  }
+  htmlEncode(text) {
+    return index.encode(text);
+  }
+  htmlDecode(text) {
+    return index.decode(text);
+  }
+  asciiToDecimal(text, fn = null) {
+    let encoded = [];
+    for (const letter of text) {
+      let decimal = Number(letter.charCodeAt(0).toString(10));
+      if (fn) {
+        decimal = fn(decimal);
+      }
+      encoded.push(decimal);
+    }
+    return encoded.join(" ");
+  }
+  htmlAsciiToDecimal(text) {
+    let encoded = this.asciiToDecimal(text, (decimal) => {
+      decimal = decimal < 100 ? "0" + decimal : decimal;
+      return "&#" + decimal + ";";
+    });
+    return encoded.replace(/ /g, "");
+  }
+  asciiToHex(text) {
+    let encoded = [];
+    for (const letter of text) {
+      encoded.push(Number(letter.charCodeAt(0)).toString(16));
+    }
+    return encoded.join(" ").toUpperCase();
+  }
+  textToBinary(text) {
+    let binary = [];
+    for (const letter of text) {
+      binary.push(toBinary(letter.charCodeAt(0)));
+    }
+    return binary.join(" ");
+  }
+  binaryToText(text) {
+    let string = [];
+    text.split(" ").forEach((binary) => {
+      string.push(fromBinary(binary));
+    });
+    return string.join("");
+  }
+  rot13(text) {
+    return text.replace(/[a-zA-Z]/g, function(c) {
+      return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+    });
+  }
+  stripSlashes(text) {
+    return text.replace(/\\/g, "");
+  }
+  addSlashes(text) {
+    return text.replace(/'|\\'/g, "\\'").replace(/"|\\"/g, '\\"');
+  }
+  smartQuotes(text) {
+    return text.replace(/(^|[-\u2014\s(\["])'/g, "$1\u2018").replace(/'/g, "\u2019").replace(/(^|[-\u2014/\[(\u2018\s])"/g, "$1\u201C").replace(/"/g, "\u201D").replace(/--/g, "\u2014");
+  }
+  straightenQuotes(text) {
+    return text.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/[\u2013\u2014]/g, "-").replace(/[\u2026]/g, "...");
+  }
+  quotesSingleToDouble(text) {
+    return quotesTransform(text, "'", '"');
+  }
+  quotesSingleToBackticks(text) {
+    return quotesTransform(text, "'", "`");
+  }
+  quotesDoubleToSingle(text) {
+    return quotesTransform(text, '"', "'");
+  }
+  quotesDoubleToBackticks(text) {
+    return quotesTransform(text, '"', "`");
+  }
+  select(editor, fn) {
+    return __async$1(this, null, function* () {
+      let selectedRanges = [new Range(0, editor.document.length)];
+      for (const range of selectedRanges) {
+        const text = editor.getTextInRange(range);
+        Promise.resolve(fn.apply(this, [editor, text])).then((response) => {
+          if (!response || !response.length) {
+            return false;
+          }
+          log("Matches found " + response.length);
+          logPerformanceStart("Nova select");
+          editor.selectedRanges = [new Range(response[0].start, response[0].end)];
+          editor.selectedRanges = response;
+          editor.scrollToPosition(response[0].start);
+          logPerformanceEnd("Nova select");
+        });
+      }
+    });
+  }
+  selectLinesMatching(editor, text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Select Lines Matching...", {
+        placeholder: ""
+      }, (val) => {
+        if (!val) {
+          resolve([]);
+          return;
+        }
+        logPerformanceStart("select lines by match");
+        const matched = this.filterLines(text, val, true);
+        if (!matched || !matched.length) {
+          resolve([]);
+          return;
+        }
+        const lines = matched.split("\n");
         const allText = editor.getTextInRange(new Range(0, editor.document.length));
-        const regex = new RegExp(selected, 'gi');
+        const newRanges = [];
+        for (let line of lines) {
+          line = escape(line);
+          const regex = new RegExp("^" + line + "$", "gm");
+          const matchedInDoc = [...allText.matchAll(regex)];
+          if (matchedInDoc && matchedInDoc.length) {
+            matchedInDoc.forEach((match) => {
+              const matchStart = match.index;
+              const matchEnd = matchStart + match[0].length;
+              const matchedrange = new Range(matchStart, matchEnd);
+              const matchedLinerange = editor.getLineRangeForRange(matchedrange);
+              const lineText = line;
+              const leading = lineText.match(/^[\s]+/);
+              let lineStartRange = matchedLinerange.start;
+              let lineEndRange = matchedLinerange.end - 1;
+              if (leading && leading.length === 1 && typeof leading[0] === "string") {
+                lineStartRange += leading[0].length;
+              }
+              newRanges.push(new Range(lineStartRange, lineEndRange));
+            });
+          }
+        }
+        logPerformanceEnd("select lines by match");
+        resolve(newRanges);
+      });
+    });
+  }
+  selectAllOcurrencesMatching(editor, text) {
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Select Ocurrences Matching...", {
+        placeholder: ""
+      }, (val) => {
+        if (!val) {
+          resolve([]);
+          return;
+        }
+        const isFullRegex = val.match(/^([/~@;%#'])(.*?)\1([gimsuy]*)$/);
+        let regex = false;
+        let isMatchStart = val.startsWith("^");
+        let isMatchEnd = val.endsWith("$");
+        let isNot = val.startsWith("!");
+        let defaultModifier =  "gi";
+        if (isFullRegex) {
+          let modifiers = isFullRegex[3];
+          if (!modifiers) {
+            modifiers = defaultModifier;
+          }
+          if (modifiers) {
+            regex = new RegExp(isFullRegex[2], modifiers);
+          } else {
+            regex = new RegExp(isFullRegex[2]);
+          }
+        } else {
+          if (isMatchStart) {
+            let check = val.slice(1).toLowerCase();
+            let isStringRegexLike = isRegexLike(check);
+            if (isStringRegexLike) {
+              regex = new RegExp(val, defaultModifier);
+            }
+            if (!isStringRegexLike) {
+              val = val.slice(1);
+            }
+          } else if (isMatchEnd) {
+            let check = val.slice(0, -1).toLowerCase();
+            let isStringRegexLike = isRegexLike(check);
+            if (isStringRegexLike) {
+              regex = new RegExp(val, defaultModifier);
+            }
+            if (!isStringRegexLike) {
+              val = val.slice(0, -1);
+            }
+          } else if (isNot) {
+            let check = val.slice(1);
+            let isStringRegexLike = isRegexLike(check);
+            if (isStringRegexLike) {
+              regex = new RegExp(val, defaultModifier);
+            }
+            if (!isStringRegexLike) {
+              val = val.slice(1);
+            }
+          } else {
+            let isStringRegexLike = isRegexLike(val);
+            if (val.length > 1 && isStringRegexLike) {
+              console.log("defaultModifier", defaultModifier);
+              regex = new RegExp(val, defaultModifier);
+            }
+            if (val.length > 1 && !isStringRegexLike) {
+              regex = new RegExp(escape(val), defaultModifier);
+            }
+          }
+        }
+        const allText = editor.getTextInRange(new Range(0, editor.document.length));
         const matchedInDoc = [...allText.matchAll(regex)];
         const newRanges = [];
-
         if (matchedInDoc && matchedInDoc.length) {
-            matchedInDoc.forEach((match) => {
-                newRanges.push(new Range(match.index, match.index + match[0].length));
-            });
+          matchedInDoc.forEach((match) => {
+            let fullMatch = match[0];
+            let matchStart = match.index;
+            let matchEnd = matchStart + match[0].length;
+            if (match.length <= 1) {
+              newRanges.push(new Range(matchStart, matchEnd));
+            } else {
+              let groupsMatched = [...match];
+              groupsMatched.shift();
+              for (const imatch of groupsMatched) {
+                let groupStart = matchStart + fullMatch.indexOf(imatch);
+                let groupEnd = groupStart + imatch.length;
+                newRanges.push(new Range(groupStart, groupEnd));
+              }
+            }
+          });
         }
-        return newRanges;
+        resolve(newRanges);
+      });
+    });
+  }
+  selectOcurrences(editor, text) {
+    let selected = editor.selectedText;
+    if (!selected) {
+      return false;
     }
-
-    /**
-     * Add All Numbers
-     */
-    addAllNumbers(text) {
-        const lines = text.split('\n');
-        const sum = lines.reduce((acc, val) => {
-            let lineval = 0;
-            if (val && val.trim()) {
-                val = val.replace(/[^0-9\.,-]+/g, '');
-                val = parseFloat(val.replace(/,/g, ''));
-                lineval = val;
-            }
-            return acc + lineval;
-        }, 0);
-        return parseFloat(sum).toFixed(2).toString();
+    selected = escape(selected);
+    const allText = editor.getTextInRange(new Range(0, editor.document.length));
+    const regex = new RegExp(selected, "gi");
+    const matchedInDoc = [...allText.matchAll(regex)];
+    const newRanges = [];
+    if (matchedInDoc && matchedInDoc.length) {
+      matchedInDoc.forEach((match) => {
+        newRanges.push(new Range(match.index, match.index + match[0].length));
+      });
     }
-
-    /**
-     * Substract All Numbers
-     */
-    substractAllNumbers(text) {
-        const lines = text.split('\n');
-        const sum = lines.reduce((acc, val) => {
-            let lineval = 0;
-            if (val && val.trim()) {
-                val = val.replace(/[^0-9\.,-]+/g, '');
-                val = parseFloat(val.replace(/,/g, ''));
-                lineval = val;
-            }
-
-            if (acc === null) {
-                return lineval;
-            }
-            return acc - lineval;
-        }, null);
-        return parseFloat(sum).toFixed(2).toString();
+    return newRanges;
+  }
+  addAllNumbers(text) {
+    const lines = text.split("\n");
+    const sum = lines.reduce((acc, val) => {
+      let lineval = 0;
+      if (val && val.trim()) {
+        val = val.replace(/[^0-9\.,-]+/g, "");
+        val = parseFloat(val.replace(/,/g, ""));
+        lineval = val;
+      }
+      return acc + lineval;
+    }, 0);
+    return parseFloat(sum).toFixed(2).toString();
+  }
+  substractAllNumbers(text) {
+    const lines = text.split("\n");
+    const sum = lines.reduce((acc, val) => {
+      let lineval = 0;
+      if (val && val.trim()) {
+        val = val.replace(/[^0-9\.,-]+/g, "");
+        val = parseFloat(val.replace(/,/g, ""));
+        lineval = val;
+      }
+      if (acc === null) {
+        return lineval;
+      }
+      return acc - lineval;
+    }, null);
+    return parseFloat(sum).toFixed(2).toString();
+  }
+  jsonStringParse(text) {
+    if (!text.trim()) {
+      return false;
     }
-
-    /**
-     * Parse JSON String
-     */
-    jsonStringParse(text) {
-        if (!text.trim()) {
+    let parsed = false;
+    try {
+      parsed = this.maybeUnserialize(text);
+      if (typeof parsed === "string" && parsed.startsWith("{")) {
+        parsed = JSON.parse(parsed.replace(/\\/g, ""));
+      }
+      if (!parsed) {
+        parsed = JSON.parse(text);
+      }
+      parsed = JSON.stringify(parsed, void 0, 2);
+    } catch (error) {
+      log(error);
+      showNotification({
+        title: "Text Tools",
+        body: "JSON Error: " + error,
+        actions: true
+      });
+    }
+    return parsed;
+  }
+  maybeUnserialize(text) {
+    let unserialized = false;
+    try {
+      unserialized = unserialize(text);
+    } catch (error) {
+      console.error(error);
+    }
+    return unserialized;
+  }
+  fakeDataTypes() {
+    return [
+      "Full Name",
+      "Name",
+      "Lastname",
+      "Email",
+      "Phone",
+      "Credit Card",
+      "User Name",
+      "Full Address",
+      "Country",
+      "City",
+      "Street",
+      "Zip Code",
+      "Company",
+      "URL",
+      "Lorem Paragraph",
+      "Lorem Paragraphs",
+      "Number",
+      "JSON",
+      "Array"
+    ];
+  }
+  generateFakeData(text, format = false) {
+    return new Promise((resolve, reject) => {
+      if (!format) {
+        nova.workspace.showChoicePalette(this.fakeDataTypes(), { placeholder: "" }, (sel) => {
+          if (!sel) {
+            resolve(false);
             return false;
+          }
+          resolve(this.generateFakeData(text, sel));
+        });
+        return false;
+      }
+      let val = fakeData(format);
+      if (typeof val !== "string") {
+        return false;
+      }
+      resolve(val);
+    });
+  }
+  generateUUID() {
+    return uuidRandom();
+  }
+  nonBreakingSpace() {
+    return "&nbsp;";
+  }
+  generateDummyFile(fileName, fileSize) {
+    if (!nova.workspace) {
+      showNotification({
+        title: "Text Tools",
+        body: "ERROR: a workspace is required to create a dummy file",
+        actions: true
+      });
+      return false;
+    }
+    return new Promise((resolve, reject) => {
+      nova.workspace.showInputPalette("Enter file name with extension", {
+        placeholder: "filename.txt"
+      }, (filename) => {
+        if (!filename) {
+          resolve();
+          return;
         }
-
-        let parsed = false;
-        try {
-            parsed = this.maybeUnserialize(text);
-
-            if (typeof parsed === 'string' && parsed.startsWith('{')) {
-                parsed = JSON.parse(parsed.replace(/\\/g, ''));
-            }
-            if (!parsed) {
-                parsed = JSON.parse(text);
-            }
-            parsed = JSON.stringify(parsed, undefined, 2);
-        } catch (error) {
+        nova.workspace.showInputPalette("Enter file size, example: 10mb", {
+          placeholder: "filesize for example: 500kb, 10mb, 1gb"
+        }, (filesize) => {
+          if (!filesize) {
+            resolve();
+            return;
+          }
+          dummyFile(nova.workspace.path, filename, filesize).then(() => {
+            showNotification({
+              title: "Text Tools",
+              body: "File generated correctly"
+            });
+            resolve();
+          }).catch((error) => {
             log(error);
             showNotification({
-                title: 'Text Tools',
-                body: 'JSON Error: ' + error,
-                actions: true
+              title: "Text Tools",
+              body: "ERROR: " + error,
+              actions: true
             });
-        }
-
-        return parsed;
-    }
-
-    /**
-     * Maybe Unserialize
-     */
-    maybeUnserialize(text) {
-        let unserialized = false;
-        try {
-            unserialized = unserialize(text);
-        } catch (error) {
-            console.error(error);
-        }
-        return unserialized;
-    }
-
-    /**
-     * Fake Data Types
-     */
-    fakeDataTypes() {
-        // prettier-ignore
-        return [
-            'Full Name',
-            'Name',
-            'Lastname',
-            'Email',
-            'Phone',
-            'Credit Card',
-            'User Name',
-            'Full Address',
-            'Country',
-            'City',
-            'Street',
-            'Zip Code',
-            'Company',
-            'URL',
-            'Lorem Paragraph',
-            'Lorem Paragraphs',
-            'Number',
-            'JSON',
-            'Array'
-        ];
-    }
-
-    /**
-     * Generate Fake Data
-     */
-    generateFakeData(text, format = false) {
-        return new Promise((resolve, reject) => {
-            if (!format) {
-                nova.workspace.showChoicePalette(this.fakeDataTypes(), { placeholder: '' }, (sel) => {
-                    if (!sel) {
-                        resolve(false);
-                        return false;
-                    }
-                    resolve(this.generateFakeData(text, sel));
-                });
-                return false;
-            }
-
-            let val = fakeData(format);
-            if (typeof val !== 'string') {
-                return false;
-            }
-
-            resolve(val);
+            resolve();
+          });
         });
+      });
+    });
+  }
+  normalizeText(text) {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+  normalizeLinesIndent(lines) {
+  }
+  newDocument(content) {
+    if (!nova.workspace) {
+      showNotification({
+        title: "Text Tools",
+        body: "ERROR: a workspace is required to create new documents",
+        actions: true
+      });
+      return false;
     }
-
-    /**
-     * Generate UUID
-     */
-    generateUUID() {
-        return uuidRandom();
-    }
-
-    /**
-     * Insert non-breaking space
-     */
-    nonBreakingSpace() {
-        return '&nbsp;';
-    }
-
-    /**
-     * Generate Dummy File
-     */
-    generateDummyFile(fileName, fileSize) {
-        if (!nova.workspace) {
-            showNotification({
-                title: 'Text Tools',
-                body: 'ERROR: a workspace is required to create a dummy file',
-                actions: true
-            });
-            return false;
-        }
-
-        return new Promise((resolve, reject) => {
-            // prettier-ignore
-            nova.workspace.showInputPalette('Enter file name with extension', {
-                    placeholder: 'filename.txt'
-                }, (filename) => {
-                    if (!filename) {
-                        resolve();
-                        return;
-                    }
-
-                    // prettier-ignore
-                    nova.workspace.showInputPalette('Enter file size, example: 10mb', {
-                            placeholder: 'filesize for example: 500kb, 10mb, 1gb'
-                        }, (filesize) => {
-                            if (!filesize) {
-                                resolve();
-                                return;
-                            }
-
-                            dummyFile(nova.workspace.path, filename, filesize)
-                            .then(() => {
-                                showNotification({
-                                    title: 'Text Tools',
-                                    body: 'File generated correctly'
-                                });
-                                resolve();
-                            }).catch(error => {
-                                log(error);
-                                showNotification({
-                                    title: 'Text Tools',
-                                    body: 'ERROR: ' + error,
-                                    actions: true
-                                });
-                                resolve();
-                            });
-                        }
-                    );
-                }
-            );
-        });
-    }
-
-    /**
-     * Normalize text
-     * resolve diacritics, accents, etc.
-     *
-     * @param {strong} str
-     */
-    normalizeText(text) {
-        return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    }
-
-    /**
-     * Open in new document
-     *
-     * @param {string} text
-     */
-    newDocument(content) {
-        if (!nova.workspace) {
-            showNotification({
-                title: 'Text Tools',
-                body: 'ERROR: a workspace is required to create new documents',
-                actions: true
-            });
-            return false;
-        }
-
-        nova.workspace.openNewTextDocument({
-            content: content,
-            line: 0
-            //syntax: ''
-        });
-    }
+    nova.workspace.openNewTextDocument({
+      content,
+      line: 0
+    });
+  }
 }
 
 function escapeRegExp(str) {
-    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'); //eslint-disable-line
+  return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
-
 function trim(text) {
-    const regStart = /^[ \t\n]*/;
-    const regEnd = /[ \t\n]*$/;
-    let rS = regStart.exec(text);
-    let rE = regEnd.exec(text);
-    let start = 0,
-        end = text.length;
-    if (rS) {
-        start = rS[0].length;
-    }
-    if (rE) {
-        end = rE.index;
-    }
-    if (rS && rE) {
-        return {
-            start: start,
-            end: end
-        };
-    }
-
-    return null;
-}
-
-function getLine(text, startIndex, endIndex) {
-    const linebreakRe = /\n/;
-    var newStartIndex = 0,
-        newEndIndex = 0;
-    var searchIndex = startIndex - 1;
-    while (true) {
-        if (searchIndex < 0) {
-            newStartIndex = searchIndex + 1;
-            break;
-        }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        if (linebreakRe.test(char)) {
-            newStartIndex = searchIndex + 1;
-            break;
-        } else {
-            searchIndex -= 1;
-        }
-    }
-    searchIndex = endIndex;
-    while (true) {
-        if (searchIndex > text.length - 1) {
-            newEndIndex = searchIndex;
-            break;
-        }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        if (linebreakRe.test(char)) {
-            newEndIndex = searchIndex;
-            break;
-        } else {
-            searchIndex += 1;
-        }
-    }
-    return { start: newStartIndex, end: newEndIndex };
-}
-
-function getResult(start, end, text, type) {
+  const regStart = /^[ \t\n]*/;
+  const regEnd = /[ \t\n]*$/;
+  let rS = regStart.exec(text);
+  let rE = regEnd.exec(text);
+  let start = 0, end = text.length;
+  if (rS) {
+    start = rS[0].length;
+  }
+  if (rE) {
+    end = rE.index;
+  }
+  if (rS && rE) {
     return {
-        end: end,
-        start: start,
-        selectionText: text.substring(start, end),
-        type: type
+      start,
+      end
     };
+  }
+  return null;
 }
-
-
-function isInsideTag(tag = '', text, startIndex, endIndex) {
-    if (!tag) {
-        return false;
+function getLine(text, startIndex, endIndex) {
+  const linebreakRe = /\n/;
+  var newStartIndex = 0, newEndIndex = 0;
+  var searchIndex = startIndex - 1;
+  while (true) {
+    if (searchIndex < 0) {
+      newStartIndex = searchIndex + 1;
+      break;
     }
-
-    //var tagRegex = /(<script\b[^>]*>)([\s\S]*?)(<\/script\b[^>]*>)/g;
-    let regexString = '(<' + tag + '\\b[^>]*>)([\\s\\S]*?)(<\/' + tag + '\\b[^>]*>)';
-    let tagRegex = new RegExp(regexString, 'gi');
-
-    var r;
-    while ((r = tagRegex.exec(text)) !== null) {
-        if (r.length < 4 || r[2].trim() === '') {
-            continue;
-        }
-
-        let tagStart = r.index + r[1].length;
-        let tagEnd = tagRegex.lastIndex - r[3].length;
-
-        //quotes pair end is before selection, stop here and continue loop
-        if (tagEnd < startIndex) {
-            continue;
-        }
-
-        // quotes pair start is after selection, return, no need to continue loop
-        if (tagStart > startIndex) {
-            return null;
-        }
-
-        if (startIndex == tagStart && endIndex == tagEnd) {
-            return null;
-        }
-
-        if (startIndex > tagStart && endIndex < tagEnd) {
-            return true;
-        }
+    let char = text.substring(searchIndex, searchIndex + 1);
+    if (linebreakRe.test(char)) {
+      newStartIndex = searchIndex + 1;
+      break;
+    } else {
+      searchIndex -= 1;
     }
-
+  }
+  searchIndex = endIndex;
+  while (true) {
+    if (searchIndex > text.length - 1) {
+      newEndIndex = searchIndex;
+      break;
+    }
+    let char = text.substring(searchIndex, searchIndex + 1);
+    if (linebreakRe.test(char)) {
+      newEndIndex = searchIndex;
+      break;
+    } else {
+      searchIndex += 1;
+    }
+  }
+  return { start: newStartIndex, end: newEndIndex };
+}
+function getResult(start, end, text, type) {
+  return {
+    end,
+    start,
+    selectionText: text.substring(start, end),
+    type
+  };
+}
+function isInsideTag(tag = "", text, startIndex, endIndex) {
+  if (!tag) {
     return false;
-}
-
-
-function hasLineBreaks(text, startIndex, endIndex) {
-    let linebreakRe = /\n/;
-    let part = text.substring(startIndex, endIndex);
-    return linebreakRe.test(part);
-}
-
-
-function getIndent(text, line) {
-    let indentReg = /^(\s*)/;
-    let line_str = text.substring(line.start, line.end);
-    let m = line_str.match(indentReg);
-    if (m) {
-        return m[0].length;
+  }
+  let regexString = "(<" + tag + "\\b[^>]*>)([\\s\\S]*?)(</" + tag + "\\b[^>]*>)";
+  let tagRegex = new RegExp(regexString, "gi");
+  var r;
+  while ((r = tagRegex.exec(text)) !== null) {
+    if (r.length < 4 || r[2].trim() === "") {
+      continue;
     }
-    return 0;
+    let tagStart = r.index + r[1].length;
+    let tagEnd = tagRegex.lastIndex - r[3].length;
+    if (tagEnd < startIndex) {
+      continue;
+    }
+    if (tagStart > startIndex) {
+      return null;
+    }
+    if (startIndex == tagStart && endIndex == tagEnd) {
+      return null;
+    }
+    if (startIndex > tagStart && endIndex < tagEnd) {
+      return true;
+    }
+  }
+  return false;
+}
+function hasLineBreaks(text, startIndex, endIndex) {
+  let linebreakRe = /\n/;
+  let part = text.substring(startIndex, endIndex);
+  return linebreakRe.test(part);
+}
+function getIndent(text, line) {
+  let indentReg = /^(\s*)/;
+  let line_str = text.substring(line.start, line.end);
+  let m = line_str.match(indentReg);
+  if (m) {
+    return m[0].length;
+  }
+  return 0;
 }
 
 function expandToRegexSet(text, startIndex, endIndex, regex, type) {
-    //add modifier
-    const globalRegex = new RegExp(regex.source, 'g');
-    //if{there is a selection (and not only a blinking cursor)
-    if (startIndex != endIndex) {
-        let selection = text.substring(startIndex, endIndex);
-        // make sure, that every character of the selection meets the regex rules,
-        // if not return here
-        if ((selection.match(globalRegex) || []).length != selection.length) {
-            return null;
-        }
+  const globalRegex = new RegExp(regex.source, "g");
+  if (startIndex != endIndex) {
+    let selection = text.substring(startIndex, endIndex);
+    if ((selection.match(globalRegex) || []).length != selection.length) {
+      return null;
     }
-    // look back
-    let searchIndex = startIndex - 1;
-    var newStartIndex = 0,
-        newEndIndex = 0;
-    while (true) {
-        // begin of text is reached
-        if (searchIndex < 0) {
-            newStartIndex = searchIndex + 1;
-            break;
-        }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        // character found, that does not fit into the search set
-        if (!regex.test(char)) {
-            newStartIndex = searchIndex + 1;
-            break;
-        } else {
-            searchIndex -= 1;
-        }
+  }
+  let searchIndex = startIndex - 1;
+  var newStartIndex = 0, newEndIndex = 0;
+  while (true) {
+    if (searchIndex < 0) {
+      newStartIndex = searchIndex + 1;
+      break;
     }
-    // look forward
-    searchIndex = endIndex;
-    while (true) {
-        // end of text reached
-        if (searchIndex > text.length - 1) {
-            newEndIndex = searchIndex;
-            break;
-        }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        // character found, that does not fit into the search set
-        if (!regex.test(char)) {
-            newEndIndex = searchIndex;
-            break;
-        } else {
-            searchIndex += 1;
-        }
+    let char = text.substring(searchIndex, searchIndex + 1);
+    if (!regex.test(char)) {
+      newStartIndex = searchIndex + 1;
+      break;
+    } else {
+      searchIndex -= 1;
     }
-
-    if (startIndex == newStartIndex && endIndex == newEndIndex) {
-        return null;
+  }
+  searchIndex = endIndex;
+  while (true) {
+    if (searchIndex > text.length - 1) {
+      newEndIndex = searchIndex;
+      break;
     }
-
-    return getResult(newStartIndex, newEndIndex, text, type);
+    let char = text.substring(searchIndex, searchIndex + 1);
+    if (!regex.test(char)) {
+      newEndIndex = searchIndex;
+      break;
+    } else {
+      searchIndex += 1;
+    }
+  }
+  if (startIndex == newStartIndex && endIndex == newEndIndex) {
+    return null;
+  }
+  return getResult(newStartIndex, newEndIndex, text, type);
 }
 
 function expandToQuotes(text, startIndex, endIndex) {
-    var quotesRegex = /(['\"\`])(?:\\.|.)*?\1/g;
-    var r;
-    // iterate over all found quotes pairs
-    while ((r = quotesRegex.exec(text)) !== null) {
-        let quotesStart = r.index;
-        let quotesEnd = quotesRegex.lastIndex;
-        //quotes pair end is before selection, stop here and continue loop
-        if (quotesEnd < startIndex) {
-            continue;
-        }
-
-        // quotes pair start is after selection, return, no need to continue loop
-        if (quotesStart > startIndex) {
-            return null;
-        }
-
-        if (startIndex == quotesStart && endIndex == quotesEnd) {
-            return null;
-        }
-
-        // the string w/o the quotes, "quotes content"
-        let quotesContentStart = quotesStart + 1;
-        let quotesContentEnd = quotesEnd - 1;
-        // "quotes content" is selected, return with quotes
-        if (startIndex == quotesContentStart && endIndex == quotesContentEnd) {
-            return getResult(quotesStart, quotesEnd, text, 'quotes');
-        }
-
-        //# selection is within the found quote pairs, return "quotes content"
-        if (startIndex > quotesStart && endIndex < quotesEnd) {
-            return getResult(quotesContentStart, quotesContentEnd, text, 'quotes');
-        }
+  var quotesRegex = /(['\"\`])(?:\\.|.)*?\1/g;
+  var r;
+  while ((r = quotesRegex.exec(text)) !== null) {
+    let quotesStart = r.index;
+    let quotesEnd = quotesRegex.lastIndex;
+    if (quotesEnd < startIndex) {
+      continue;
     }
-
-    return null;
+    if (quotesStart > startIndex) {
+      return null;
+    }
+    if (startIndex == quotesStart && endIndex == quotesEnd) {
+      return null;
+    }
+    let quotesContentStart = quotesStart + 1;
+    let quotesContentEnd = quotesEnd - 1;
+    if (startIndex == quotesContentStart && endIndex == quotesContentEnd) {
+      return getResult(quotesStart, quotesEnd, text, "quotes");
+    }
+    if (startIndex > quotesStart && endIndex < quotesEnd) {
+      return getResult(quotesContentStart, quotesContentEnd, text, "quotes");
+    }
+  }
+  return null;
 }
 
 function expandToXMLNode(text, start, end) {
-    let tagProperties = getTagProperties(text.substring(start, end));
-    //if we are selecting a tag, then select the matching tag
-
-    let tagName;
-    if (tagProperties) {
-        tagName = tagProperties['name'];
-        if (tagProperties['type'] == 'closing') {
-            let stringStartToTagStart = text.substring(0, start);
-
-            let openingTagPosition = findTag(stringStartToTagStart, 'backward', tagName);
-            if (openingTagPosition) {
-                return getResult(openingTagPosition['start'], end, text, 'complete_node');
-            }
-        }
-        //if it's a opening tag, find opening tag and return positions
-        else if (tagProperties['type'] == 'opening') {
-            // check this tag already have closing tag inside
-            if (!isTextCloseTag(text.substring(start, end), tagName)) {
-                let stringNodeEndToStringEnd = text.substring(end, text.length);
-                let closingTagPosition = findTag(stringNodeEndToStringEnd, 'forward', tagName);
-                if (closingTagPosition) {
-                    return getResult(start, end + closingTagPosition['end'], text, 'complete_node');
-                }
-            }
-        } //else it's self closing and there is no matching tag
-    }
-
-    //check if current selection is within a tag, if it is expand to the tag
-    //first expand to inside the tag and then to the whole tag
-    let isWithinTagResult = isWithinTag(text, start, end);
-    if (isWithinTagResult) {
-        let inner_start = isWithinTagResult['start'] + 1;
-        let inner_end = isWithinTagResult['end'] - 1;
-
-        if (start == inner_start && end == inner_end) {
-            return getResult(isWithinTagResult['start'], isWithinTagResult['end'], text, 'complete_node');
-        } else {
-            return getResult(inner_start, inner_end, text, 'inner_node');
-        }
-    }
-
-    //expand selection to the "parent" node of the current selection
-    let stringStartToSelectionStart = text.substring(0, start);
-    let parent_opening_tag = findTag(stringStartToSelectionStart, 'backward');
-    let newStart = 0,
-        newEnd = 0;
-
-
-    if (parent_opening_tag) {
-        //find closing tag
-        let stringNodeEndToStringEnd = text.substring(parent_opening_tag['end'], text.length);
-        //console.log('stringNodeEndToStringEnd', stringNodeEndToStringEnd);
-        let closingTagPosition = findTag(stringNodeEndToStringEnd, 'forward', parent_opening_tag['name']);
+  let tagProperties = getTagProperties(text.substring(start, end));
+  let tagName;
+  if (tagProperties) {
+    tagName = tagProperties["name"];
+    if (tagProperties["type"] == "closing") {
+      let stringStartToTagStart = text.substring(0, start);
+      let openingTagPosition = findTag(stringStartToTagStart, "backward", tagName);
+      if (openingTagPosition) {
+        return getResult(openingTagPosition["start"], end, text, "complete_node");
+      }
+    } else if (tagProperties["type"] == "opening") {
+      if (!isTextCloseTag(text.substring(start, end), tagName)) {
+        let stringNodeEndToStringEnd = text.substring(end, text.length);
+        let closingTagPosition = findTag(stringNodeEndToStringEnd, "forward", tagName);
         if (closingTagPosition) {
-            //set positions to content of node, w / o the node tags
-            newStart = parent_opening_tag['end'];
-            newEnd = parent_opening_tag['end'] + closingTagPosition['start'];
+          return getResult(start, end + closingTagPosition["end"], text, "complete_node");
         }
-
-        //if this is the current selection, set positions to content of node including start and end tags
-        if (newStart == start && newEnd == end) {
-            newStart = parent_opening_tag['start'];
-            newEnd = parent_opening_tag['end'] + closingTagPosition['end'];
-        }
-
-        return getResult(newStart, newEnd, text, 'parent_node_content');
+      }
     }
-
-    return null;
-}
-
-function isWithinTag(text, startIndex, endIndex) {
-    let openingRe = /</;
-    let closingRe = />/;
-
-    //// look back
-    let searchIndex = startIndex - 1;
-    let newStartIndex = 0;
-    while (true) {
-        ////begin of text is reached, let's return here
-        if (searchIndex < 0) {
-            return false;
-        }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        //# tag start found!
-        if (openingRe.test(char)) {
-            newStartIndex = searchIndex;
-            break;
-        }
-        //# closing tag found, let's return here
-        if (closingRe.test(char)) {
-            return false;
-        }
-        searchIndex -= 1;
-    }
-    //# look forward
-    searchIndex = endIndex;
-    while (true) {
-        //# end of text is reached, let's return here
-        if (searchIndex > text.length - 1) {
-            return false;
-        }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        //# tag start found!
-        if (closingRe.test(char)) {
-            return { start: newStartIndex, end: searchIndex + 1 };
-        }
-        //# closing tag found, let's return here
-        if (openingRe.test(char)) {
-            return false;
-        }
-        searchIndex += 1;
-    }
-}
-
-
-
-function getTagProperties(text) {
-    text = text.replace(/\s\s+/g, ' ').trim();
-
-    var regex = /<\s*(\/?)\s*([^\s\/]*)\s*(?:.*?)(\/?)\s*>/;
-    var tagName, tag_type;
-    let void_elements = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
-
-    var result = regex.exec(text);
-    if (!result) {
-        return null;
-    }
-
-    tagName = result[2];
-    if (result[1]) {
-        tag_type = 'closing';
-    } else if (result[3]) {
-        tag_type = 'self_closing';
-    } else if (void_elements.indexOf(tagName) !== -1) {
-        tag_type = 'self_closing';
+  }
+  let isWithinTagResult = isWithinTag(text, start, end);
+  if (isWithinTagResult) {
+    let inner_start = isWithinTagResult["start"] + 1;
+    let inner_end = isWithinTagResult["end"] - 1;
+    if (start == inner_start && end == inner_end) {
+      return getResult(isWithinTagResult["start"], isWithinTagResult["end"], text, "complete_node");
     } else {
-        tag_type = 'opening';
+      return getResult(inner_start, inner_end, text, "inner_node");
     }
-
-    return { name: tagName, type: tag_type };
+  }
+  let stringStartToSelectionStart = text.substring(0, start);
+  let parent_opening_tag = findTag(stringStartToSelectionStart, "backward");
+  let newStart = 0, newEnd = 0;
+  if (parent_opening_tag) {
+    let stringNodeEndToStringEnd = text.substring(parent_opening_tag["end"], text.length);
+    let closingTagPosition = findTag(stringNodeEndToStringEnd, "forward", parent_opening_tag["name"]);
+    if (closingTagPosition) {
+      newStart = parent_opening_tag["end"];
+      newEnd = parent_opening_tag["end"] + closingTagPosition["start"];
+    }
+    if (newStart == start && newEnd == end) {
+      newStart = parent_opening_tag["start"];
+      newEnd = parent_opening_tag["end"] + closingTagPosition["end"];
+    }
+    return getResult(newStart, newEnd, text, "parent_node_content");
+  }
+  return null;
 }
-
-function findTag(text, direction, tagName = '') {
-    // search for opening and closing tag with a tagName.If tagName = "", search
-    // for all tags.
-    //let regexString = '<s*' + tagName + '.*?>|</s*' + tagName + 's*>';
-    let regexString = '<s*[\\s\\S]+?>|<\/s*s*>';
-
-    if (tagName) {
-        regexString = '<s*' + tagName + '[\\s\\S]+?>|</s*' + tagName + 's*>';
+function isWithinTag(text, startIndex, endIndex) {
+  let openingRe = /</;
+  let closingRe = />/;
+  let searchIndex = startIndex - 1;
+  let newStartIndex = 0;
+  while (true) {
+    if (searchIndex < 0) {
+      return false;
     }
-
-    let regex = new RegExp(regexString, 'g');
-    // direction == "forward" implies that we are looking for closing tags (and
-    // vice versa
-    let targetTagType = direction == 'forward' ? 'closing' : 'opening';
-    // set counterpart
-    let targetTagTypeCounterpart = direction == 'forward' ? 'opening' : 'closing';
-
-    // found tags will be added/ removed from the stack to eliminate complete nodes
-    // (opening tag + closing tag).
-    let symbolStack = [];
-    // since regex can't run backwards, we reverse the result
-    var tArr = [];
-    var r;
-    while ((r = regex.exec(text)) !== null) {
-        let tagName = r[0];
-        let start = r.index;
-        let end = regex.lastIndex;
-        tArr.push({
-            name: tagName,
-            start: start,
-            end: end
-        });
+    let char = text.substring(searchIndex, searchIndex + 1);
+    if (openingRe.test(char)) {
+      newStartIndex = searchIndex;
+      break;
     }
-
-    if (direction == 'backward') {
-        tArr.reverse();
+    if (closingRe.test(char)) {
+      return false;
     }
-
-    //console.log('reverse', JSON.stringify(tArr, null, ' '));
-
-    var result = null;
-    tArr.forEach((value) => {
-        let tag_string = value.name;
-        // ignore comments
-        if (result) {
-            return;
-        }
-
-        if (tag_string.includes('<!--') || tag_string.includes('<![')) {
-            return;
-        }
-
-        let tag_type = getTagProperties(tag_string)['type'];
-
-        if (tag_type == targetTagType) {
-            if (symbolStack.length === 0) {
-                result = {
-                    start: value.start,
-                    end: value.end,
-                    name: getTagProperties(tag_string)['name']
-                };
-                return;
-            }
-
-            symbolStack.pop();
-        } else if (tag_type == targetTagTypeCounterpart) {
-            symbolStack.push(tag_type);
-        }
-    });
-
-    return result;
+    searchIndex -= 1;
+  }
+  searchIndex = endIndex;
+  while (true) {
+    if (searchIndex > text.length - 1) {
+      return false;
+    }
+    let char = text.substring(searchIndex, searchIndex + 1);
+    if (closingRe.test(char)) {
+      return { start: newStartIndex, end: searchIndex + 1 };
+    }
+    if (openingRe.test(char)) {
+      return false;
+    }
+    searchIndex += 1;
+  }
 }
-
-
-
-
-// check is text string have xml node closing ex:<div>aaa</div>
-function isTextCloseTag(text, tagName = '') {
-    // search for opening and closing tag with a tagName.If tagName = "", search
-    // for all tags.
-    let regexString = '<s*' + tagName + '.*?>|</s*' + tagName + 's*>';
-    let regex = new RegExp(regexString, 'g');
-    // direction == "forward" implies that we are looking for closing tags (and
-    // vice versa
-    let targetTagType = 'closing';
-    // set counterpart
-    let targetTagTypeCounterpart = 'opening';
-    // found tags will be added/ removed from the stack to eliminate complete nodes
-    // (opening tag + closing tag).
-    let symbolStack = [];
-    // since regex can't run backwards, we reverse the result
-    var tArr = [];
-    var r;
-    while ((r = regex.exec(text)) !== null) {
-        let tagName = r[0];
-        let start = r.index;
-        let end = regex.lastIndex;
-        tArr.push({ name: tagName, start: start, end: end });
-    }
-    tArr.forEach((value) => {
-        let tag_string = value.name;
-        if (tag_string.indexOf('<!--') === 0 || tag_string.indexOf('<![') === 0) {
-            return;
-        }
-        let tag_type = getTagProperties(tag_string)['type'];
-        if (tag_type == targetTagType) {
-            symbolStack.pop();
-        } else if (tag_type == targetTagTypeCounterpart) {
-            symbolStack.push(tag_type);
-        }
+function getTagProperties(text) {
+  text = text.replace(/\s\s+/g, " ").trim();
+  var regex = /<\s*(\/?)\s*([^\s\/]*)\s*(?:.*?)(\/?)\s*>/;
+  var tagName, tag_type;
+  let void_elements = ["area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"];
+  var result = regex.exec(text);
+  if (!result) {
+    return null;
+  }
+  tagName = result[2];
+  if (result[1]) {
+    tag_type = "closing";
+  } else if (result[3]) {
+    tag_type = "self_closing";
+  } else if (void_elements.indexOf(tagName) !== -1) {
+    tag_type = "self_closing";
+  } else {
+    tag_type = "opening";
+  }
+  return { name: tagName, type: tag_type };
+}
+function findTag(text, direction, tagName = "") {
+  let regexString = "<s*[\\s\\S]+?>|</s*s*>";
+  if (tagName) {
+    regexString = "<s*" + tagName + "[\\s\\S]+?>|</s*" + tagName + "s*>";
+  }
+  let regex = new RegExp(regexString, "g");
+  let targetTagType = direction == "forward" ? "closing" : "opening";
+  let targetTagTypeCounterpart = direction == "forward" ? "opening" : "closing";
+  let symbolStack = [];
+  var tArr = [];
+  var r;
+  while ((r = regex.exec(text)) !== null) {
+    let tagName2 = r[0];
+    let start = r.index;
+    let end = regex.lastIndex;
+    tArr.push({
+      name: tagName2,
+      start,
+      end
     });
-
-    return symbolStack.length == 0;
+  }
+  if (direction == "backward") {
+    tArr.reverse();
+  }
+  var result = null;
+  tArr.forEach((value) => {
+    let tag_string = value.name;
+    if (result) {
+      return;
+    }
+    if (tag_string.includes("<!--") || tag_string.includes("<![")) {
+      return;
+    }
+    let tag_type = getTagProperties(tag_string)["type"];
+    if (tag_type == targetTagType) {
+      if (symbolStack.length === 0) {
+        result = {
+          start: value.start,
+          end: value.end,
+          name: getTagProperties(tag_string)["name"]
+        };
+        return;
+      }
+      symbolStack.pop();
+    } else if (tag_type == targetTagTypeCounterpart) {
+      symbolStack.push(tag_type);
+    }
+  });
+  return result;
+}
+function isTextCloseTag(text, tagName = "") {
+  let regexString = "<s*" + tagName + ".*?>|</s*" + tagName + "s*>";
+  let regex = new RegExp(regexString, "g");
+  let targetTagType = "closing";
+  let targetTagTypeCounterpart = "opening";
+  let symbolStack = [];
+  var tArr = [];
+  var r;
+  while ((r = regex.exec(text)) !== null) {
+    let tagName2 = r[0];
+    let start = r.index;
+    let end = regex.lastIndex;
+    tArr.push({ name: tagName2, start, end });
+  }
+  tArr.forEach((value) => {
+    let tag_string = value.name;
+    if (tag_string.indexOf("<!--") === 0 || tag_string.indexOf("<![") === 0) {
+      return;
+    }
+    let tag_type = getTagProperties(tag_string)["type"];
+    if (tag_type == targetTagType) {
+      symbolStack.pop();
+    } else if (tag_type == targetTagTypeCounterpart) {
+      symbolStack.push(tag_type);
+    }
+  });
+  return symbolStack.length == 0;
 }
 
 function expandToWord(text, startIndex, endIndex) {
-    const regex = /[\u00BF-\u1FFF\u2C00-\uD7FF\w$]/;
-    return expandToRegexSet(text, startIndex, endIndex, regex, 'word');
+  const regex = /[\u00BF-\u1FFF\u2C00-\uD7FF\w$]/;
+  return expandToRegexSet(text, startIndex, endIndex, regex, "word");
 }
 
 function expandToSemanticUnit(text, startIndex, endIndex) {
-    const symbols = '([{)]}';
-    const breakSymbols = ':|,;=&|\n\r';
-    const lookBackBreakSymbols = breakSymbols + '([{';
-    const lookForwardBreakSymbols = breakSymbols + ')]}';
-    const symbolsRe = new RegExp(`[${escapeRegExp(symbols)}${escapeRegExp(breakSymbols)}]`);
-    const counterparts = {
-        '(': ')',
-        '{': '}',
-        '[': ']',
-        ')': '(',
-        '}': '{',
-        ']': '['
-    };
-    let symbolStack = [];
-
-    let searchIndex = startIndex - 1;
-    let newStartIndex, newEndIndex;
-    while (true) {
-        if (searchIndex < 0) {
-            newStartIndex = searchIndex + 1;
-            break;
+  const symbols = "([{)]}";
+  const breakSymbols = ":|,;=&|\n\r";
+  const lookBackBreakSymbols = breakSymbols + "([{";
+  const lookForwardBreakSymbols = breakSymbols + ")]}";
+  const symbolsRe = new RegExp(`[${escapeRegExp(symbols)}${escapeRegExp(breakSymbols)}]`);
+  const counterparts = {
+    "(": ")",
+    "{": "}",
+    "[": "]",
+    ")": "(",
+    "}": "{",
+    "]": "["
+  };
+  let symbolStack = [];
+  let searchIndex = startIndex - 1;
+  let newStartIndex, newEndIndex;
+  while (true) {
+    if (searchIndex < 0) {
+      newStartIndex = searchIndex + 1;
+      break;
+    }
+    let char = text.substring(searchIndex, searchIndex + 1);
+    let result = symbolsRe.exec(char);
+    if (result) {
+      let symbol = result[0];
+      if (lookBackBreakSymbols.indexOf(symbol) != -1 && symbolStack.length == 0) {
+        newStartIndex = searchIndex + 1;
+        break;
+      }
+      if (symbols.indexOf(symbol) != -1) {
+        if (symbolStack.length > 0 && symbolStack[symbolStack.length - 1] == counterparts[symbol]) {
+          symbolStack.pop();
+        } else {
+          symbolStack.push(symbol);
         }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        let result = symbolsRe.exec(char);
-        if (result) {
-            let symbol = result[0];
-            if (lookBackBreakSymbols.indexOf(symbol) != -1 && symbolStack.length == 0) {
-                newStartIndex = searchIndex + 1;
-                break;
-            }
-            if (symbols.indexOf(symbol) != -1) {
-                if (symbolStack.length > 0 && symbolStack[symbolStack.length - 1] == counterparts[symbol]) {
-                    symbolStack.pop();
-                } else {
-                    symbolStack.push(symbol);
-                }
-            }
+      }
+    }
+    searchIndex -= 1;
+  }
+  searchIndex = endIndex;
+  while (true) {
+    let char = text.substring(searchIndex, searchIndex + 1);
+    let result = symbolsRe.exec(char);
+    if (result) {
+      let symbol = result[0];
+      if (symbolStack.length == 0 && lookForwardBreakSymbols.indexOf(symbol) != -1) {
+        newEndIndex = searchIndex;
+        break;
+      }
+      if (symbols.indexOf(symbol) != -1) {
+        if (symbolStack.length > 0 && symbolStack[symbolStack.length - 1] == counterparts[symbol]) {
+          symbolStack.pop();
+        } else {
+          symbolStack.push(symbol);
         }
-        searchIndex -= 1;
+      }
     }
-
-    searchIndex = endIndex;
-
-    while (true) {
-        let char = text.substring(searchIndex, searchIndex + 1);
-        let result = symbolsRe.exec(char);
-        if (result) {
-            let symbol = result[0];
-            if (symbolStack.length == 0 && lookForwardBreakSymbols.indexOf(symbol) != -1) {
-                newEndIndex = searchIndex;
-                break;
-            }
-            if (symbols.indexOf(symbol) != -1) {
-                if (symbolStack.length > 0 && symbolStack[symbolStack.length - 1] == counterparts[symbol]) {
-                    symbolStack.pop();
-                } else {
-                    symbolStack.push(symbol);
-                }
-            }
-        }
-        if (searchIndex >= text.length - 1) {
-            return null;
-        }
-        searchIndex += 1;
+    if (searchIndex >= text.length - 1) {
+      return null;
     }
-    let s = text.substring(newStartIndex, newEndIndex);
-    let trimResult = trim(s);
-
-    if (trimResult) {
-        newStartIndex = newStartIndex + trimResult.start;
-        newEndIndex = newEndIndex - (s.length - trimResult.end);
+    searchIndex += 1;
+  }
+  let s = text.substring(newStartIndex, newEndIndex);
+  let trimResult = trim(s);
+  if (trimResult) {
+    newStartIndex = newStartIndex + trimResult.start;
+    newEndIndex = newEndIndex - (s.length - trimResult.end);
+  }
+  if (newStartIndex == startIndex && newEndIndex == endIndex) {
+    return null;
+  }
+  if (newStartIndex > startIndex || newEndIndex < endIndex) {
+    return null;
+  }
+  if (s.charAt(0) == ">") {
+    if (text.substring(newStartIndex - 1, newStartIndex) == "=") {
+      newStartIndex = newStartIndex - 1;
     }
-    if (newStartIndex == startIndex && newEndIndex == endIndex) {
-        return null;
-    }
-    if (newStartIndex > startIndex || newEndIndex < endIndex) {
-        return null;
-    }
-
-    // Handle arrow funtions =>
-    if (s.charAt(0) == '>') {
-        if (text.substring(newStartIndex - 1, newStartIndex) == '=') {
-            newStartIndex = newStartIndex - 1;
-        }
-    }
-
-    return getResult(newStartIndex, newEndIndex, text, 'semantic_unit');
+  }
+  return getResult(newStartIndex, newEndIndex, text, "semantic_unit");
 }
 
 function expandToSymbols(text, startIndex, endIndex) {
-    // Do not expand to next symbol if the selection the prev
-    // selection is followed by ; or , for example a closing bracket };
-    const breakSymbols = [';', ','];
-    const beforeBreak = ['}', ']', ')'];
-
-    if (breakSymbols.includes(text.substring(endIndex, endIndex + 1)) && beforeBreak.includes(text.substring(endIndex - 1, endIndex))) {
+  const breakSymbols = [";", ","];
+  const beforeBreak = ["}", "]", ")"];
+  if (breakSymbols.includes(text.substring(endIndex, endIndex + 1)) && beforeBreak.includes(text.substring(endIndex - 1, endIndex))) {
+    return null;
+  }
+  const openingSymbols = "([{";
+  const closingSymbols = ")]}";
+  const symbolsRegex = /[\(\[\{\)\]\}]/;
+  const symbolsRegexGlobal = /[\(\[\{\)\]\}]/g;
+  const quotesRegex = /(['\"])(?:\\.|.)*?\1/g;
+  let quotesBlacklist = {};
+  var r;
+  while ((r = quotesRegex.exec(text)) != null) {
+    let quotes_start = r.index;
+    let quotes_end = quotesRegex.lastIndex;
+    let i = 0;
+    while (i < text.length) {
+      quotesBlacklist[quotes_start + i] = true;
+      i += 1;
+      if (quotes_start + i == quotes_end) {
+        break;
+      }
+    }
+  }
+  const counterparts = {
+    "(": ")",
+    "{": "}",
+    "[": "]",
+    ")": "(",
+    "}": "{",
+    "]": "["
+  };
+  let selectionString = text.substring(startIndex, endIndex);
+  let selectionQuotes = selectionString.match(symbolsRegexGlobal) || [];
+  let backwardSymbolsStack = [];
+  let forwardSymbolsStack = [];
+  if (selectionQuotes.length != 0) {
+    let inspect_index = 0;
+    while (true) {
+      let item = selectionQuotes[inspect_index];
+      if (item && selectionQuotes.indexOf(counterparts[item]) != -1) {
+        selectionQuotes.splice(inspect_index, 1);
+        selectionQuotes.splice(selectionQuotes.indexOf(counterparts[item]), 1);
+      } else {
+        inspect_index = inspect_index + 1;
+        if (inspect_index >= selectionQuotes.length) {
+          break;
+        }
+      }
+    }
+    selectionQuotes.forEach((item) => {
+      if (openingSymbols.indexOf(item) !== -1) {
+        forwardSymbolsStack.push(item);
+      } else if (closingSymbols.indexOf(item) !== -1) {
+        backwardSymbolsStack.push(item);
+      }
+    });
+  }
+  let search_index = startIndex - 1;
+  let symbolsStart = 0, symbolsEnd = 0;
+  var symbol;
+  while (true) {
+    if (search_index < 0) {
+      return null;
+    }
+    if (quotesBlacklist[search_index]) {
+      search_index -= 1;
+      continue;
+    }
+    let char = text.substring(search_index, search_index + 1);
+    let r2 = symbolsRegex.exec(char);
+    if (r2) {
+      symbol = r2[0];
+      if (openingSymbols.indexOf(symbol) !== -1 && backwardSymbolsStack.length == 0) {
+        symbolsStart = search_index + 1;
+        break;
+      }
+      if (backwardSymbolsStack.length > 0 && backwardSymbolsStack[backwardSymbolsStack.length - 1] === counterparts[symbol]) {
+        backwardSymbolsStack.pop();
+      } else {
+        backwardSymbolsStack.push(symbol);
+      }
+    }
+    search_index -= 1;
+  }
+  let symbol_pair_regex = new RegExp(`[${escapeRegExp(symbol + counterparts[symbol])}]`);
+  forwardSymbolsStack.push(symbol);
+  search_index = endIndex;
+  while (true) {
+    if (quotesBlacklist[search_index]) {
+      search_index += 1;
+      continue;
+    }
+    let character = text.substring(search_index, search_index + 1);
+    let result = symbol_pair_regex.exec(character);
+    if (result) {
+      symbol = result[0];
+      if (forwardSymbolsStack[forwardSymbolsStack.length - 1] == counterparts[symbol]) {
+        forwardSymbolsStack.pop();
+      } else {
+        forwardSymbolsStack.push(symbol);
+      }
+      if (forwardSymbolsStack.length == 0) {
+        symbolsEnd = search_index;
+        break;
+      }
+    }
+    if (search_index == text.length) {
+      return;
+    }
+    search_index += 1;
+  }
+  if (startIndex == symbolsStart && endIndex == symbolsEnd) {
+    return getResult(symbolsStart - 1, symbolsEnd + 1, text, "symbol");
+  } else {
+    let line = getLine(text, startIndex, endIndex);
+    let lineText = text.substring(line.start, line.end);
+    let firstLine = lineText.split("\n");
+    let currentSelectedFirstLine = selectionString.split("\n");
+    if (currentSelectedFirstLine.length) {
+      currentSelectedFirstLine = currentSelectedFirstLine[0].trim();
+    }
+    if (firstLine.length) {
+      firstLine = firstLine[0].trim();
+      if (/^\w+:.*{$/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
         return null;
+      }
+      if (/^\w+?[\s+]?\w+[\s+]?=[\s+]?{/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
+        return null;
+      }
     }
-
-    const openingSymbols = '([{';
-    const closingSymbols = ')]}';
-    const symbolsRegex = /[\(\[\{\)\]\}]/;
-    const symbolsRegexGlobal = /[\(\[\{\)\]\}]/g;
-    const quotesRegex = /(['\"])(?:\\.|.)*?\1/g;
-    let quotesBlacklist = {};
-    //   # get all quoted strings and create dict with key of index = True
-    //   # Example: f+"oob"+bar
-    //   # quotesBlacklist = {
-    //   #   2: true, 3: true, 4: true, 5: true, 6: true
-    //   # }
-    var r;
-    while ((r = quotesRegex.exec(text)) != null) {
-        let quotes_start = r.index;
-        let quotes_end = quotesRegex.lastIndex;
-        let i = 0;
-        while (i < text.length) {
-            quotesBlacklist[quotes_start + i] = true;
-            i += 1;
-            if (quotes_start + i == quotes_end) {
-                break;
-            }
-        }
-    }
-    const counterparts = {
-        '(': ')',
-        '{': '}',
-        '[': ']',
-        ')': '(',
-        '}': '{',
-        ']': '['
-    };
-    //# find symbols in selection that are "not closed"
-    let selectionString = text.substring(startIndex, endIndex);
-    let selectionQuotes = selectionString.match(symbolsRegexGlobal) || [];
-    let backwardSymbolsStack = [];
-    let forwardSymbolsStack = [];
-
-    if (selectionQuotes.length != 0) {
-        let inspect_index = 0;
-        // # remove symbols that have a counterpart, i.e. that are "closed"
-        while (true) {
-            let item = selectionQuotes[inspect_index];
-            if (item && selectionQuotes.indexOf(counterparts[item]) != -1) {
-                selectionQuotes.splice(inspect_index, 1);
-                selectionQuotes.splice(selectionQuotes.indexOf(counterparts[item]), 1);
-            } else {
-                inspect_index = inspect_index + 1;
-                if (inspect_index >= selectionQuotes.length) {
-                    break;
-                }
-            }
-        }
-        //# put the remaining "open" symbols in the stack lists depending if they are
-        ///# opening or closing symbols
-        selectionQuotes.forEach((item) => {
-            if (openingSymbols.indexOf(item) !== -1) {
-                forwardSymbolsStack.push(item);
-            } else if (closingSymbols.indexOf(item) !== -1) {
-                backwardSymbolsStack.push(item);
-            }
-        });
-    }
-    let search_index = startIndex - 1;
-    let symbolsStart = 0,
-        symbolsEnd = 0;
-    var symbol;
-    //# look back from begin of selection
-    while (true) {
-        //# begin of string reached
-        if (search_index < 0) {
-            return null;
-        }
-        //# skip if current index is within a quote
-        if (quotesBlacklist[search_index]) {
-            search_index -= 1;
-            continue;
-        }
-
-        let char = text.substring(search_index, search_index + 1);
-
-        let r = symbolsRegex.exec(char);
-        if (r) {
-            symbol = r[0];
-            if (openingSymbols.indexOf(symbol) !== -1 && backwardSymbolsStack.length == 0) {
-                symbolsStart = search_index + 1;
-                break;
-            }
-            if (backwardSymbolsStack.length > 0 && backwardSymbolsStack[backwardSymbolsStack.length - 1] === counterparts[symbol]) {
-                //# last symbol in the stack is the counterpart of the found one
-                backwardSymbolsStack.pop();
-            } else {
-                backwardSymbolsStack.push(symbol);
-            }
-        }
-        search_index -= 1;
-    }
-    let symbol_pair_regex = new RegExp(`[${escapeRegExp(symbol + counterparts[symbol])}]`);
-    forwardSymbolsStack.push(symbol);
-    search_index = endIndex;
-    //# look forward from end of selection
-    while (true) {
-        //# skip if current index is within a quote
-        if (quotesBlacklist[search_index]) {
-            search_index += 1;
-            continue;
-        }
-        let character = text.substring(search_index, search_index + 1);
-        let result = symbol_pair_regex.exec(character);
-        if (result) {
-            symbol = result[0];
-            if (forwardSymbolsStack[forwardSymbolsStack.length - 1] == counterparts[symbol]) {
-                //# counterpart of found symbol is the last one in stack, remove it
-                forwardSymbolsStack.pop();
-            } else {
-                forwardSymbolsStack.push(symbol);
-            }
-
-            if (forwardSymbolsStack.length == 0) {
-                symbolsEnd = search_index;
-                break;
-            }
-        }
-        //# end of string reached
-        if (search_index == text.length) {
-            return;
-        }
-        search_index += 1;
-    }
-
-
-    if (startIndex == symbolsStart && endIndex == symbolsEnd) {
-        return getResult(symbolsStart - 1, symbolsEnd + 1, text, 'symbol');
-    } else {
-
-        // Handle expansion inside objects properties
-        // {
-        //    example: {
-        //       anotherelm: true
-        //    }
-        // }
-        let line = getLine(text, startIndex, endIndex);
-        let lineText = text.substring(line.start, line.end);
-        let firstLine = lineText.split('\n');
-        let currentSelectedFirstLine = selectionString.split('\n');
-        if (currentSelectedFirstLine.length) {
-            currentSelectedFirstLine = currentSelectedFirstLine[0].trim();
-        }
-
-        if (firstLine.length) {
-            firstLine = firstLine[0].trim();
-
-            // Do not jump to parent symbol if there's an object property. myprop: {
-            if (/^\w+:.*{$/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
-                return null;
-            }
-
-            // Do not jump to parent symbol if there's an variable definition. const myvar = {
-            if (/^\w+?[\s+]?\w+[\s+]?=[\s+]?{/.test(firstLine) && firstLine !== currentSelectedFirstLine) {
-                return null;
-            }
-        }
-
-        return getResult(symbolsStart, symbolsEnd, text, 'symbol');
-    }
+    return getResult(symbolsStart, symbolsEnd, text, "symbol");
+  }
 }
 
 function expandToLine(text, startIndex, endIndex) {
-    const lineReg = /\n/;
-    const spacesAndTabsRe = /(\s|\t)*/;
-    var newStartIndex = 0,
-        newEndIndex = 0;
-
-    let searchIndex = startIndex - 1;
-    while (true) {
-        if (searchIndex < 0) {
-            newStartIndex = searchIndex + 1;
-            break;
-        }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        if (lineReg.test(char)) {
-            newStartIndex = searchIndex + 1;
-            break;
-        } else {
-            searchIndex -= 1;
-        }
+  const lineReg = /\n/;
+  const spacesAndTabsRe = /(\s|\t)*/;
+  var newStartIndex = 0, newEndIndex = 0;
+  let searchIndex = startIndex - 1;
+  while (true) {
+    if (searchIndex < 0) {
+      newStartIndex = searchIndex + 1;
+      break;
     }
-
-    searchIndex = endIndex;
-
-    while (true) {
-        if (searchIndex > text.length - 1) {
-            newEndIndex = searchIndex;
-            break;
-        }
-        let char = text.substring(searchIndex, searchIndex + 1);
-        if (lineReg.test(char)) {
-            newEndIndex = searchIndex;
-            break;
-        } else {
-            searchIndex += 1;
-        }
+    let char = text.substring(searchIndex, searchIndex + 1);
+    if (lineReg.test(char)) {
+      newStartIndex = searchIndex + 1;
+      break;
+    } else {
+      searchIndex -= 1;
     }
-
-    //remove blank space in top
-    var s = text.substring(newStartIndex, newEndIndex);
-    var r = spacesAndTabsRe.exec(s);
-    if (r && r[0].length <= startIndex) {
-        newStartIndex += r[0].length;
+  }
+  searchIndex = endIndex;
+  while (true) {
+    if (searchIndex > text.length - 1) {
+      newEndIndex = searchIndex;
+      break;
     }
-
-    // Stop at line end delimiter
-    const lineEndingChars = [';', ','];
-    const lastChar = text.substring(newEndIndex - 1, newEndIndex);
-
-    if (lineEndingChars.includes(lastChar)) {
-        if (startIndex == newStartIndex && endIndex < newEndIndex - 1) {
-            newEndIndex = newEndIndex - 1;
-        } else if (newStartIndex < startIndex && endIndex + 1 == newEndIndex) {
-            newEndIndex = newEndIndex - 1;
-        }
+    let char = text.substring(searchIndex, searchIndex + 1);
+    if (lineReg.test(char)) {
+      newEndIndex = searchIndex;
+      break;
+    } else {
+      searchIndex += 1;
     }
-
-    if (startIndex == newStartIndex && endIndex == newEndIndex) {
-        return null;
+  }
+  var s = text.substring(newStartIndex, newEndIndex);
+  var r = spacesAndTabsRe.exec(s);
+  if (r && r[0].length <= startIndex) {
+    newStartIndex += r[0].length;
+  }
+  const lineEndingChars = [";", ","];
+  const lastChar = text.substring(newEndIndex - 1, newEndIndex);
+  if (lineEndingChars.includes(lastChar)) {
+    if (startIndex == newStartIndex && endIndex < newEndIndex - 1) {
+      newEndIndex = newEndIndex - 1;
+    } else if (newStartIndex < startIndex && endIndex + 1 == newEndIndex) {
+      newEndIndex = newEndIndex - 1;
     }
-
-    return getResult(newStartIndex, newEndIndex, text, 'line');
+  }
+  if (startIndex == newStartIndex && endIndex == newEndIndex) {
+    return null;
+  }
+  return getResult(newStartIndex, newEndIndex, text, "line");
 }
 
 function expandToBackticks(text, startIndex, endIndex) {
-    var quotesRegex = /([\`])(?:[\w\s\S])*?\1/g;
-    var r;
-
-    // iterate over all found backticks pairs
-    while ((r = quotesRegex.exec(text)) !== null) {
-        let quotesStart = r.index;
-        let quotesEnd = quotesRegex.lastIndex;
-        //quotes pair end is before selection, stop here and continue loop
-        if (quotesEnd < startIndex) {
-            continue;
-        }
-
-        // quotes pair start is after selection, return, no need to continue loop
-        if (quotesStart > startIndex) {
-            return null;
-        }
-
-        if (startIndex == quotesStart && endIndex == quotesEnd) {
-            return null;
-        }
-
-        // the string w/o the quotes, "quotes content"
-        let quotesContentStart = quotesStart + 1;
-        let quotesContentEnd = quotesEnd - 1;
-
-        // "quotes content" is selected, return with quotes
-        if (startIndex == quotesContentStart && endIndex == quotesContentEnd) {
-            return getResult(quotesStart, quotesEnd, text, 'backticks');
-        }
-
-        //# selection is within the found quote pairs, return "quotes content"
-        if (startIndex > quotesStart && endIndex < quotesEnd) {
-            return getResult(quotesContentStart, quotesContentEnd, text, 'backticks');
-        }
+  var quotesRegex = /([\`])(?:[\w\s\S])*?\1/g;
+  var r;
+  while ((r = quotesRegex.exec(text)) !== null) {
+    let quotesStart = r.index;
+    let quotesEnd = quotesRegex.lastIndex;
+    if (quotesEnd < startIndex) {
+      continue;
     }
-
-    return null;
+    if (quotesStart > startIndex) {
+      return null;
+    }
+    if (startIndex == quotesStart && endIndex == quotesEnd) {
+      return null;
+    }
+    let quotesContentStart = quotesStart + 1;
+    let quotesContentEnd = quotesEnd - 1;
+    if (startIndex == quotesContentStart && endIndex == quotesContentEnd) {
+      return getResult(quotesStart, quotesEnd, text, "backticks");
+    }
+    if (startIndex > quotesStart && endIndex < quotesEnd) {
+      return getResult(quotesContentStart, quotesContentEnd, text, "backticks");
+    }
+  }
+  return null;
 }
 
 class JavascriptExpander {
-
-    constructor(editor) {
-        this.editor = editor;
+  constructor(editor) {
+    this.editor = editor;
+  }
+  expand(text, start, end, data = {}) {
+    let selectionInString = expandToQuotes(text, start, end);
+    if (selectionInString) {
+      let stringResult = this.expandAgainsString(selectionInString.selectionText, start - selectionInString.end, end - selectionInString.end);
+      if (stringResult) {
+        stringResult.end = stringResult.end + selectionInString.end;
+        stringResult.start = stringResult.start + selectionInString.end;
+        stringResult.selectionText = text.substring(stringResult.end, stringResult.start);
+        return stringResult;
+      }
     }
-
-    expand(text, start, end, data = {}) {
-        let selectionInString = expandToQuotes(text, start, end);
-        if (selectionInString) {
-            let stringResult = this.expandAgainsString(selectionInString.selectionText, start - selectionInString.end, end - selectionInString.end);
-
-            if (stringResult) {
-                stringResult.end = stringResult.end + selectionInString.end;
-                stringResult.start = stringResult.start + selectionInString.end;
-                stringResult.selectionText = text.substring(stringResult.end, stringResult.start);
-
-                return stringResult;
-            }
-        }
-
-        if (!hasLineBreaks(text, start, end)) {
-            //let line = getLine(text, start, end);
-            //let lineString = text.substring(line.start, line.end);
-            let line = data.lineRange;
-            let lineString = this.editor.getTextInRange(new Range(line.start, line.end));
-            let lineResult = this.expandAgainsLine(lineString, start - line.start, end - line.start, data);
-
-            if (lineResult) {
-                lineResult.end = lineResult.end + line.start;
-                lineResult.start = lineResult.start + line.start;
-                lineResult.selectionText = this.editor.getTextInRange(new Range(lineResult.start, lineResult.end));
-                return lineResult;
-            }
-        }
-
-        let expandStack = [];
-        let result = null;
-
-
-        result = expandToSemanticUnit(text, start, end);
-        if (result) {
-            expandStack.push('semantic_unit');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToBackticks(text, start, end);
-        if (result) {
-            expandStack.push('backticks');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToSymbols(text, start, end);
-        if (result) {
-            expandStack.push('symbols');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToLine(text, start, end);
-        if (result) {
-            expandStack.push('line');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        // TODO: JS expand above will fails if there are comments
-
-        return null;
+    if (!hasLineBreaks(text, start, end)) {
+      let line = data.lineRange;
+      let lineString = this.editor.getTextInRange(new Range(line.start, line.end));
+      let lineResult = this.expandAgainsLine(lineString, start - line.start, end - line.start, data);
+      if (lineResult) {
+        lineResult.end = lineResult.end + line.start;
+        lineResult.start = lineResult.start + line.start;
+        lineResult.selectionText = this.editor.getTextInRange(new Range(lineResult.start, lineResult.end));
+        return lineResult;
+      }
     }
-
-    expandAgainsLine(text, start, end, data) {
-        let expandStack = [];
-        let result = null;
-
-        /*let result = expandToSubword(text, start, end);
-        if (result) {
-            expandStack.push('subword');
-            result['expandStack'] = expandStack;
-            return result;
-        }*/
-
-        result = expandToWord(text, start, end);
-        if (result) {
-            expandStack.push('word');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToQuotes(text, start, end);
-        if (result) {
-            expandStack.push('quotes');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToBackticks(text, start, end);
-        if (result) {
-            expandStack.push('backticks');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToSemanticUnit(text, start, end);
-        if (result) {
-            expandStack.push('semantic_unit');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToSymbols(text, start, end);
-        if (result) {
-            expandStack.push('symbols');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToLine(text, start, end);
-        if (result) {
-            expandStack.push('line');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        return null;
+    let expandStack = [];
+    let result = null;
+    result = expandToSemanticUnit(text, start, end);
+    if (result) {
+      expandStack.push("semantic_unit");
+      result["expandStack"] = expandStack;
+      return result;
     }
-
-    expandAgainsString(text, start, end) {
-        let expandStack = [];
-        let result = expandToSemanticUnit(text, start, end);
-        if (result) {
-            expandStack.push('semantic_unit');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-        result = expandToSymbols(text, start, end);
-        if (result) {
-            expandStack.push('symbols');
-            result['expandStack'] = expandStack;
-        }
-
-        return result;
+    result = expandToBackticks(text, start, end);
+    if (result) {
+      expandStack.push("backticks");
+      result["expandStack"] = expandStack;
+      return result;
     }
+    result = expandToSymbols(text, start, end);
+    if (result) {
+      expandStack.push("symbols");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToLine(text, start, end);
+    if (result) {
+      expandStack.push("line");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    return null;
+  }
+  expandAgainsLine(text, start, end, data) {
+    let expandStack = [];
+    let result = null;
+    result = expandToWord(text, start, end);
+    if (result) {
+      expandStack.push("word");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToQuotes(text, start, end);
+    if (result) {
+      expandStack.push("quotes");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToBackticks(text, start, end);
+    if (result) {
+      expandStack.push("backticks");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToSemanticUnit(text, start, end);
+    if (result) {
+      expandStack.push("semantic_unit");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToSymbols(text, start, end);
+    if (result) {
+      expandStack.push("symbols");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToLine(text, start, end);
+    if (result) {
+      expandStack.push("line");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    return null;
+  }
+  expandAgainsString(text, start, end) {
+    let expandStack = [];
+    let result = expandToSemanticUnit(text, start, end);
+    if (result) {
+      expandStack.push("semantic_unit");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToSymbols(text, start, end);
+    if (result) {
+      expandStack.push("symbols");
+      result["expandStack"] = expandStack;
+    }
+    return result;
+  }
 }
 
 class HTMLExpander {
-    constructor(editor) {
-        this.editor = editor;
+  constructor(editor) {
+    this.editor = editor;
+  }
+  expand(text, start, end, data = {}) {
+    let expandStack = [];
+    let result = null;
+    if (isInsideTag("script", text, start, end)) {
+      const jsExpander = new JavascriptExpander(this.editor);
+      const expand = jsExpander.expand(text, start, end, data);
+      if (expand) {
+        return expand;
+      }
     }
-
-    expand(text, start, end, data = {}) {
-        let expandStack = [];
-        let result = null;
-
-        // Check if inside a script tag
-        if (isInsideTag('script', text, start, end)) {
-            const jsExpander = new JavascriptExpander(this.editor);
-            const expand = jsExpander.expand(text, start, end, data);
-            if (expand) {
-                return expand;
-            }
-        }
-
-        // Check if inside a style tag
-        if (isInsideTag('style', text, start, end)) {
-            const jsExpander = new JavascriptExpander(this.editor);
-            const expand = jsExpander.expand(text, start, end, data);
-            if (expand) {
-                return expand;
-            }
-        }
-
-        /*let result = expandToSubword(text, start, end);
-        if (result) {
-            expandStack.push('subword');
-            result['expandStack'] = expandStack;
-            return result;
-        }*/
-
-        result = expandToWord(text, start, end);
-        if (result) {
-            expandStack.push('word');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToQuotes(text, start, end);
-        if (result) {
-            expandStack.push('quotes');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        expandStack.push('xml_node');
-        result = expandToXMLNode(text, start, end);
-
-        if (result) {
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        return null;
+    if (isInsideTag("style", text, start, end)) {
+      const jsExpander = new JavascriptExpander(this.editor);
+      const expand = jsExpander.expand(text, start, end, data);
+      if (expand) {
+        return expand;
+      }
     }
+    result = expandToWord(text, start, end);
+    if (result) {
+      expandStack.push("word");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToQuotes(text, start, end);
+    if (result) {
+      expandStack.push("quotes");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    expandStack.push("xml_node");
+    result = expandToXMLNode(text, start, end);
+    if (result) {
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    return null;
+  }
 }
 
 const indentReg = /^(\s*)/;
-
 function empty_line(text, line) {
-    return text.substring(line.start, line.end).trim() === '';
+  return text.substring(line.start, line.end).trim() === "";
 }
-
 function getIndent$1(text, line) {
-    let line_str = text.substring(line.start, line.end);
-    let m = line_str.match(indentReg);
-    if (m) {
-        return m[0].length;
-    }
-    return 0;
+  let line_str = text.substring(line.start, line.end);
+  let m = line_str.match(indentReg);
+  if (m) {
+    return m[0].length;
+  }
+  return 0;
 }
-
 function expandToIndent(text, startIndex, endIndex) {
-    let line = getLine(text, startIndex, endIndex);
-    let indent = getIndent$1(text, line);
-    let start = line.start;
-    let end = line.end;
-    let beforeLine = line;
-
-    while (true) {
-        let pos = beforeLine.start - 1;
-        if (pos <= 0) {
-            break;
-        }
-
-        beforeLine = getLine(text, pos, pos);
-
-        let beforeIndent = getIndent$1(text, beforeLine);
-
-        //done if the line has a lower indent
-        if (!(indent <= beforeIndent) && !empty_line(text, beforeLine)) {
-            break;
-        }
-
-        if (!empty_line(text, beforeLine) && indent == beforeIndent) {
-            start = beforeLine.start;
-        }
+  let line = getLine(text, startIndex, endIndex);
+  let indent = getIndent$1(text, line);
+  let start = line.start;
+  let end = line.end;
+  let beforeLine = line;
+  while (true) {
+    let pos = beforeLine.start - 1;
+    if (pos <= 0) {
+      break;
     }
-
-    let afterLine = line;
-
-    while (true) {
-        //get the line afterLine
-        let pos = afterLine.end + 1;
-        if (pos >= text.length) {
-            break;
-        }
-        afterLine = getLine(text, pos, pos);
-        let afterIndent = getIndent$1(text, afterLine);
-        //done if the line has a lower indent
-        if (!(indent <= afterIndent) && !empty_line(text, afterLine)) {
-            break;
-        }
-        //move the end
-        if (!empty_line(text, afterLine)) {
-            end = afterLine.end;
-        }
+    beforeLine = getLine(text, pos, pos);
+    let beforeIndent = getIndent$1(text, beforeLine);
+    if (!(indent <= beforeIndent) && !empty_line(text, beforeLine)) {
+      break;
     }
-
-    return getResult(start, end, text, 'indent');
+    if (!empty_line(text, beforeLine) && indent == beforeIndent) {
+      start = beforeLine.start;
+    }
+  }
+  let afterLine = line;
+  while (true) {
+    let pos = afterLine.end + 1;
+    if (pos >= text.length) {
+      break;
+    }
+    afterLine = getLine(text, pos, pos);
+    let afterIndent = getIndent$1(text, afterLine);
+    if (!(indent <= afterIndent) && !empty_line(text, afterLine)) {
+      break;
+    }
+    if (!empty_line(text, afterLine)) {
+      end = afterLine.end;
+    }
+  }
+  return getResult(start, end, text, "indent");
 }
 
 class PythonExpander {
-    constructor(editor) {
-        this.editor = editor;
+  constructor(editor) {
+    this.editor = editor;
+  }
+  expand(text, start, end, data = {}) {
+    let expandStack = [];
+    let result = null;
+    const jsExpander = new JavascriptExpander(this.editor);
+    const expand = jsExpander.expand(text, start, end, data);
+    if (expand) {
+      return expand;
     }
-
-    expand(text, start, end, data = {}) {
-        let expandStack = [];
-        let result = null;
-
-        const jsExpander = new JavascriptExpander(this.editor);
-        const expand = jsExpander.expand(text, start, end, data);
-
-        if (expand) {
-            return expand;
-        }
-
-
-        result = this.expandLineWithoutIndent(text, start, end);
-        if (result) {
-            expandStack.push('line_no_indent');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-
-        result = this.expandOverLineContinuation(text, start, end);
-        if (result) {
-            expandStack.push('line_continuation');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = this.expandPythonBlockFromStart(text, start, end);
-        if (result) {
-            expandStack.push('py_block_start');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-
-        result = this.pyExpandToIndent(text, start, end);
-        if (result) {
-            expandStack.push('py_indent');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-
-        if (result) {
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        return null;
+    result = this.expandLineWithoutIndent(text, start, end);
+    if (result) {
+      expandStack.push("line_no_indent");
+      result["expandStack"] = expandStack;
+      return result;
     }
-
-
-    expandLineWithoutIndent(text, start, end) {
-        const line = getLine(text, start, end);
-        //const line = this.editor.getLineRangeForRange(new Range(start, end));
-        const indent = getIndent$1(text, line);
-        let lstart = Math.min(start, line.start + indent);
-        let lend = Math.max(end, line.end);
-
-        if (lstart !== start || lend !== end) {
-            return getResult(lstart, lend, text, 'line_no_indent');
-        }
-
-        return null;
+    result = this.expandOverLineContinuation(text, start, end);
+    if (result) {
+      expandStack.push("line_continuation");
+      result["expandStack"] = expandStack;
+      return result;
     }
-
-    expandOverLineContinuation(text, start, end) {
-        if (text.substring(end - 1, end) !== '\\') {
-            return null;
-        }
-
-        const line = this.editor.getLineRangeForRange(new Range(start, end));
-        const lineIndent = getIndent$1(text, line);
-        const nextLine = this.editor.getLineRangeForRange(new Range(end + 1, end + 2));
-
-        start = line.start + lineIndent;
-        end = nextLine.end - 1;
-
-        const nextResult = this.expandOverLineContinuation(text, start, end);
-        if (nextResult) {
-            start = nextResult.start;
-            end = nextResult.end;
-        }
-
-        return getResult(start, end, text, 'line_continuation');
+    result = this.expandPythonBlockFromStart(text, start, end);
+    if (result) {
+      expandStack.push("py_block_start");
+      result["expandStack"] = expandStack;
+      return result;
     }
-
-    expandPythonBlockFromStart(text, start, end) {
-        if (text.substring(end - 1, end) !== ':') {
-            return null;
-        }
-
-        const result = expandToIndent(text, end + 1, end + 1);
-        if (result) {
-            const line = this.editor.getLineRangeForRange(new Range(start, end));
-            const indent = getIndent$1(text, line);
-
-            start = line.start + indent;
-            end = result.end;
-            return getResult(start, end, text, 'py_block_start');
-        }
-
-        return null;
+    result = this.pyExpandToIndent(text, start, end);
+    if (result) {
+      expandStack.push("py_indent");
+      result["expandStack"] = expandStack;
+      return result;
     }
-
-
-
-    pyExpandToIndent(text, start, end) {
-        //const line = this.editor.getLineRangeForRange(new Range(start, end));
-        const line = getLine(text, start, end);
-        const indent = getIndent$1(text, line);
-
-        // we don't expand to indent 0 (whole document)
-        if (indent == 0) {
-            return null;
-        }
-
-        // expand to indent
-        //let result = expandToIndent(text, start - indent, end);
-        let result = expandToIndent(text, start - indent, end);
-        if (!result) {
-            return null;
-        }
-
-        // get the indent of the first line
-        // if the expansion changed return the result increased
-        /*if (result.start !== start || result.end !== end) {
-            //return result;
-        }*/
-
-        let pos = result.start + indent - 1;
-
-        while (true) {
-            if (pos < 0) {
-                break;
-            }
-
-            // get the indent of the line before
-            let beforeLine = getLine(text, pos, pos);
-            let beforeIndent = getIndent$1(text, beforeLine);
-
-            if (!empty_line(text, beforeLine) && beforeIndent < indent) {
-                start = beforeLine.start;
-                end = result.end;
-                return getResult(start + beforeIndent, end, text, 'py_indent');
-            }
-
-            // goto the line before the line befor
-            pos = beforeLine.start - 1;
-        }
-
-        return null;
+    if (result) {
+      result["expandStack"] = expandStack;
+      return result;
     }
+    return null;
+  }
+  expandLineWithoutIndent(text, start, end) {
+    const line = getLine(text, start, end);
+    const indent = getIndent$1(text, line);
+    let lstart = Math.min(start, line.start + indent);
+    let lend = Math.max(end, line.end);
+    if (lstart !== start || lend !== end) {
+      return getResult(lstart, lend, text, "line_no_indent");
+    }
+    return null;
+  }
+  expandOverLineContinuation(text, start, end) {
+    if (text.substring(end - 1, end) !== "\\") {
+      return null;
+    }
+    const line = this.editor.getLineRangeForRange(new Range(start, end));
+    const lineIndent = getIndent$1(text, line);
+    const nextLine = this.editor.getLineRangeForRange(new Range(end + 1, end + 2));
+    start = line.start + lineIndent;
+    end = nextLine.end - 1;
+    const nextResult = this.expandOverLineContinuation(text, start, end);
+    if (nextResult) {
+      start = nextResult.start;
+      end = nextResult.end;
+    }
+    return getResult(start, end, text, "line_continuation");
+  }
+  expandPythonBlockFromStart(text, start, end) {
+    if (text.substring(end - 1, end) !== ":") {
+      return null;
+    }
+    const result = expandToIndent(text, end + 1, end + 1);
+    if (result) {
+      const line = this.editor.getLineRangeForRange(new Range(start, end));
+      const indent = getIndent$1(text, line);
+      start = line.start + indent;
+      end = result.end;
+      return getResult(start, end, text, "py_block_start");
+    }
+    return null;
+  }
+  pyExpandToIndent(text, start, end) {
+    const line = getLine(text, start, end);
+    const indent = getIndent$1(text, line);
+    if (indent == 0) {
+      return null;
+    }
+    let result = expandToIndent(text, start - indent, end);
+    if (!result) {
+      return null;
+    }
+    let pos = result.start + indent - 1;
+    while (true) {
+      if (pos < 0) {
+        break;
+      }
+      let beforeLine = getLine(text, pos, pos);
+      let beforeIndent = getIndent$1(text, beforeLine);
+      if (!empty_line(text, beforeLine) && beforeIndent < indent) {
+        start = beforeLine.start;
+        end = result.end;
+        return getResult(start + beforeIndent, end, text, "py_indent");
+      }
+      pos = beforeLine.start - 1;
+    }
+    return null;
+  }
 }
 
 class PHPExpander {
-    constructor(editor) {
-        this.editor = editor;
+  constructor(editor) {
+    this.editor = editor;
+  }
+  expand(text, start, end, data = {}) {
+    let expandStack = [];
+    let result = null;
+    if (isInsideTag("script", text, start, end)) {
+      const jsExpander = new JavascriptExpander(this.editor);
+      const expand = jsExpander.expand(text, start, end, data);
+      if (expand) {
+        return expand;
+      }
     }
-
-
-    expand(text, start, end, data = {}) {
-        let expandStack = [];
-        let result = null;
-
-
-        // Check if inside a script tag
-        if (isInsideTag('script', text, start, end)) {
-            const jsExpander = new JavascriptExpander(this.editor);
-            const expand = jsExpander.expand(text, start, end, data);
-            if (expand) {
-                return expand;
-            }
-        }
-
-        // Check if inside a style tag
-        if (isInsideTag('style', text, start, end)) {
-            const jsExpander = new JavascriptExpander(this.editor);
-            const expand = jsExpander.expand(text, start, end, data);
-            if (expand) {
-                return expand;
-            }
-        }
-
-        let selectionInString = expandToQuotes(text, start, end);
-        if (selectionInString) {
-            let stringResult = this.expandAgainsString(selectionInString.selectionText, start - selectionInString.end, end - selectionInString.end);
-
-            if (stringResult) {
-                stringResult.end = stringResult.end + selectionInString.end;
-                stringResult.start = stringResult.start + selectionInString.end;
-                stringResult.selectionText = text.substring(stringResult.end, stringResult.start);
-
-                return stringResult;
-            }
-        }
-
-
-        if (!hasLineBreaks(text, start, end)) {
-            //let line = getLine(text, start, end);
-            //let lineString = text.substring(line.start, line.end);
-            let line = data.lineRange;
-            let lineString = this.editor.getTextInRange(new Range(line.start, line.end));
-            let lineResult = this.expandAgainsLine(lineString, start - line.start, end - line.start, data);
-
-            if (lineResult) {
-                lineResult.end = lineResult.end + line.start;
-                lineResult.start = lineResult.start + line.start;
-                lineResult.selectionText = this.editor.getTextInRange(new Range(lineResult.start, lineResult.end));
-                return lineResult;
-            }
-        }
-
-        /*expandStack.push('subword');
-        let result = expandToSubword(text, start, end);
-        if (result) {
-            result['expandStack'] = expandStack;
-            return result;
-        }*/
-
-        result = expandToWord(text, start, end);
-        if (result) {
-            expandStack.push('word');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToQuotes(text, start, end);
-        if (result) {
-            expandStack.push('quotes');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToSemanticUnit(text, start, end);
-        if (result) {
-            expandStack.push('semantic_unit');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = this.expandToFunction(text, start, end);
-        if (result) {
-            expandStack.push('function');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToSymbols(text, start, end);
-        if (result) {
-            expandStack.push('symbols');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        /*result = expandToXMLNode(text, start, end);
-        if (result) {
-            expandStack.push('xml_node');
-            result['expandStack'] = expandStack;
-            return result;
-        }*/
-
-        result = expandToLine(text, start, end);
-        if (result) {
-            expandStack.push('line');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        return null;
+    if (isInsideTag("style", text, start, end)) {
+      const jsExpander = new JavascriptExpander(this.editor);
+      const expand = jsExpander.expand(text, start, end, data);
+      if (expand) {
+        return expand;
+      }
     }
-
-
-
-    expandAgainsLine(text, start, end, data) {
-        let expandStack = [];
-        let result = null;
-
-        /*let result = expandToSubword(text, start, end);
-        if (result) {
-            expandStack.push('subword');
-            result['expandStack'] = expandStack;
-            return result;
-        }*/
-
-        result = expandToWord(text, start, end);
-        if (result) {
-            expandStack.push('word');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToQuotes(text, start, end);
-        if (result) {
-            expandStack.push('quotes');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToSemanticUnit(text, start, end);
-        if (result) {
-            expandStack.push('semantic_unit');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToSymbols(text, start, end);
-        if (result) {
-            expandStack.push('symbols');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        result = expandToLine(text, start, end);
-        if (result) {
-            expandStack.push('line');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-
-        return null;
+    let selectionInString = expandToQuotes(text, start, end);
+    if (selectionInString) {
+      let stringResult = this.expandAgainsString(selectionInString.selectionText, start - selectionInString.end, end - selectionInString.end);
+      if (stringResult) {
+        stringResult.end = stringResult.end + selectionInString.end;
+        stringResult.start = stringResult.start + selectionInString.end;
+        stringResult.selectionText = text.substring(stringResult.end, stringResult.start);
+        return stringResult;
+      }
     }
-
-    expandAgainsString(text, start, end) {
-        let expandStack = [];
-        let result = expandToSemanticUnit(text, start, end);
-        if (result) {
-            expandStack.push('semantic_unit');
-            result['expandStack'] = expandStack;
-            return result;
-        }
-        result = expandToSymbols(text, start, end);
-        if (result) {
-            expandStack.push('symbols');
-            result['expandStack'] = expandStack;
-        }
-
-        return result;
+    if (!hasLineBreaks(text, start, end)) {
+      let line = data.lineRange;
+      let lineString = this.editor.getTextInRange(new Range(line.start, line.end));
+      let lineResult = this.expandAgainsLine(lineString, start - line.start, end - line.start, data);
+      if (lineResult) {
+        lineResult.end = lineResult.end + line.start;
+        lineResult.start = lineResult.start + line.start;
+        lineResult.selectionText = this.editor.getTextInRange(new Range(lineResult.start, lineResult.end));
+        return lineResult;
+      }
     }
-
-
-    expandToFunction(text, start, end) {
-        const currentSelection = text.substring(start, end);
-        if (currentSelection.trim().startsWith('{')) {
-
-            const line = this.editor.getLineRangeForRange(new Range(start, end));
-            const prevLine = this.editor.getLineRangeForRange(new Range(line.start - 2, line.start - 1));
-            const prevLineText = text.substring(prevLine.start, prevLine.end);
-
-            if (/^(?:\w+).+function.+\w+\(.*\)/.test(prevLineText.trim()) || /\s*class\s+.*/.test(prevLineText.trim())) {
-                let indent = getIndent(text, prevLine);
-                return getResult(prevLine.start + indent, end, text, 'function');
-            }
-        }
-
-        return null;
+    result = expandToWord(text, start, end);
+    if (result) {
+      expandStack.push("word");
+      result["expandStack"] = expandStack;
+      return result;
     }
+    result = expandToQuotes(text, start, end);
+    if (result) {
+      expandStack.push("quotes");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToSemanticUnit(text, start, end);
+    if (result) {
+      expandStack.push("semantic_unit");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = this.expandToFunction(text, start, end);
+    if (result) {
+      expandStack.push("function");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToSymbols(text, start, end);
+    if (result) {
+      expandStack.push("symbols");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToLine(text, start, end);
+    if (result) {
+      expandStack.push("line");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    return null;
+  }
+  expandAgainsLine(text, start, end, data) {
+    let expandStack = [];
+    let result = null;
+    result = expandToWord(text, start, end);
+    if (result) {
+      expandStack.push("word");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToQuotes(text, start, end);
+    if (result) {
+      expandStack.push("quotes");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToSemanticUnit(text, start, end);
+    if (result) {
+      expandStack.push("semantic_unit");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToSymbols(text, start, end);
+    if (result) {
+      expandStack.push("symbols");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToLine(text, start, end);
+    if (result) {
+      expandStack.push("line");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    return null;
+  }
+  expandAgainsString(text, start, end) {
+    let expandStack = [];
+    let result = expandToSemanticUnit(text, start, end);
+    if (result) {
+      expandStack.push("semantic_unit");
+      result["expandStack"] = expandStack;
+      return result;
+    }
+    result = expandToSymbols(text, start, end);
+    if (result) {
+      expandStack.push("symbols");
+      result["expandStack"] = expandStack;
+    }
+    return result;
+  }
+  expandToFunction(text, start, end) {
+    const currentSelection = text.substring(start, end);
+    if (currentSelection.trim().startsWith("{")) {
+      const line = this.editor.getLineRangeForRange(new Range(start, end));
+      const prevLine = this.editor.getLineRangeForRange(new Range(line.start - 2, line.start - 1));
+      const prevLineText = text.substring(prevLine.start, prevLine.end);
+      if (/^(?:\w+).+function.+\w+\(.*\)/.test(prevLineText.trim()) || /\s*class\s+.*/.test(prevLineText.trim())) {
+        let indent = getIndent(text, prevLine);
+        return getResult(prevLine.start + indent, end, text, "function");
+      }
+    }
+    return null;
+  }
 }
 
 const expandHistory = new Map();
-
 class SelectionExpander {
-    //expandHistory = new Map();
-
-    /**
-     * Return file extension
-     */
-    getExtension(editor) {
-        let filePath = editor.document.path;
-        let extension = nova.path.extname(filePath).substring(1);
-
-        if (filePath.endsWith('.blade.php')) {
-            extension = 'html';
-        } else if (extension == 'vue') {
-            extension = 'html';
-        }
-
-        return extension;
+  getExtension(editor) {
+    let filePath = editor.document.path;
+    let extension = nova.path.extname(filePath).substring(1);
+    if (filePath.endsWith(".blade.php")) {
+      extension = "html";
+    } else if (extension == "vue") {
+      extension = "html";
     }
-
-    /**
-     * Expand
-     * expand the active selections
-     */
-    expand(editor) {
-        if (!editor) {
-            return;
-        }
-
-        let exp;
-        let path = editor.document.path;
-        let extension = this.getExtension(editor);
-        let text = editor.getTextInRange(new Range(0, editor.document.length));
-        let selectedRanges = editor.selectedRanges;
-
-        if (extension) {
-            switch (extension) {
-                case 'html':
-                    exp = new HTMLExpander(editor);
-                    break;
-                case 'php':
-                    exp = new PHPExpander(editor);
-                    break;
-                case 'py':
-                    exp = new PythonExpander(editor);
-                    break;
-                default:
-                    exp = new JavascriptExpander(editor);
-                    break;
-            }
-        }
-
-        const history = this.getHistory(path);
-
-        const newRanges = selectedRanges.map((range, index) => {
-            let start = range.start;
-            let end = range.end;
-            let lineRange = editor.getLineRangeForRange(new Range(start, end));
-
-            let additionalData = {
-                lineRange: {
-                    start: lineRange.start,
-                    end: lineRange.end - 1 >= lineRange.start ? lineRange.end - 1 : lineRange.end,
-                },
-                selectedText: editor.getTextInRange(new Range(start, end)),
-            };
-
-            let result = exp.expand(text, start, end, additionalData);
-
-            if (result) {
-                if (!history.steps[index]) {
-                    history.steps[index] = [];
-                }
-
-                if (this.allowHistoryStep(path, range)) {
-                    history.steps[index].push({
-                        start: range.start,
-                        end: range.end,
-                        resultStart: result.start,
-                        resultEnd: result.end,
-                        index: index
-                    });
-                    history.lastSelected = result;
-                }
-
-                start = result.start;
-                end = result.end;
-            }
-
-            if (start < end) {
-                editor.addSelectionForRange(new Range(start, end));
-                return new Range(start, end);
-            }
-        });
-
-        history.selectedRanges = selectedRanges;
-
-        if (newRanges.length) ;
+    return extension;
+  }
+  expand(editor) {
+    if (!editor) {
+      return;
     }
-
-    /**
-     * Shink selection
-     * shrinks the active selection(s)
-     * using the ranges stored in expandHistory
-     */
-    shrink(editor) {
-        const path = editor.document.path;
-        const history = this.getHistory(path);
-
-        if (!history || !history.steps.length) {
-            return;
-        }
-
-        let newRanges = history.selectedRanges.map((range, index) => {
-            if (history.steps[index].length > 0) {
-                let historyPosition = history.steps[index].pop();
-                if (historyPosition && historyPosition.start && historyPosition.end) {
-                    return new Range(historyPosition.start, historyPosition.end);
-                }
-            }
-        });
-
-        newRanges = newRanges.filter(Boolean);
-
-        if (newRanges.length) {
-            editor.selectedRanges = newRanges;
-        }
+    let exp;
+    let path = editor.document.path;
+    let extension = this.getExtension(editor);
+    let text = editor.getTextInRange(new Range(0, editor.document.length));
+    let selectedRanges = editor.selectedRanges;
+    if (extension) {
+      switch (extension) {
+        case "html":
+          exp = new HTMLExpander(editor);
+          break;
+        case "php":
+          exp = new PHPExpander(editor);
+          break;
+        case "py":
+          exp = new PythonExpander(editor);
+          break;
+        default:
+          exp = new JavascriptExpander(editor);
+          break;
+      }
     }
-
-    /**
-     * Get steps history
-     *
-     * @param {string} path
-     */
-    getHistory(path) {
-        if (!expandHistory.has(path)) {
-            expandHistory.set(path, {
-                steps: [],
-                selectedRanges: [],
-                lastSelected: null
-            });
+    const history = this.getHistory(path);
+    const newRanges = selectedRanges.map((range, index) => {
+      let start = range.start;
+      let end = range.end;
+      let lineRange = editor.getLineRangeForRange(new Range(start, end));
+      let additionalData = {
+        lineRange: {
+          start: lineRange.start,
+          end: lineRange.end - 1 >= lineRange.start ? lineRange.end - 1 : lineRange.end
+        },
+        selectedText: editor.getTextInRange(new Range(start, end))
+      };
+      let result = exp.expand(text, start, end, additionalData);
+      if (result) {
+        if (!history.steps[index]) {
+          history.steps[index] = [];
         }
-
-        return expandHistory.get(path);
+        if (this.allowHistoryStep(path, range)) {
+          history.steps[index].push({
+            start: range.start,
+            end: range.end,
+            resultStart: result.start,
+            resultEnd: result.end,
+            index
+          });
+          history.lastSelected = result;
+        }
+        start = result.start;
+        end = result.end;
+      }
+      if (start < end) {
+        editor.addSelectionForRange(new Range(start, end));
+        return new Range(start, end);
+      }
+    });
+    history.selectedRanges = selectedRanges;
+    if (newRanges.length) ;
+  }
+  shrink(editor) {
+    const path = editor.document.path;
+    const history = this.getHistory(path);
+    if (!history || !history.steps.length) {
+      return;
     }
-
-    /**
-     * Get last step
-     *
-     * @param {string} path - current file path
-     */
-    getHistoryLastSetp(path) {
-        const history = this.getHistory(path);
-        if (!history.steps || !history.steps[history.steps.length - 1]) {
-            return false;
+    let newRanges = history.selectedRanges.map((range, index) => {
+      if (history.steps[index].length > 0) {
+        let historyPosition = history.steps[index].pop();
+        if (historyPosition && historyPosition.start && historyPosition.end) {
+          return new Range(historyPosition.start, historyPosition.end);
         }
-
-        const steps = history.steps[history.steps.length - 1];
-        if (steps && steps.length) {
-            const lastStep = steps[steps.length - 1];
-            if (lastStep?.start && lastStep?.end) {
-                return lastStep;
-            }
-        }
-
-        return false;
+      }
+    });
+    newRanges = newRanges.filter(Boolean);
+    if (newRanges.length) {
+      editor.selectedRanges = newRanges;
     }
-
-    /**
-     * Check if we can push
-     * the step into the history array
-     *
-     * @param {string} path
-     * @param {Range} range
-     */
-    allowHistoryStep(path, range) {
-        const lastStep = this.getHistoryLastSetp(path);
-        if (!lastStep) {
-            return true;
-        }
-
-        // Same as previous step, do not push otherwise undo
-        // will do the same step multiple times
-        if (lastStep.start === range.start && lastStep.end === range.end) {
-            return false;
-        }
-
-        return true;
+  }
+  getHistory(path) {
+    if (!expandHistory.has(path)) {
+      expandHistory.set(path, {
+        steps: [],
+        selectedRanges: [],
+        lastSelected: null
+      });
     }
-
-
-    /**
-     * Maybe Reset History
-     * the editor will reset
-     * the selection history
-     * once the user clears the
-     * active selection
-     */
-    maybeResetHistory(editor) {
-        const path = editor.document.path;
-        const history = expandHistory.get(path);
-        const selected = editor.selectedRanges;
-
-        if (!history) {
-            return false;
-        }
-
-        // Selection cleared, reset history
-        if (history.lastSelected && selected[0].start == selected[0].end) {
-            this.resetHistory(editor);
-        }
+    return expandHistory.get(path);
+  }
+  getHistoryLastSetp(path) {
+    const history = this.getHistory(path);
+    if (!history.steps || !history.steps[history.steps.length - 1]) {
+      return false;
     }
-
-    /**
-     * Reset history
-     */
-    resetHistory(editor) {
-        const path = editor.document.path;
-
-        if (expandHistory.has(path)) {
-            expandHistory.set(path, {
-                steps: [],
-                selectedRanges: [],
-                lastSelected: null
-            });
-
-            if (nova.inDevMode()) {
-                console.log('reset selection data');
-            }
-        }
+    const steps = history.steps[history.steps.length - 1];
+    if (steps && steps.length) {
+      const lastStep = steps[steps.length - 1];
+      if ((lastStep == null ? void 0 : lastStep.start) && (lastStep == null ? void 0 : lastStep.end)) {
+        return lastStep;
+      }
     }
+    return false;
+  }
+  allowHistoryStep(path, range) {
+    const lastStep = this.getHistoryLastSetp(path);
+    if (!lastStep) {
+      return true;
+    }
+    if (lastStep.start === range.start && lastStep.end === range.end) {
+      return false;
+    }
+    return true;
+  }
+  maybeResetHistory(editor) {
+    const path = editor.document.path;
+    const history = expandHistory.get(path);
+    const selected = editor.selectedRanges;
+    if (!history) {
+      return;
+    }
+    if (selected && history.lastSelected && selected[0].start == selected[0].end) {
+      this.resetHistory(editor);
+    }
+    return;
+  }
+  resetHistory(editor) {
+    const path = editor.document.path;
+    if (expandHistory.has(path)) {
+      expandHistory.set(path, {
+        steps: [],
+        selectedRanges: [],
+        lastSelected: null
+      });
+      if (nova.inDevMode()) {
+        console.log("reset selection data");
+      }
+    }
+  }
 }
 
+var TokenType;
+(function(TokenType2) {
+  TokenType2[TokenType2["Invalid"] = 0] = "Invalid";
+  TokenType2[TokenType2["Word"] = 1] = "Word";
+  TokenType2[TokenType2["Assignment"] = 2] = "Assignment";
+  TokenType2[TokenType2["Arrow"] = 3] = "Arrow";
+  TokenType2[TokenType2["Block"] = 4] = "Block";
+  TokenType2[TokenType2["PartialBlock"] = 5] = "PartialBlock";
+  TokenType2[TokenType2["EndOfBlock"] = 6] = "EndOfBlock";
+  TokenType2[TokenType2["String"] = 7] = "String";
+  TokenType2[TokenType2["PartialString"] = 8] = "PartialString";
+  TokenType2[TokenType2["Comment"] = 9] = "Comment";
+  TokenType2[TokenType2["Whitespace"] = 10] = "Whitespace";
+  TokenType2[TokenType2["Colon"] = 11] = "Colon";
+  TokenType2[TokenType2["Comma"] = 12] = "Comma";
+  TokenType2[TokenType2["CommaAsWord"] = 13] = "CommaAsWord";
+  TokenType2[TokenType2["Insertion"] = 14] = "Insertion";
+})(TokenType || (TokenType = {}));
+const REG_WS = /\s/;
+const BRACKET_PAIR = {
+  "{": "}",
+  "[": "]",
+  "(": ")"
+};
+function whitespace(count) {
+  return new Array(count + 1).join(" ");
+}
 class SelectionAlign {
-    align(editor) {
-        let selectedRanges = editor.selectedRanges;
-        let extension = this.getExtension(editor);
-
-        for (const range of selectedRanges) {
-            const aligned = this.process(range, editor.getTextInRange(range), extension);
-
-            if (aligned) {
-                editor.edit((e) => e.replace(range, aligned));
-            }
+  align(editor) {
+    this.editor = editor;
+    var ranges = [];
+    let selectedRanges = editor.selectedRanges;
+    this.indentBase = "dontchange";
+    selectedRanges.forEach((range) => {
+      const indentBase = this.indentBase;
+      const importantIndent = indentBase == "dontchange";
+      let res;
+      let start = range.start;
+      let end = range.end;
+      while (true) {
+        res = this.narrow(start, end, start, importantIndent);
+        let lastLine = res.infos[res.infos.length - 1];
+        if (lastLine.line.lineNumber > end) {
+          break;
         }
-    }
-
-    process(range, selectedText, extension) {
-        const groups = this.getGroups(range, selectedText);
-
-        console.log(groups);
-
-        const tokens = this.parseText(selectedText, extension);
-        if (!tokens) {
-            return false;
+        if (res.infos[0] && res.infos[0].sgfntTokenType != TokenType.Invalid) {
+          ranges.push(res);
         }
-
-        return this.alignTokens(selectedText, tokens);
+        if (lastLine.line.lineNumber == end) {
+          break;
+        }
+        start = lastLine.line.lineNumber + 1;
+      }
+    });
+    let formatted = [];
+    for (let range of ranges) {
+      formatted.push(this.format(range));
     }
-
-    parseText(text) {
-        let pos = 0;
-        let tokens = [];
-        let skipChars = null;
-        let whiteSpaceBefore = 0;
-        let charsBeforeCharFound = '';
-        let isNewline = true;
-
+  }
+  tokenize(line) {
+    let textline = this.editor.document.lineAt(line);
+    let text = textline.text;
+    let pos = 0;
+    let lt = {
+      line: textline,
+      sgfntTokenType: TokenType.Invalid,
+      sgfntTokens: [],
+      tokens: []
+    };
+    let lastTokenType = TokenType.Invalid;
+    let tokenStartPos = -1;
+    while (pos < text.length) {
+      let char = text.charAt(pos);
+      let next = text.charAt(pos + 1);
+      let currTokenType;
+      let nextSeek = 1;
+      if (char.match(REG_WS)) {
+        currTokenType = TokenType.Whitespace;
+      } else if (char == '"' || char == "'" || char == "`") {
+        currTokenType = TokenType.String;
+      } else if (char == "{" || char == "(" || char == "[") {
+        currTokenType = TokenType.Block;
+      } else if (char == "}" || char == ")" || char == "]") {
+        currTokenType = TokenType.EndOfBlock;
+      } else if (char == "/" && (next == "/" && (pos > 0 ? text.charAt(pos - 1) : "") != ":" || next == "*")) {
+        currTokenType = TokenType.Comment;
+      } else if (char == ":" && next != ":") {
+        currTokenType = TokenType.Colon;
+      } else if (char == ",") {
+        if (lt.tokens.length == 0 || lt.tokens.length == 1 && lt.tokens[0].type == TokenType.Whitespace) {
+          currTokenType = TokenType.CommaAsWord;
+        } else {
+          currTokenType = TokenType.Comma;
+        }
+      } else if (char == "=" && next == ">") {
+        currTokenType = TokenType.Arrow;
+        nextSeek = 2;
+      } else if (char == "=" && next == "=") {
+        currTokenType = TokenType.Word;
+        nextSeek = 2;
+      } else if ((char == "+" || char == "-" || char == "*" || char == "/") && next == "=") {
+        currTokenType = TokenType.Assignment;
+        nextSeek = 2;
+      } else if (char == "=" && next != "=") {
+        currTokenType = TokenType.Assignment;
+      } else {
+        currTokenType = TokenType.Word;
+      }
+      if (currTokenType != lastTokenType) {
+        if (tokenStartPos != -1) {
+          lt.tokens.push({
+            type: lastTokenType,
+            text: textline.text.substr(tokenStartPos, pos - tokenStartPos)
+          });
+        }
+        lastTokenType = currTokenType;
+        tokenStartPos = pos;
+        if (lastTokenType == TokenType.Assignment || lastTokenType == TokenType.Colon || lastTokenType == TokenType.Arrow) {
+          if (lt.sgfntTokens.indexOf(lastTokenType) === -1) {
+            lt.sgfntTokens.push(lastTokenType);
+          }
+        }
+      }
+      if (currTokenType == TokenType.String) {
+        ++pos;
         while (pos < text.length) {
-            let type;
-            let char = text.charAt(pos);
-            let next = text.charAt(pos + 1);
-            let nextSeek = 1;
-            let stringStarts = ['"', "'", "`"]; //eslint-disable-line
-            let bracketStarts = ['{', '(', '['];
-            let bracketEnds = ['}', ')', ']'];
-
-            if (text.charCodeAt(pos) == 10) {
-                type = 'newline';
-            } else if (char.match(/\s/)) {
-                type = 'whitespace';
-            } else if (stringStarts.includes(char)) {
-                type = 'string';
-            } else if (bracketStarts.includes(char)) {
-                type = 'blockStart';
-            } else if (bracketEnds.includes(char)) {
-                type = 'blockEnd';
-            } else if (char == '/' && (
-                  (next == '/' && (pos > 0 ? text.charAt(pos - 1) : '') != ':')
-                || next == '*'
-            )) {
-                type = 'comment';
-            } else if ((char == '#' && next == ' ') || (char == '"' && next == '"' && text.charAt(pos + 2) == '"')) { // python style commets
-                type = 'comment';
-            } else if (char == ':' && next != ':') {
-                type = 'colon';
-            } else if (char == ':' && next == ':') {
-                type = 'word';
-            } else if (char == '=' && next == '>') {
-                type = 'arrow';
-                nextSeek = 2;
-            } else if ((char == '=' || char == '!' || char == '>' || char == '<') && next == '=') {
-                type = 'word';
-                nextSeek = 2;
-                if ((char == '=' || char == '!') && text.charAt(pos + nextSeek) == '=') {
-                      nextSeek = 3;
-                }
-            } else if ((
-                // Math operators
-                char == '+' || char == '-' || char == '*' || char == '/' || char == '%' || // FIXME: Find a way to work with the `**` operator
-                // Bitwise operators
-                char == '~' || char == '|' || char == '^' || // FIXME: Find a way to work with the `<<` and `>>` bitwise operators
-                // Other operators
-                char == '.'
-            ) && next == '=') {
-                type = 'assignment';
-                nextSeek = 2;
-            } else if (char == '=' && next != '=') {
-                type = 'assignment';
+          let quote = text.charAt(pos);
+          if (quote == char && text.charAt(pos - 1) != "\\") {
+            break;
+          }
+          ++pos;
+        }
+        if (pos >= text.length) {
+          lastTokenType = TokenType.PartialString;
+        }
+      }
+      if (currTokenType == TokenType.Block) {
+        ++pos;
+        let bracketCount = 1;
+        while (pos < text.length) {
+          let bracket = text.charAt(pos);
+          if (bracket == char) {
+            ++bracketCount;
+          } else if (bracket == BRACKET_PAIR[char] && text.charAt(pos - 1) != "\\") {
+            if (bracketCount == 1) {
+              break;
             } else {
-                type = 'word';
+              --bracketCount;
             }
-
-            //console.log('char', char, text.charCodeAt(pos));
-
-            if (type == 'newline') {
-                charsBeforeCharFound = '';
-                isNewline = true;
-            }
-
-            if (isNewline && type !== 'newline') {
-                charsBeforeCharFound += char;
-            }
-
-            if (type == 'whitespace') {
-                whiteSpaceBefore += 1;
-            }
-
-            // Skip content defined as strings
-            if (type == 'string' && !skipChars) {
-                skipChars = true;
-            } else if (type == 'string' && skipChars) {
-                skipChars = false;
-            }
-
-            // Skip inner blocks
-            if (type == 'blockStart' && !skipChars) {
-                skipChars = true;
-            } else if (type == 'blockEnd' && skipChars) {
-                skipChars = false;
-            }
-
-            if (skipChars) {
-                ++pos;
-                continue;
-            }
-
-            if (isNewline && type == 'assignment' || type == 'arrow' || type == 'colon') {
-                charsBeforeCharFound = charsBeforeCharFound.slice(0, -1);
-
-                isNewline = false;
-                tokens.push({
-                   char: char,
-                   whiteSpaceBefore: whiteSpaceBefore,
-                   charsBeforeCharFound: charsBeforeCharFound,
-                   pos: pos,
-                   type: type
-                });
-                charsBeforeCharFound = '';
-            }
-
-            if (type !== 'whitespace') {
-                whiteSpaceBefore = 0;
-            }
-
-            pos += nextSeek;
+          }
+          ++pos;
         }
-
-        if (tokens && tokens.length > 1) {
-            return tokens;
+        if (pos >= text.length) {
+          lastTokenType = TokenType.PartialBlock;
         }
-
-        return null;
+      }
+      if (char == "/") {
+        if (next == "/") {
+          pos = text.length;
+        } else if (next == "*") {
+          ++pos;
+          while (pos < text.length) {
+            if (text.charAt(pos) == "*" && text.charAt(pos + 1) == "/") {
+              ++pos;
+              currTokenType = TokenType.Word;
+              break;
+            }
+            ++pos;
+          }
+        }
+      }
+      pos += nextSeek;
     }
-
-
-
-    alignTokens(text, tokens) {
-        // Find the biggest text before the found aligment character
-        const before = tokens.reduce((acc, token) => acc = acc > token.charsBeforeCharFound.trimStart().length ? acc : token.charsBeforeCharFound.trimStart().length, 0);
-        const originalText = text;
-        let offset = 0;
-
-        for (const token of tokens) {
-            let toAdd = 0;
-            let charsBefore = token.charsBeforeCharFound.trimStart().length;
-            if (charsBefore < before) {
-                toAdd = before - charsBefore;
-            }
-
-            if (toAdd > 0) {
-                let space = ' '.repeat(toAdd);
-                let pos = token.pos + offset;
-                text = text.substring(0, pos) + space + text.substring(pos);
-                offset += toAdd;
-            }
-            //console.log(JSON.stringify(token, null, ' '));
-        }
-
-        if (originalText == text) {
-            return null;
-        }
-
-        return text;
+    if (tokenStartPos != -1) {
+      lt.tokens.push({
+        type: lastTokenType,
+        text: textline.text.substr(tokenStartPos, pos - tokenStartPos)
+      });
     }
-
-
-
-    getGroups(range, text) {
-        let start = range.start;
-        let end = range.end;
-        let groups = [text];
-
-        //let bracketGroups = /(?:\[)([^\]]+)+/gm;
-        let bracketRegex = /(?:\[|{)([^\]}]+)+/gm;
-        const bracketMatchs = [...text.matchAll(bracketRegex)];
-
-        if (bracketMatchs && bracketMatchs.length) {
-            bracketMatchs.forEach(match => {
-                if (/\n/.test(match[1])) {
-                    groups.push(match[1]);
+    return lt;
+  }
+  hasPartialToken(info) {
+    for (let j = info.tokens.length - 1; j >= 0; --j) {
+      let lastT = info.tokens[j];
+      if (lastT.type == TokenType.PartialBlock || lastT.type == TokenType.EndOfBlock || lastT.type == TokenType.PartialString) {
+        return true;
+      }
+    }
+    return false;
+  }
+  hasSameIndent(info1, info2) {
+    var t1 = info1.tokens[0];
+    var t2 = info2.tokens[0];
+    if (t1.type == TokenType.Whitespace) {
+      if (t1.text == t2.text) {
+        return true;
+      }
+    } else if (t2.type != TokenType.Whitespace) {
+      return true;
+    }
+    return false;
+  }
+  arrayAnd(array1, array2) {
+    var res = [];
+    var map = {};
+    for (var i = 0; i < array1.length; ++i) {
+      map[array1[i]] = true;
+    }
+    for (var i = 0; i < array2.length; ++i) {
+      if (map[array2[i]]) {
+        res.push(array2[i]);
+      }
+    }
+    return res;
+  }
+  narrow(start, end, anchor, importantIndent) {
+    let anchorToken = this.tokenize(anchor);
+    let range = { anchor, infos: [anchorToken] };
+    let tokenTypes = anchorToken.sgfntTokens;
+    if (anchorToken.sgfntTokens.length == 0) {
+      return range;
+    }
+    if (this.hasPartialToken(anchorToken)) {
+      return range;
+    }
+    let i = anchor - 1;
+    while (i >= start) {
+      let token = this.tokenize(i);
+      if (this.hasPartialToken(token)) {
+        break;
+      }
+      let tt = this.arrayAnd(tokenTypes, token.sgfntTokens);
+      if (tt.length == 0) {
+        break;
+      }
+      tokenTypes = tt;
+      if (importantIndent && !this.hasSameIndent(anchorToken, token)) {
+        break;
+      }
+      range.infos.unshift(token);
+      --i;
+    }
+    i = anchor + 1;
+    while (i <= end) {
+      let token = this.tokenize(i);
+      let tt = this.arrayAnd(tokenTypes, token.sgfntTokens);
+      if (tt.length == 0) {
+        break;
+      }
+      tokenTypes = tt;
+      if (importantIndent && !this.hasSameIndent(anchorToken, token)) {
+        break;
+      }
+      if (this.hasPartialToken(token)) {
+        range.infos.push(token);
+        break;
+      }
+      range.infos.push(token);
+      ++i;
+    }
+    let sgt;
+    if (tokenTypes.indexOf(TokenType.Assignment) >= 0) {
+      sgt = TokenType.Assignment;
+    } else {
+      sgt = tokenTypes[0];
+    }
+    for (let info of range.infos) {
+      info.sgfntTokenType = sgt;
+    }
+    return range;
+  }
+  format(range) {
+    let indentation = null;
+    let anchorLine = range.infos[0];
+    if (this.indentBase == "activeline") {
+      for (let info of range.infos) {
+        if (info.line.lineNumber == range.anchor) {
+          anchorLine = info;
+          break;
+        }
+      }
+    }
+    if (anchorLine.tokens[0].type == TokenType.Whitespace) {
+      indentation = anchorLine.tokens[0].text;
+    } else {
+      indentation = "";
+    }
+    for (let info of range.infos) {
+      if (info.tokens[0].type == TokenType.Whitespace) {
+        info.tokens.shift();
+      }
+      if (info.tokens.length > 1 && info.tokens[info.tokens.length - 1].type == TokenType.Whitespace) {
+        info.tokens.pop();
+      }
+    }
+    let firstWordLength = 0;
+    for (let info of range.infos) {
+      let count = 0;
+      for (let token of info.tokens) {
+        if (token.type == info.sgfntTokenType) {
+          count = -count;
+          break;
+        }
+        if (token.type != TokenType.Whitespace) {
+          ++count;
+        }
+      }
+      if (count < -1) {
+        firstWordLength = Math.max(firstWordLength, info.tokens[0].text.length);
+      }
+    }
+    if (firstWordLength > 0) {
+      let wordSpace = { type: TokenType.Insertion, text: whitespace(firstWordLength + 1) };
+      let oneSpace = { type: TokenType.Insertion, text: " " };
+      for (let info of range.infos) {
+        let count = 0;
+        for (let token of info.tokens) {
+          if (token.type == info.sgfntTokenType) {
+            count = -count;
+            break;
+          }
+          if (token.type != TokenType.Whitespace) {
+            ++count;
+          }
+        }
+        if (count == -1) {
+          info.tokens.unshift(wordSpace);
+        } else if (count < -1) {
+          if (info.tokens[1].type == TokenType.Whitespace) {
+            info.tokens[1] = oneSpace;
+          } else if (info.tokens[0].type == TokenType.CommaAsWord) {
+            info.tokens.splice(1, 0, oneSpace);
+          }
+          if (info.tokens[0].text.length != firstWordLength) {
+            let ws = { type: TokenType.Insertion, text: whitespace(firstWordLength - info.tokens[0].text.length) };
+            if (info.tokens[0].type == TokenType.CommaAsWord) {
+              info.tokens.unshift(ws);
+            } else {
+              info.tokens.splice(1, 0, ws);
+            }
+          }
+        }
+      }
+    }
+    for (let info of range.infos) {
+      let i = 1;
+      while (i < info.tokens.length) {
+        if (info.tokens[i].type == info.sgfntTokenType || info.tokens[i].type == TokenType.Comma) {
+          if (info.tokens[i - 1].type == TokenType.Whitespace) {
+            info.tokens.splice(i - 1, 1);
+            --i;
+          }
+          if (info.tokens[i + 1] && info.tokens[i + 1].type == TokenType.Whitespace) {
+            info.tokens.splice(i + 1, 1);
+          }
+        }
+        ++i;
+      }
+    }
+    const configWS = {
+      colon: [0, 1],
+      arrow: [1, 1],
+      assignment: [1, 1],
+      comment: 2
+    };
+    const stt = TokenType[range.infos[0].sgfntTokenType].toLowerCase();
+    const configDef = { "colon": [0, 1], "assignment": [1, 1], "comment": 2, "arrow": [1, 1] };
+    const configSTT = configWS[stt] || configDef[stt];
+    const configComment = configWS["comment"] || configDef["comment"];
+    const rangeSize = range.infos.length;
+    let length = new Array(rangeSize);
+    length.fill(0);
+    let column = new Array(rangeSize);
+    column.fill(0);
+    let result = new Array(rangeSize);
+    result.fill(indentation);
+    let exceed = 0;
+    let resultSize = 0;
+    while (exceed < rangeSize) {
+      let operatorSize = 0;
+      for (let l = 0; l < rangeSize; ++l) {
+        let i = column[l];
+        let info = range.infos[l];
+        let tokenSize = info.tokens.length;
+        if (i == -1) {
+          continue;
+        }
+        let end = tokenSize;
+        let res = result[l];
+        if (tokenSize > 1 && info.tokens[tokenSize - 1].type == TokenType.Comment) {
+          if (tokenSize > 2 && info.tokens[tokenSize - 2].type == TokenType.Whitespace) {
+            end = tokenSize - 2;
+          } else {
+            end = tokenSize - 1;
+          }
+        }
+        for (; i < end; ++i) {
+          let token = info.tokens[i];
+          if (token.type == info.sgfntTokenType || token.type == TokenType.Comma && i != 0) {
+            operatorSize = Math.max(operatorSize, token.text.length);
+            break;
+          } else {
+            res += token.text;
+          }
+        }
+        result[l] = res;
+        if (i < end) {
+          resultSize = Math.max(resultSize, res.length);
+        }
+        if (i == end) {
+          ++exceed;
+          column[l] = -1;
+          info.tokens.splice(0, end);
+        } else {
+          column[l] = i;
+        }
+      }
+      for (let l = 0; l < rangeSize; ++l) {
+        let i = column[l];
+        if (i == -1) {
+          continue;
+        }
+        let info = range.infos[l];
+        let res = result[l];
+        let op = info.tokens[i].text;
+        if (op.length < operatorSize) {
+          {
+            op = op + whitespace(operatorSize - op.length);
+          }
+        }
+        let padding = "";
+        if (resultSize > res.length) {
+          padding = whitespace(resultSize - res.length);
+        }
+        if (info.tokens[i].type == TokenType.Comma) {
+          res += op;
+          if (i < info.tokens.length - 1) {
+            res += padding + " ";
+          }
+        } else {
+          if (configSTT[0] < 0) {
+            if (configSTT[1] < 0) {
+              let z = res.length - 1;
+              while (z >= 0) {
+                let ch = res.charAt(z);
+                if (ch.match(REG_WS)) {
+                  break;
                 }
-            });
+                --z;
+              }
+              res = res.substring(0, z + 1) + padding + res.substring(z + 1) + op;
+            } else {
+              res = res + op;
+              if (i < info.tokens.length - 1) {
+                res += padding;
+              }
+            }
+          } else {
+            res = res + padding + whitespace(configSTT[0]) + op;
+          }
+          if (configSTT[1] > 0) {
+            res += whitespace(configSTT[1]);
+          }
         }
-
-        return groups;
+        result[l] = res;
+        column[l] = i + 1;
+      }
     }
-
-
-
-
-    /**
-     * Return file extension
-     */
-    getExtension(editor) {
-        let filePath = editor.document.path;
-        let extension = nova.path.extname(filePath).substring(1);
-
-        if (filePath.endsWith('.blade.php')) {
-            extension = 'html';
-        } else if (extension == 'vue') {
-            extension = 'html';
+    if (configComment < 0) {
+      for (let l = 0; l < rangeSize; ++l) {
+        let info = range.infos[l];
+        for (let token of info.tokens) {
+          result[l] += token.text;
         }
-
-        return extension;
+      }
+    } else {
+      resultSize = 0;
+      for (let res of result) {
+        resultSize = Math.max(res.length, resultSize);
+      }
+      for (let l = 0; l < rangeSize; ++l) {
+        let info = range.infos[l];
+        if (info.tokens.length) {
+          let res = result[l];
+          result[l] = res + whitespace(resultSize - res.length + configComment) + info.tokens.pop().text;
+        }
+      }
     }
+    return result;
+  }
 }
 
 exports.activate = () => {
-    const tools = new NovaTextTools();
-
-    if (nova.inDevMode()) {
-        console.log('Text Tools Activated');
-    }
-
-    // Text commands
-    const commands = {
-        tolowercase: 'toLowercase',
-        touppercase: 'toUpperCase',
-        tosnakecase: 'toSnakeCase',
-        tocamelcase: 'toCamelCase',
-        toconstantcase: 'toConstantCase',
-        toheadercase: 'toHeaderCase',
-        tonocase: 'toNoCase',
-        todotcase: 'toDotCase',
-        toparamcase: 'toParamCase',
-        topascalcase: 'toPascalCase',
-        topathcase: 'toPathCase',
-        tosentencecase: 'toSentenceCase',
-        tocapitalcase: 'toCapitalCase',
-        tospongececase: 'toSpongeCase',
-        totitlecase: 'toTitleCase',
-
-        sortalphanumerically: 'sortLinesAlphanumerically',
-        sortalphanumericallyreverse: 'sortLinesAlphanumericallyReverse',
-        sortbylength: 'sortLinesByLength',
-        sortbylengthreverse: 'sortLinesByLengthReverse',
-        deleteduplicates: 'deleteDuplicates',
-        deleteemptylines: 'deleteEmptyLines',
-        filterduplucates: 'filterDuplicates',
-        filterduplucatesnew: 'filterDuplicatesNewDoc',
-        filteruniques: 'filterUniques',
-        filteruniquesnew: 'filterUniquesNewDoc',
-        deletelinesmatching: 'deleteLinesMatching',
-        filterlinesmatching: 'filterLinesMatching',
-        filterlinesmatchingnew: 'filterLinesMatchingNewDoc',
-        reverselines: 'reverseLines',
-        randomlines: 'randomLines',
-        joinlines: 'joinLines',
-        splittolines: 'splitToLines',
-        addlinesnumber: 'addLinesNumbers',
-
-        tobase64: 'base64Encode',
-        decodebase64: 'base64Decode',
-        urlencode: 'urlEncode',
-        urldecode: 'urlDecode',
-        encodehtml: 'htmlEncode',
-        decodehtml: 'htmlDecode',
-        encodespaces: 'spacesEncode',
-        decodespaces: 'spacesDecode',
-        htmlasciitodecimal: 'htmlAsciiToDecimal',
-        asciitodecimal: 'asciiToDecimal',
-        asciitohex: 'asciiToHex',
-        texttobinary: 'textToBinary',
-        binarytotext: 'binaryToText',
-
-        stripslashes: 'stripSlashes',
-        addslashes: 'addSlashes',
-        smartquotes: 'smartQuotes',
-        straightenquotes: 'straightenQuotes',
-        quotessingletodouble: 'quotesSingleToDouble',
-        quotessingletobackticks: 'quotesSingleToBackticks',
-        quotesdoubletosingle: 'quotesDoubleToSingle',
-        quotesdoubletobackticks: 'quotesDoubleToBackticks',
-
-        wrapeachlinewith: 'wrapLinesWith',
-        appendtolines: 'appendToLines',
-        prependtolines: 'prependToLines',
-
-        addallnumbers: 'addAllNumbers',
-        substractallnumbers: 'substractAllNumbers',
-
-        jsonstringparse: 'jsonStringParse'
-    };
-
-    for (const command in commands) {
-        nova.commands.register(`biati.texttools.${command}`, (editor) => {
-            const commandMethod = commands[command];
-            return tools.process(editor, tools[commandMethod]);
-        });
-    }
-
-    // Selection commands
-    const selectionCommands = {
-        selectlinesmatching: 'selectLinesMatching',
-        selectallocurrencesmatching: 'selectAllOcurrencesMatching',
-        selectocurrences: 'selectOcurrences'
-    };
-
-    for (const scommand in selectionCommands) {
-        nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
-            const commandMethod = selectionCommands[scommand];
-            tools.select(editor, tools[commandMethod]);
-        });
-    }
-
-    // Insert commands
-    const insertionCommands = {
-        generateuuid: 'generateUUID',
-        fakedata: 'generateFakeData',
-        nonbreakingspace: 'nonBreakingSpace',
-        generatedummyfile: 'generateDummyFile'
-    };
-
-    for (const scommand in insertionCommands) {
-        nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
-            const commandMethod = insertionCommands[scommand];
-            return tools.process(editor, tools[commandMethod], 'insert');
-        });
-    }
-
-    nova.commands.register('biati.texttools.generatedummyfile', () => {
-        return tools.generateDummyFile();
+  const tools = new NovaTextTools();
+  if (nova.inDevMode()) {
+    console.log("Text Tools Activated");
+  }
+  const commands = {
+    tolowercase: "toLowercase",
+    touppercase: "toUpperCase",
+    tosnakecase: "toSnakeCase",
+    tocamelcase: "toCamelCase",
+    toconstantcase: "toConstantCase",
+    toheadercase: "toHeaderCase",
+    tonocase: "toNoCase",
+    todotcase: "toDotCase",
+    toparamcase: "toParamCase",
+    topascalcase: "toPascalCase",
+    topathcase: "toPathCase",
+    tosentencecase: "toSentenceCase",
+    tocapitalcase: "toCapitalCase",
+    tospongececase: "toSpongeCase",
+    totitlecase: "toTitleCase",
+    sortalphanumerically: "sortLinesAlphanumerically",
+    sortalphanumericallyreverse: "sortLinesAlphanumericallyReverse",
+    sortbylength: "sortLinesByLength",
+    sortbylengthreverse: "sortLinesByLengthReverse",
+    deleteduplicates: "deleteDuplicates",
+    deleteemptylines: "deleteEmptyLines",
+    filterduplucates: "filterDuplicates",
+    filterduplucatesnew: "filterDuplicatesNewDoc",
+    filteruniques: "filterUniques",
+    filteruniquesnew: "filterUniquesNewDoc",
+    deletelinesmatching: "deleteLinesMatching",
+    filterlinesmatching: "filterLinesMatching",
+    filterlinesmatchingnew: "filterLinesMatchingNewDoc",
+    reverselines: "reverseLines",
+    randomlines: "randomLines",
+    joinlines: "joinLines",
+    splittolines: "splitToLines",
+    addlinesnumber: "addLinesNumbers",
+    tobase64: "base64Encode",
+    decodebase64: "base64Decode",
+    urlencode: "urlEncode",
+    urldecode: "urlDecode",
+    encodehtml: "htmlEncode",
+    decodehtml: "htmlDecode",
+    encodespaces: "spacesEncode",
+    decodespaces: "spacesDecode",
+    htmlasciitodecimal: "htmlAsciiToDecimal",
+    asciitodecimal: "asciiToDecimal",
+    asciitohex: "asciiToHex",
+    texttobinary: "textToBinary",
+    binarytotext: "binaryToText",
+    rot13: "rot13",
+    stripslashes: "stripSlashes",
+    addslashes: "addSlashes",
+    smartquotes: "smartQuotes",
+    straightenquotes: "straightenQuotes",
+    quotessingletodouble: "quotesSingleToDouble",
+    quotessingletobackticks: "quotesSingleToBackticks",
+    quotesdoubletosingle: "quotesDoubleToSingle",
+    quotesdoubletobackticks: "quotesDoubleToBackticks",
+    wrapeachlinewith: "wrapLinesWith",
+    appendtolines: "appendToLines",
+    prependtolines: "prependToLines",
+    addallnumbers: "addAllNumbers",
+    substractallnumbers: "substractAllNumbers",
+    jsonstringparse: "jsonStringParse"
+  };
+  for (const command in commands) {
+    nova.commands.register(`biati.texttools.${command}`, (editor) => {
+      const commandMethod = commands[command];
+      return tools.process(command, editor, tools[commandMethod]);
     });
-
-    // Selection Expand/Shrink
-    let expander = new SelectionExpander();
-    nova.commands.register('biati.texttools.expandselection', (editor) => {
-        expander.expand(editor);
+  }
+  const selectionCommands = {
+    selectlinesmatching: "selectLinesMatching",
+    selectallocurrencesmatching: "selectAllOcurrencesMatching",
+    selectocurrences: "selectOcurrences"
+  };
+  for (const scommand in selectionCommands) {
+    nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
+      const commandMethod = selectionCommands[scommand];
+      tools.select(editor, tools[commandMethod]);
     });
-    nova.commands.register('biati.texttools.shrinkselection', (editor) => {
-        expander.shrink(editor);
+  }
+  const insertionCommands = {
+    generateuuid: "generateUUID",
+    fakedata: "generateFakeData",
+    nonbreakingspace: "nonBreakingSpace",
+    generatedummyfile: "generateDummyFile"
+  };
+  for (const scommand in insertionCommands) {
+    nova.commands.register(`biati.texttools.${scommand}`, (editor) => {
+      const commandMethod = insertionCommands[scommand];
+      return tools.process(scommand, editor, tools[commandMethod], "insert");
     });
-    nova.workspace.onDidAddTextEditor((editor) => {
-        return editor.onDidChangeSelection(() => {
-            expander.maybeResetHistory(editor);
-        });
-    });
-
-    // Selection Align
-    let aligner = new SelectionAlign();
-    nova.commands.register('biati.texttools.alignselection', (editor) => {
-        aligner.align(editor);
-    });
+  }
+  nova.commands.register("biati.texttools.generatedummyfile", () => {
+    return tools.generateDummyFile();
+  });
+  let expander = new SelectionExpander();
+  nova.commands.register("biati.texttools.expandselection", (editor) => {
+    expander.expand(editor);
+  });
+  nova.commands.register("biati.texttools.shrinkselection", (editor) => {
+    expander.shrink(editor);
+  });
+  function onChange(textEditor) {
+    expander.maybeResetHistory(textEditor);
+  }
+  function onSelectionChange(textEditor) {
+    nova.subscriptions.add(textEditor.onDidChangeSelection(onChange));
+  }
+  nova.subscriptions.add(nova.workspace.onDidAddTextEditor(onSelectionChange));
+  let aligner = new SelectionAlign();
+  nova.commands.register("biati.texttools.alignselection", (editor) => {
+    aligner.align(editor);
+  });
 };
-
-exports.deactivate = () => {};
+exports.deactivate = () => {
+};

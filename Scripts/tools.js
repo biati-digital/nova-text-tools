@@ -19,20 +19,26 @@ class NovaTextTools {
      * if no selection then the entire content will
      * be processed
      */
-    process(editor, fn, action = 'replace') {
+    process(command, editor, fn, action = 'replace') {
         let selectedRanges = editor.selectedRanges;
 
         if (selectedRanges.length === 1 && selectedRanges[0].start === selectedRanges[0].end) {
             selectedRanges = [new Range(0, editor.document.length)];
         }
-        for (const range of selectedRanges) {
+
+        for (let range of selectedRanges) {
             const text = editor.getTextInRange(range);
+
             Promise.resolve(fn.apply(this, [text])).then((response) => {
                 if (!response && typeof response !== 'string') {
                     return false;
                 }
 
                 if (action === 'replace') {
+                    if (response.length < range.end - range.start) {
+                        range = new Range(range.start, range.start + response.length);
+                    }
+
                     editor.edit((e) => e.replace(range, response));
                 }
                 if (action === 'insert') {
@@ -456,15 +462,18 @@ class NovaTextTools {
         const firstLineIndent = lines[0].match(/^[\s]*/g);
         const lastLineIndent = lines[lines.length - 1].match(/^[\s]*/g);
 
-        return lines.reverse().map((line, index) => {
-            if (index === 0 && firstLineIndent) {
-                line = line.replace(/^[\s]*/g, firstLineIndent[0]);
-            }
-            if (index === lines.length - 1 && lastLineIndent) {
-                line = line.replace(/^[\s]*/g, lastLineIndent[0]);
-            }
-            return line;
-        }).join('\n');
+        return lines
+            .reverse()
+            .map((line, index) => {
+                if (index === 0 && firstLineIndent) {
+                    line = line.replace(/^[\s]*/g, firstLineIndent[0]);
+                }
+                if (index === lines.length - 1 && lastLineIndent) {
+                    line = line.replace(/^[\s]*/g, lastLineIndent[0]);
+                }
+                return line;
+            })
+            .join('\n');
     }
 
     /**
@@ -758,7 +767,6 @@ class NovaTextTools {
                 ordered[lines.length - 1] = ordered[lines.length - 1].replace(/^[\s]*/g, lastLineIndent[0]);
             }
 
-
             resolve(ordered.join('\n'));
         });
     }
@@ -882,6 +890,15 @@ class NovaTextTools {
         });
 
         return string.join('');
+    }
+
+    /**
+     * ROT13
+     */
+    rot13(text) {
+        return text.replace(/[a-zA-Z]/g, function (c) {
+            return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+        });
     }
 
     /**
@@ -1407,9 +1424,7 @@ class NovaTextTools {
         return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
-    normalizeLinesIndent(lines) {
-
-    }
+    normalizeLinesIndent(lines) {}
 
     /**
      * Open in new document
