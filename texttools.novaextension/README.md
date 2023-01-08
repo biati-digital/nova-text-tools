@@ -5,17 +5,25 @@
 
 **Swiss Army knife for text manipulation and selection**. This extension provides 65+ commands to manipulate and select text in your files. The commands are available globally and ready to be used any time with any file. **If you have text selected it will perform the actions in the current selections otherwise it will perform the action in the entire file.**
 
-### What's New:
-We've added more than 15 new tools since the first release so make sure to always read the CHANGELOG.
+### Text transform commands
 
-New in version 3.0:
+-  Make Camel Case: `test string` becomes `testString`
+-  Make Constant Case: `test string` becomes `TEST_STRING`
+-  Make Dot Case: `test string` becomes `test.string`
+-  Make Header Case: `test string` becomes `Test-String`
+-  Make No Case: `testString` becomes `test string`
+-  Make Snake Case: `Test string` becomes `test_string`
+-  Make Param Case: `Test string` becomes `test-string`
+-  Make Pascal Case: `test string` becomes `TestString`
+-  Make Path Case: `test string` becomes `test/string`
+-  Make Sentence Case: `testString` becomes `Test string`
+-  Make Sponge Case: `Test string` becomes `tEsT StRiNG`
+-  Make Capital Case: `Test string` becomes `Test String`
+-  Make Lower Case: `Test string` becomes `test string`
+-  Make Upper Case: `Test string` becomes `TEST STRING`
+-  Make Title Case: `step-by-step instructions` becomes `Step-by-Step Instructions`
 
-- **Selection Expand/Shrink**, we would love if you try it and let us know if you find errors. This is still a work in progress, currently it supports HTML, CSS, Less, Sass, Javascript, Vue, PHP and Python. You can use the shortcut `control+option+right` to expand and `control+option+left` to shrink.
-
-### What's Planned:
-- Selection Align.
-
-### Text commands
+### Text sort and filter commands
 
 -  Sort Lines Alphanumerically
 -  Sort Lines Alphanumerically Reverse
@@ -35,21 +43,9 @@ New in version 3.0:
 -  Join Lines (Join lines using a specified delimiter)
 -  Split Text to Lines (Split a string to lines at the specified delimiter)
 -  Add Lines number with multiple formats: 1, 1., 1), 1.-, 1 -, 1:, Ordinal, Roman Numerals
--  Make Camel Case: `test string` becomes `testString`
--  Make Constant Case: `test string` becomes `TEST_STRING`
--  Make Dot Case: `test string` becomes `test.string`
--  Make Header Case: `test string` becomes `Test-String`
--  Make No Case: `testString` becomes `test string`
--  Make Snake Case: `Test string` becomes `test_string`
--  Make Param Case: `Test string` becomes `test-string`
--  Make Pascal Case: `test string` becomes `TestString`
--  Make Path Case: `test string` becomes `test/string`
--  Make Sentence Case: `testString` becomes `Test string`
--  Make Sponge Case: `Test string` becomes `tEsT StRiNG`
--  Make Capital Case: `Test string` becomes `Test String`
--  Make Lower Case: `Test string` becomes `test string`
--  Make Upper Case: `Test string` becomes `TEST STRING`
--  Make Title Case: `step-by-step instructions` becomes `Step-by-Step Instructions`
+
+### Text encode and decode commands
+
 -  Base64 Encode
 -  Base64 Decode
 -  URL Encode
@@ -63,6 +59,7 @@ New in version 3.0:
 -  ASCII to Hex
 -  Text to Binary
 -  Binary to Text
+-  Text to ROT13
 -  Add Slashes
 -  Strip Slashes
 -  Smart Quotes `"I don't know you"` becomes `“I don’t know you”`
