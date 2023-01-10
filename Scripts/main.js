@@ -1,6 +1,6 @@
-import NovaTextTools from './tools.js';
-import SelectionExpander from './expander/expander.js';
 import SelectionAlign from './align/align.js';
+import SelectionExpander from './expander/expander.js';
+import NovaTextTools from './tools.js';
 
 exports.activate = () => {
     const tools = new NovaTextTools();
@@ -14,12 +14,16 @@ exports.activate = () => {
         tolowercase: 'toLowercase',
         touppercase: 'toUpperCase',
         tosnakecase: 'toSnakeCase',
+        topascalsnakecase: 'toPascalSnakeCase',
+        tocamelsnakecase: 'toCamelSnakeCase',
         tocamelcase: 'toCamelCase',
         toconstantcase: 'toConstantCase',
         toheadercase: 'toHeaderCase',
         tonocase: 'toNoCase',
+        toflatcase: 'toflatCase',
         todotcase: 'toDotCase',
         toparamcase: 'toParamCase',
+        toscreamingparamcase: 'toScreamingParamCase',
         topascalcase: 'toPascalCase',
         topathcase: 'toPathCase',
         tosentencecase: 'toSentenceCase',

@@ -1,3 +1,14 @@
+## Version 3.2.0
+
+- New: Make Train Case as an alias for Make Header Case
+- New: Make Screaming Snake Case as an alias for Make Constant Case
+- New: Make Pascal Snake Case
+- New: Make Camel Snake Case
+- New: Make Screaming Kebab Case
+- New: Make Flat Case
+- Updated: Make Param Case has been renamed to Make Kebab Case
+- Updated: README
+
 ## Version 3.1.0
 
 - New: Text to rot13
