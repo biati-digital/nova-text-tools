@@ -1,10 +1,10 @@
-import { snakeCase, camelCase, constantCase, dotCase, headerCase, noCase, paramCase, pascalCase, pathCase, sentenceCase } from 'change-case';
-import { romanize, ordinalSuffix, titleCase, randomArray, fakeData, quotesTransform, escape, isRegexLike, toBinary, fromBinary } from './utils.js';
-import { logPerformanceStart, logPerformanceEnd, showNotification, log } from './nova.js';
-import { encode, decode } from 'html-entities';
-import { dummyFile } from './dummy-file.js';
+import { camelCase, constantCase, dotCase, headerCase, noCase, paramCase, pascalCase, pathCase, sentenceCase, snakeCase } from 'change-case';
+import { decode, encode } from 'html-entities';
 import unserialize from 'locutus/php/var/unserialize';
 import uuid from 'uuid-random';
+import { dummyFile } from './dummy-file.js';
+import { log, logPerformanceEnd, logPerformanceStart, showNotification } from './nova.js';
+import { escape, fakeData, fromBinary, isRegexLike, ordinalSuffix, quotesTransform, randomArray, romanize, titleCase, toBinary } from './utils.js';
 
 /**
  * Nova Text Tools
@@ -35,14 +35,20 @@ class NovaTextTools {
                 }
 
                 if (action === 'replace') {
-                    if (response.length < range.end - range.start) {
+                    let deletedRange;
+                    if (response.length < range.length) {
+                        deletedRange = new Range(range.start + response.length, range.end);
                         range = new Range(range.start, range.start + response.length);
                     }
 
-                    editor.edit((e) => e.replace(range, response));
+                    editor.edit((e) => {
+                        if (deletedRange) {
+                            e.delete(deletedRange);
+                        }
+                        e.replace(range, response);
+                    });
                 }
                 if (action === 'insert') {
-                    console.log('action', action, response);
                     editor.insert(response);
                 }
             });

@@ -1,3 +1,7 @@
+## Version 3.1.1
+
+- Fixed: Converting from Snake Case to Camel Case no longer leaves the last character twice at the end of the converted string
+
 ## Version 3.1.0
 
 - New: Text to rot13

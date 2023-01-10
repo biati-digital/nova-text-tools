@@ -155,266 +155,6 @@ function snakeCase(input, options) {
     return dotCase(input, __assign({ delimiter: "_" }, options));
 }
 
-function titleCase(string) {
-  const SMALL_WORDS = /\b(?:an?d?|a[st]|because|but|by|en|for|i[fn]|neither|nor|o[fnr]|only|over|per|so|some|tha[tn]|the|to|up|upon|vs?\.?|versus|via|when|with|without|yet)\b/i;
-  const TOKENS = /[^\s:–—-]+|./g;
-  const WHITESPACE = /\s/;
-  const IS_MANUAL_CASE = /.(?=[A-Z]|\..)/;
-  const ALPHANUMERIC_PATTERN = /[A-Za-z0-9\u00C0-\u00FF]/;
-  let result = "";
-  let m;
-  while ((m = TOKENS.exec(string)) !== null) {
-    const { 0: token, index } = m;
-    if (!IS_MANUAL_CASE.test(token) && (!SMALL_WORDS.test(token) || index === 0 || index + token.length === string.length) && (string.charAt(index + token.length) !== ":" || WHITESPACE.test(string.charAt(index + token.length + 1)))) {
-      result += token.replace(ALPHANUMERIC_PATTERN, (m2) => m2.toUpperCase());
-      continue;
-    }
-    result += token;
-  }
-  return result;
-}
-function romanize(num) {
-  if (isNaN(num)) {
-    return NaN;
-  }
-  var digits = String(+num).split(""), key = [
-    "",
-    "C",
-    "CC",
-    "CCC",
-    "CD",
-    "D",
-    "DC",
-    "DCC",
-    "DCCC",
-    "CM",
-    "",
-    "X",
-    "XX",
-    "XXX",
-    "XL",
-    "L",
-    "LX",
-    "LXX",
-    "LXXX",
-    "XC",
-    "",
-    "I",
-    "II",
-    "III",
-    "IV",
-    "V",
-    "VI",
-    "VII",
-    "VIII",
-    "IX"
-  ], roman = "", i = 3;
-  while (i--) {
-    roman = (key[+digits.pop() + i * 10] || "") + roman;
-  }
-  return Array(+digits.join("") + 1).join("M") + roman;
-}
-function ordinalSuffix(i) {
-  var j = i % 10, k = i % 100;
-  if (j == 1 && k != 11) {
-    return i + "st";
-  }
-  if (j == 2 && k != 12) {
-    return i + "nd";
-  }
-  if (j == 3 && k != 13) {
-    return i + "rd";
-  }
-  return i + "th";
-}
-function randomArray(array) {
-  var currentIndex = array.length, randomIndex;
-  while (currentIndex != 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-  }
-  return array;
-}
-function fakeData(format, amount = 1) {
-  let val = false;
-  switch (format) {
-    case "Full Name":
-      val = faker.name.findName();
-      break;
-    case "Name":
-      val = faker.name.firstName();
-      break;
-    case "Lastname":
-      val = faker.name.lastName();
-      break;
-    case "Email":
-      val = faker.internet.email();
-      break;
-    case "Phone":
-      val = faker.phone.phoneNumber();
-      break;
-    case "Credit Card":
-      val = faker.finance.creditCardNumber();
-      break;
-    case "User Name":
-      val = faker.internet.userName();
-      break;
-    case "URL":
-      val = faker.internet.url();
-      break;
-    case "Full Address":
-      val = faker.address.streetAddress() + ", " + faker.address.city() + ", " + faker.address.country() + ", Zip Code " + faker.address.zipCode();
-      break;
-    case "Country":
-      val = faker.address.country();
-      break;
-    case "City":
-      val = faker.address.city();
-      break;
-    case "Street":
-      val = faker.address.streetAddress();
-      break;
-    case "Zip Code":
-      val = faker.address.zipCode();
-      break;
-    case "Company":
-      val = faker.company.companyName();
-      break;
-    case "Lorem Paragraph":
-      val = faker.lorem.paragraph();
-      break;
-    case "Lorem Paragraphs":
-      val = faker.lorem.paragraphs();
-      break;
-    case "Number":
-      val = faker.datatype.number().toString();
-      break;
-    case "JSON":
-      val = faker.datatype.json();
-      break;
-    case "Array":
-      val = faker.random.arrayElements();
-      break;
-    case "UUID":
-      val = faker.datatype.uuid();
-      break;
-  }
-  return val;
-}
-function quotesTransform(input, toChange, changeTo) {
-  let result = "";
-  let isBetweenQuotes = false;
-  let quoteCharacter;
-  for (let index = 0; index < input.length; index++) {
-    const current = input[index];
-    const next = input[index + 1];
-    if (current === '"' || current === "'") {
-      if (!isBetweenQuotes) {
-        quoteCharacter = current;
-        isBetweenQuotes = true;
-        result += changeTo;
-      } else if (quoteCharacter === current) {
-        result += changeTo;
-        isBetweenQuotes = false;
-      } else {
-        result += "\\" + changeTo;
-      }
-    } else if (current === "\\" && (next === "'" || next === '"')) {
-      if (next === changeTo) {
-        result += isBetweenQuotes && quoteCharacter === changeTo ? "\\" + changeTo : "\\\\" + changeTo;
-        index++;
-      } else if (next === toChange) {
-        result += isBetweenQuotes ? toChange : changeTo;
-        index++;
-      } else {
-        result += current;
-      }
-    } else if (current === "\\" && next === "\\") {
-      result += "\\\\";
-      index++;
-    } else {
-      result += current;
-    }
-  }
-  return result;
-}
-function escape(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-function isRegexLike(string) {
-  return /\\w|\\s|\\d|\\b|\\.|\.\*|\.\+/.test(string);
-}
-function toBinary(n) {
-  let value = convertToBinary(n);
-  let length = value.length;
-  while (length < 8) {
-    value = "0" + value;
-    length++;
-  }
-  return value;
-}
-function fromBinary(binary) {
-  let out = "";
-  while (binary.length >= 8) {
-    var byte = binary.slice(0, 8);
-    binary = binary.slice(8);
-    out += String.fromCharCode(parseInt(byte, 2));
-  }
-  return decodeURIComponent(escape(out));
-}
-function convertToBinary(n) {
-  if (n <= 1) {
-    return String(n);
-  } else {
-    return convertToBinary(Math.floor(n / 2)) + String(n % 2);
-  }
-}
-
-function log(message2) {
-  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
-  if (nova.inDevMode() || showLog) {
-    if (typeof message2 == "object") {
-      message2 = JSON.stringify(message2, null, 2);
-    }
-    console.log(message2);
-  }
-}
-function logPerformanceStart(id = "") {
-  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
-  if (nova.inDevMode() || showLog) {
-    console.time(id);
-  }
-}
-function logPerformanceEnd(id = "") {
-  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
-  if (nova.inDevMode() || showLog) {
-    if (typeof message == "object") {
-      message = JSON.stringify(message, null, " ");
-    }
-    console.timeEnd(id);
-  }
-}
-function showNotification({ id = "", title, body, actions = false, type = "", cancellAll = true }) {
-  if (!id) {
-    id = nova.extension.identifier;
-  }
-  if (cancellAll) {
-    nova.notifications.cancel(id);
-  }
-  let request = new NotificationRequest(id);
-  request.title = nova.localize(title);
-  request.body = nova.localize(body);
-  if (actions) {
-    if (typeof actions === "boolean") {
-      request.actions = [nova.localize("OK")];
-    } else {
-      request.actions = actions.map((action) => nova.localize(action));
-    }
-  }
-  nova.notifications.add(request).catch((err) => console.error(err, err.stack));
-}
-
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 function unwrapExports (x) {
@@ -642,142 +382,6 @@ exports.decode = decode;
 });
 
 var index = /*@__PURE__*/unwrapExports(lib);
-
-var __async = (__this, __arguments, generator) => {
-  return new Promise((resolve, reject) => {
-    var fulfilled = (value) => {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    };
-    var rejected = (value) => {
-      try {
-        step(generator.throw(value));
-      } catch (e) {
-        reject(e);
-      }
-    };
-    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
-    step((generator = generator.apply(__this, __arguments)).next());
-  });
-};
-function mkFile(filePath, size) {
-  return new Promise((resolve, reject) => {
-    const docurl = new Process("/usr/bin/env", {
-      args: ["mkfile", "-n", size.toString(), filePath]
-    });
-    let stdOut = "";
-    let stdErr = "";
-    docurl.onStdout((result) => {
-      stdOut += result;
-    });
-    docurl.onStderr((line) => {
-      stdErr += line;
-    });
-    docurl.onDidExit((status) => {
-      if (status === 0) {
-        resolve(stdOut);
-      } else {
-        reject(stdErr);
-      }
-    });
-    docurl.start();
-  });
-}
-function compressFile(command) {
-  return new Promise((resolve, reject) => {
-    const docurl = new Process("/usr/bin/env", {
-      args: command
-    });
-    let stdOut = "";
-    let stdErr = "";
-    docurl.onStdout((result) => {
-      stdOut += result;
-    });
-    docurl.onStderr((line) => {
-      stdErr += line;
-    });
-    docurl.onDidExit((status) => {
-      if (status === 0) {
-        resolve(stdOut);
-      } else {
-        reject(stdErr);
-      }
-    });
-    docurl.start();
-  });
-}
-function dummyFile(filePath, fileName, size) {
-  return __async(this, null, function* () {
-    if (!filePath) {
-      throw new Error("File path must be provided");
-    }
-    if (!fileName) {
-      throw new Error("File name must be provided");
-    }
-    size = size.toLowerCase().replace(/\s/g, "").replace(/,/, "");
-    size = size.replace(/([0-9.]+)(gigabytes|gigas|giga|gbs|gb)/i, (r1, r2) => {
-      return r2 + "gb";
-    });
-    size = size.replace(/([0-9.]+)(megabytes|megabyte|mbs|mb)/i, (r1, r2) => {
-      return r2 + "mb";
-    });
-    size = size.replace(/([0-9.]+)(kilobytes|kilobyte|kbs|kb)/i, (r1, r2) => {
-      return r2 + "kb";
-    });
-    size = size.replace(/([0-9.]+)(bytes|byte|bs|b)/i, (r1, r2) => {
-      return r2;
-    });
-    const bMatch = size.match(/^(\d+)$/i);
-    const kbMatch = size.match(/^(\d+)kb$/i);
-    const mbMatch = size.match(/^(\d+)mb/i);
-    const gbMatch = size.match(/^(\d+)gb/i);
-    let isZip = false;
-    let isTar = false;
-    if (fileName.endsWith(".zip")) {
-      isZip = nova.path.join(filePath, fileName);
-      fileName = fileName.replace(".zip", ".txt");
-    }
-    if (fileName.endsWith(".tar")) {
-      isTar = nova.path.join(filePath, fileName);
-      fileName = fileName.replace(".tar", ".txt");
-    }
-    filePath = nova.path.join(filePath, fileName);
-    if (bMatch) {
-      size = +bMatch[1];
-    }
-    if (kbMatch) {
-      size = +kbMatch[1] * 1e3;
-    }
-    if (mbMatch) {
-      size = +mbMatch[1] * 1e3 * 1e3;
-    }
-    if (gbMatch) {
-      size = +gbMatch[1] * 1e3 * 1e3 * 1e3;
-    }
-    if (size < 0) {
-      throw new Error("File size must be provided");
-    }
-    if (size >= 3e10) {
-      throw new Error("File size limit is 30GB just in case");
-    }
-    mkFile(filePath, size).then((res) => {
-      if (isZip) {
-        return compressFile(["zip", "-m", "-0", isZip, filePath]);
-      }
-      if (isTar) {
-        return compressFile(["tar", "-cf", isTar, filePath]);
-      }
-      return true;
-    }).then(() => {
-      return true;
-    }).catch((error) => {
-      console.error(error);
-    });
-  });
-}
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -1345,6 +949,402 @@ var uuidRandom = createCommonjsModule(function (module) {
 })();
 });
 
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
+function mkFile(filePath, size) {
+  return new Promise((resolve, reject) => {
+    const docurl = new Process("/usr/bin/env", {
+      args: ["mkfile", "-n", size.toString(), filePath]
+    });
+    let stdOut = "";
+    let stdErr = "";
+    docurl.onStdout((result) => {
+      stdOut += result;
+    });
+    docurl.onStderr((line) => {
+      stdErr += line;
+    });
+    docurl.onDidExit((status) => {
+      if (status === 0) {
+        resolve(stdOut);
+      } else {
+        reject(stdErr);
+      }
+    });
+    docurl.start();
+  });
+}
+function compressFile(command) {
+  return new Promise((resolve, reject) => {
+    const docurl = new Process("/usr/bin/env", {
+      args: command
+    });
+    let stdOut = "";
+    let stdErr = "";
+    docurl.onStdout((result) => {
+      stdOut += result;
+    });
+    docurl.onStderr((line) => {
+      stdErr += line;
+    });
+    docurl.onDidExit((status) => {
+      if (status === 0) {
+        resolve(stdOut);
+      } else {
+        reject(stdErr);
+      }
+    });
+    docurl.start();
+  });
+}
+function dummyFile(filePath, fileName, size) {
+  return __async(this, null, function* () {
+    if (!filePath) {
+      throw new Error("File path must be provided");
+    }
+    if (!fileName) {
+      throw new Error("File name must be provided");
+    }
+    size = size.toLowerCase().replace(/\s/g, "").replace(/,/, "");
+    size = size.replace(/([0-9.]+)(gigabytes|gigas|giga|gbs|gb)/i, (r1, r2) => {
+      return r2 + "gb";
+    });
+    size = size.replace(/([0-9.]+)(megabytes|megabyte|mbs|mb)/i, (r1, r2) => {
+      return r2 + "mb";
+    });
+    size = size.replace(/([0-9.]+)(kilobytes|kilobyte|kbs|kb)/i, (r1, r2) => {
+      return r2 + "kb";
+    });
+    size = size.replace(/([0-9.]+)(bytes|byte|bs|b)/i, (r1, r2) => {
+      return r2;
+    });
+    const bMatch = size.match(/^(\d+)$/i);
+    const kbMatch = size.match(/^(\d+)kb$/i);
+    const mbMatch = size.match(/^(\d+)mb/i);
+    const gbMatch = size.match(/^(\d+)gb/i);
+    let isZip = false;
+    let isTar = false;
+    if (fileName.endsWith(".zip")) {
+      isZip = nova.path.join(filePath, fileName);
+      fileName = fileName.replace(".zip", ".txt");
+    }
+    if (fileName.endsWith(".tar")) {
+      isTar = nova.path.join(filePath, fileName);
+      fileName = fileName.replace(".tar", ".txt");
+    }
+    filePath = nova.path.join(filePath, fileName);
+    if (bMatch) {
+      size = +bMatch[1];
+    }
+    if (kbMatch) {
+      size = +kbMatch[1] * 1e3;
+    }
+    if (mbMatch) {
+      size = +mbMatch[1] * 1e3 * 1e3;
+    }
+    if (gbMatch) {
+      size = +gbMatch[1] * 1e3 * 1e3 * 1e3;
+    }
+    if (size < 0) {
+      throw new Error("File size must be provided");
+    }
+    if (size >= 3e10) {
+      throw new Error("File size limit is 30GB just in case");
+    }
+    mkFile(filePath, size).then((res) => {
+      if (isZip) {
+        return compressFile(["zip", "-m", "-0", isZip, filePath]);
+      }
+      if (isTar) {
+        return compressFile(["tar", "-cf", isTar, filePath]);
+      }
+      return true;
+    }).then(() => {
+      return true;
+    }).catch((error) => {
+      console.error(error);
+    });
+  });
+}
+
+function log(message2) {
+  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
+  if (nova.inDevMode() || showLog) {
+    if (typeof message2 == "object") {
+      message2 = JSON.stringify(message2, null, 2);
+    }
+    console.log(message2);
+  }
+}
+function logPerformanceStart(id = "") {
+  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
+  if (nova.inDevMode() || showLog) {
+    console.time(id);
+  }
+}
+function logPerformanceEnd(id = "") {
+  const showLog = nova.workspace.config.get(nova.extension.identifier + ".log");
+  if (nova.inDevMode() || showLog) {
+    if (typeof message == "object") {
+      message = JSON.stringify(message, null, " ");
+    }
+    console.timeEnd(id);
+  }
+}
+function showNotification({ id = "", title, body, actions = false, type = "", cancellAll = true }) {
+  if (!id) {
+    id = nova.extension.identifier;
+  }
+  if (cancellAll) {
+    nova.notifications.cancel(id);
+  }
+  let request = new NotificationRequest(id);
+  request.title = nova.localize(title);
+  request.body = nova.localize(body);
+  if (actions) {
+    if (typeof actions === "boolean") {
+      request.actions = [nova.localize("OK")];
+    } else {
+      request.actions = actions.map((action) => nova.localize(action));
+    }
+  }
+  nova.notifications.add(request).catch((err) => console.error(err, err.stack));
+}
+
+function titleCase(string) {
+  const SMALL_WORDS = /\b(?:an?d?|a[st]|because|but|by|en|for|i[fn]|neither|nor|o[fnr]|only|over|per|so|some|tha[tn]|the|to|up|upon|vs?\.?|versus|via|when|with|without|yet)\b/i;
+  const TOKENS = /[^\s:–—-]+|./g;
+  const WHITESPACE = /\s/;
+  const IS_MANUAL_CASE = /.(?=[A-Z]|\..)/;
+  const ALPHANUMERIC_PATTERN = /[A-Za-z0-9\u00C0-\u00FF]/;
+  let result = "";
+  let m;
+  while ((m = TOKENS.exec(string)) !== null) {
+    const { 0: token, index } = m;
+    if (!IS_MANUAL_CASE.test(token) && (!SMALL_WORDS.test(token) || index === 0 || index + token.length === string.length) && (string.charAt(index + token.length) !== ":" || WHITESPACE.test(string.charAt(index + token.length + 1)))) {
+      result += token.replace(ALPHANUMERIC_PATTERN, (m2) => m2.toUpperCase());
+      continue;
+    }
+    result += token;
+  }
+  return result;
+}
+function romanize(num) {
+  if (isNaN(num)) {
+    return NaN;
+  }
+  var digits = String(+num).split(""), key = [
+    "",
+    "C",
+    "CC",
+    "CCC",
+    "CD",
+    "D",
+    "DC",
+    "DCC",
+    "DCCC",
+    "CM",
+    "",
+    "X",
+    "XX",
+    "XXX",
+    "XL",
+    "L",
+    "LX",
+    "LXX",
+    "LXXX",
+    "XC",
+    "",
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+    "VI",
+    "VII",
+    "VIII",
+    "IX"
+  ], roman = "", i = 3;
+  while (i--) {
+    roman = (key[+digits.pop() + i * 10] || "") + roman;
+  }
+  return Array(+digits.join("") + 1).join("M") + roman;
+}
+function ordinalSuffix(i) {
+  var j = i % 10, k = i % 100;
+  if (j == 1 && k != 11) {
+    return i + "st";
+  }
+  if (j == 2 && k != 12) {
+    return i + "nd";
+  }
+  if (j == 3 && k != 13) {
+    return i + "rd";
+  }
+  return i + "th";
+}
+function randomArray(array) {
+  var currentIndex = array.length, randomIndex;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}
+function fakeData(format, amount = 1) {
+  let val = false;
+  switch (format) {
+    case "Full Name":
+      val = faker.name.findName();
+      break;
+    case "Name":
+      val = faker.name.firstName();
+      break;
+    case "Lastname":
+      val = faker.name.lastName();
+      break;
+    case "Email":
+      val = faker.internet.email();
+      break;
+    case "Phone":
+      val = faker.phone.phoneNumber();
+      break;
+    case "Credit Card":
+      val = faker.finance.creditCardNumber();
+      break;
+    case "User Name":
+      val = faker.internet.userName();
+      break;
+    case "URL":
+      val = faker.internet.url();
+      break;
+    case "Full Address":
+      val = faker.address.streetAddress() + ", " + faker.address.city() + ", " + faker.address.country() + ", Zip Code " + faker.address.zipCode();
+      break;
+    case "Country":
+      val = faker.address.country();
+      break;
+    case "City":
+      val = faker.address.city();
+      break;
+    case "Street":
+      val = faker.address.streetAddress();
+      break;
+    case "Zip Code":
+      val = faker.address.zipCode();
+      break;
+    case "Company":
+      val = faker.company.companyName();
+      break;
+    case "Lorem Paragraph":
+      val = faker.lorem.paragraph();
+      break;
+    case "Lorem Paragraphs":
+      val = faker.lorem.paragraphs();
+      break;
+    case "Number":
+      val = faker.datatype.number().toString();
+      break;
+    case "JSON":
+      val = faker.datatype.json();
+      break;
+    case "Array":
+      val = faker.random.arrayElements();
+      break;
+    case "UUID":
+      val = faker.datatype.uuid();
+      break;
+  }
+  return val;
+}
+function quotesTransform(input, toChange, changeTo) {
+  let result = "";
+  let isBetweenQuotes = false;
+  let quoteCharacter;
+  for (let index = 0; index < input.length; index++) {
+    const current = input[index];
+    const next = input[index + 1];
+    if (current === '"' || current === "'") {
+      if (!isBetweenQuotes) {
+        quoteCharacter = current;
+        isBetweenQuotes = true;
+        result += changeTo;
+      } else if (quoteCharacter === current) {
+        result += changeTo;
+        isBetweenQuotes = false;
+      } else {
+        result += "\\" + changeTo;
+      }
+    } else if (current === "\\" && (next === "'" || next === '"')) {
+      if (next === changeTo) {
+        result += isBetweenQuotes && quoteCharacter === changeTo ? "\\" + changeTo : "\\\\" + changeTo;
+        index++;
+      } else if (next === toChange) {
+        result += isBetweenQuotes ? toChange : changeTo;
+        index++;
+      } else {
+        result += current;
+      }
+    } else if (current === "\\" && next === "\\") {
+      result += "\\\\";
+      index++;
+    } else {
+      result += current;
+    }
+  }
+  return result;
+}
+function escape(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function isRegexLike(string) {
+  return /\\w|\\s|\\d|\\b|\\.|\.\*|\.\+/.test(string);
+}
+function toBinary(n) {
+  let value = convertToBinary(n);
+  let length = value.length;
+  while (length < 8) {
+    value = "0" + value;
+    length++;
+  }
+  return value;
+}
+function fromBinary(binary) {
+  let out = "";
+  while (binary.length >= 8) {
+    var byte = binary.slice(0, 8);
+    binary = binary.slice(8);
+    out += String.fromCharCode(parseInt(byte, 2));
+  }
+  return decodeURIComponent(escape(out));
+}
+function convertToBinary(n) {
+  if (n <= 1) {
+    return String(n);
+  } else {
+    return convertToBinary(Math.floor(n / 2)) + String(n % 2);
+  }
+}
+
 var __async$1 = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -1380,13 +1380,19 @@ class NovaTextTools {
           return false;
         }
         if (action === "replace") {
-          if (response.length < range.end - range.start) {
+          let deletedRange;
+          if (response.length < range.length) {
+            deletedRange = new Range(range.start + response.length, range.end);
             range = new Range(range.start, range.start + response.length);
           }
-          editor.edit((e) => e.replace(range, response));
+          editor.edit((e) => {
+            if (deletedRange) {
+              e.delete(deletedRange);
+            }
+            e.replace(range, response);
+          });
         }
         if (action === "insert") {
-          console.log("action", action, response);
           editor.insert(response);
         }
       });
@@ -3556,12 +3562,11 @@ class SelectionExpander {
     const history = expandHistory.get(path);
     const selected = editor.selectedRanges;
     if (!history) {
-      return;
+      return false;
     }
-    if (selected && history.lastSelected && selected[0].start == selected[0].end) {
+    if (history.lastSelected && selected[0].start == selected[0].end) {
       this.resetHistory(editor);
     }
-    return;
   }
   resetHistory(editor) {
     const path = editor.document.path;
@@ -3578,495 +3583,168 @@ class SelectionExpander {
   }
 }
 
-var TokenType;
-(function(TokenType2) {
-  TokenType2[TokenType2["Invalid"] = 0] = "Invalid";
-  TokenType2[TokenType2["Word"] = 1] = "Word";
-  TokenType2[TokenType2["Assignment"] = 2] = "Assignment";
-  TokenType2[TokenType2["Arrow"] = 3] = "Arrow";
-  TokenType2[TokenType2["Block"] = 4] = "Block";
-  TokenType2[TokenType2["PartialBlock"] = 5] = "PartialBlock";
-  TokenType2[TokenType2["EndOfBlock"] = 6] = "EndOfBlock";
-  TokenType2[TokenType2["String"] = 7] = "String";
-  TokenType2[TokenType2["PartialString"] = 8] = "PartialString";
-  TokenType2[TokenType2["Comment"] = 9] = "Comment";
-  TokenType2[TokenType2["Whitespace"] = 10] = "Whitespace";
-  TokenType2[TokenType2["Colon"] = 11] = "Colon";
-  TokenType2[TokenType2["Comma"] = 12] = "Comma";
-  TokenType2[TokenType2["CommaAsWord"] = 13] = "CommaAsWord";
-  TokenType2[TokenType2["Insertion"] = 14] = "Insertion";
-})(TokenType || (TokenType = {}));
-const REG_WS = /\s/;
-const BRACKET_PAIR = {
-  "{": "}",
-  "[": "]",
-  "(": ")"
-};
-function whitespace(count) {
-  return new Array(count + 1).join(" ");
-}
 class SelectionAlign {
   align(editor) {
-    this.editor = editor;
-    var ranges = [];
     let selectedRanges = editor.selectedRanges;
-    this.indentBase = "dontchange";
-    selectedRanges.forEach((range) => {
-      const indentBase = this.indentBase;
-      const importantIndent = indentBase == "dontchange";
-      let res;
-      let start = range.start;
-      let end = range.end;
-      while (true) {
-        res = this.narrow(start, end, start, importantIndent);
-        let lastLine = res.infos[res.infos.length - 1];
-        if (lastLine.line.lineNumber > end) {
-          break;
-        }
-        if (res.infos[0] && res.infos[0].sgfntTokenType != TokenType.Invalid) {
-          ranges.push(res);
-        }
-        if (lastLine.line.lineNumber == end) {
-          break;
-        }
-        start = lastLine.line.lineNumber + 1;
+    let extension = this.getExtension(editor);
+    for (const range of selectedRanges) {
+      const aligned = this.process(range, editor.getTextInRange(range), extension);
+      if (aligned) {
+        editor.edit((e) => e.replace(range, aligned));
       }
-    });
-    let formatted = [];
-    for (let range of ranges) {
-      formatted.push(this.format(range));
     }
   }
-  tokenize(line) {
-    let textline = this.editor.document.lineAt(line);
-    let text = textline.text;
+  process(range, selectedText, extension) {
+    const groups = this.getGroups(range, selectedText);
+    console.log(groups);
+    const tokens = this.parseText(selectedText, extension);
+    if (!tokens) {
+      return false;
+    }
+    return this.alignTokens(selectedText, tokens);
+  }
+  parseText(text) {
     let pos = 0;
-    let lt = {
-      line: textline,
-      sgfntTokenType: TokenType.Invalid,
-      sgfntTokens: [],
-      tokens: []
-    };
-    let lastTokenType = TokenType.Invalid;
-    let tokenStartPos = -1;
+    let tokens = [];
+    let skipChars = null;
+    let whiteSpaceBefore = 0;
+    let charsBeforeCharFound = "";
+    let isNewline = true;
     while (pos < text.length) {
+      let type;
       let char = text.charAt(pos);
       let next = text.charAt(pos + 1);
-      let currTokenType;
       let nextSeek = 1;
-      if (char.match(REG_WS)) {
-        currTokenType = TokenType.Whitespace;
-      } else if (char == '"' || char == "'" || char == "`") {
-        currTokenType = TokenType.String;
-      } else if (char == "{" || char == "(" || char == "[") {
-        currTokenType = TokenType.Block;
-      } else if (char == "}" || char == ")" || char == "]") {
-        currTokenType = TokenType.EndOfBlock;
+      let stringStarts = ['"', "'", "`"];
+      let bracketStarts = ["{", "(", "["];
+      let bracketEnds = ["}", ")", "]"];
+      if (text.charCodeAt(pos) == 10) {
+        type = "newline";
+      } else if (char.match(/\s/)) {
+        type = "whitespace";
+      } else if (stringStarts.includes(char)) {
+        type = "string";
+      } else if (bracketStarts.includes(char)) {
+        type = "blockStart";
+      } else if (bracketEnds.includes(char)) {
+        type = "blockEnd";
       } else if (char == "/" && (next == "/" && (pos > 0 ? text.charAt(pos - 1) : "") != ":" || next == "*")) {
-        currTokenType = TokenType.Comment;
+        type = "comment";
+      } else if (char == "#" && next == " " || char == '"' && next == '"' && text.charAt(pos + 2) == '"') {
+        type = "comment";
       } else if (char == ":" && next != ":") {
-        currTokenType = TokenType.Colon;
-      } else if (char == ",") {
-        if (lt.tokens.length == 0 || lt.tokens.length == 1 && lt.tokens[0].type == TokenType.Whitespace) {
-          currTokenType = TokenType.CommaAsWord;
-        } else {
-          currTokenType = TokenType.Comma;
-        }
+        type = "colon";
+      } else if (char == ":" && next == ":") {
+        type = "word";
       } else if (char == "=" && next == ">") {
-        currTokenType = TokenType.Arrow;
+        type = "arrow";
         nextSeek = 2;
-      } else if (char == "=" && next == "=") {
-        currTokenType = TokenType.Word;
+      } else if ((char == "=" || char == "!" || char == ">" || char == "<") && next == "=") {
+        type = "word";
         nextSeek = 2;
-      } else if ((char == "+" || char == "-" || char == "*" || char == "/") && next == "=") {
-        currTokenType = TokenType.Assignment;
+        if ((char == "=" || char == "!") && text.charAt(pos + nextSeek) == "=") {
+          nextSeek = 3;
+        }
+      } else if ((char == "+" || char == "-" || char == "*" || char == "/" || char == "%" || char == "~" || char == "|" || char == "^" || char == ".") && next == "=") {
+        type = "assignment";
         nextSeek = 2;
       } else if (char == "=" && next != "=") {
-        currTokenType = TokenType.Assignment;
+        type = "assignment";
       } else {
-        currTokenType = TokenType.Word;
+        type = "word";
       }
-      if (currTokenType != lastTokenType) {
-        if (tokenStartPos != -1) {
-          lt.tokens.push({
-            type: lastTokenType,
-            text: textline.text.substr(tokenStartPos, pos - tokenStartPos)
-          });
-        }
-        lastTokenType = currTokenType;
-        tokenStartPos = pos;
-        if (lastTokenType == TokenType.Assignment || lastTokenType == TokenType.Colon || lastTokenType == TokenType.Arrow) {
-          if (lt.sgfntTokens.indexOf(lastTokenType) === -1) {
-            lt.sgfntTokens.push(lastTokenType);
-          }
-        }
+      if (type == "newline") {
+        charsBeforeCharFound = "";
+        isNewline = true;
       }
-      if (currTokenType == TokenType.String) {
+      if (isNewline && type !== "newline") {
+        charsBeforeCharFound += char;
+      }
+      if (type == "whitespace") {
+        whiteSpaceBefore += 1;
+      }
+      if (type == "string" && !skipChars) {
+        skipChars = true;
+      } else if (type == "string" && skipChars) {
+        skipChars = false;
+      }
+      if (type == "blockStart" && !skipChars) {
+        skipChars = true;
+      } else if (type == "blockEnd" && skipChars) {
+        skipChars = false;
+      }
+      if (skipChars) {
         ++pos;
-        while (pos < text.length) {
-          let quote = text.charAt(pos);
-          if (quote == char && text.charAt(pos - 1) != "\\") {
-            break;
-          }
-          ++pos;
-        }
-        if (pos >= text.length) {
-          lastTokenType = TokenType.PartialString;
-        }
+        continue;
       }
-      if (currTokenType == TokenType.Block) {
-        ++pos;
-        let bracketCount = 1;
-        while (pos < text.length) {
-          let bracket = text.charAt(pos);
-          if (bracket == char) {
-            ++bracketCount;
-          } else if (bracket == BRACKET_PAIR[char] && text.charAt(pos - 1) != "\\") {
-            if (bracketCount == 1) {
-              break;
-            } else {
-              --bracketCount;
-            }
-          }
-          ++pos;
-        }
-        if (pos >= text.length) {
-          lastTokenType = TokenType.PartialBlock;
-        }
+      if (isNewline && type == "assignment" || type == "arrow" || type == "colon") {
+        charsBeforeCharFound = charsBeforeCharFound.slice(0, -1);
+        isNewline = false;
+        tokens.push({
+          char,
+          whiteSpaceBefore,
+          charsBeforeCharFound,
+          pos,
+          type
+        });
+        charsBeforeCharFound = "";
       }
-      if (char == "/") {
-        if (next == "/") {
-          pos = text.length;
-        } else if (next == "*") {
-          ++pos;
-          while (pos < text.length) {
-            if (text.charAt(pos) == "*" && text.charAt(pos + 1) == "/") {
-              ++pos;
-              currTokenType = TokenType.Word;
-              break;
-            }
-            ++pos;
-          }
-        }
+      if (type !== "whitespace") {
+        whiteSpaceBefore = 0;
       }
       pos += nextSeek;
     }
-    if (tokenStartPos != -1) {
-      lt.tokens.push({
-        type: lastTokenType,
-        text: textline.text.substr(tokenStartPos, pos - tokenStartPos)
+    if (tokens && tokens.length > 1) {
+      return tokens;
+    }
+    return null;
+  }
+  alignTokens(text, tokens) {
+    const before = tokens.reduce((acc, token) => acc = acc > token.charsBeforeCharFound.trimStart().length ? acc : token.charsBeforeCharFound.trimStart().length, 0);
+    const originalText = text;
+    let offset = 0;
+    for (const token of tokens) {
+      let toAdd = 0;
+      let charsBefore = token.charsBeforeCharFound.trimStart().length;
+      if (charsBefore < before) {
+        toAdd = before - charsBefore;
+      }
+      if (toAdd > 0) {
+        let space = " ".repeat(toAdd);
+        let pos = token.pos + offset;
+        text = text.substring(0, pos) + space + text.substring(pos);
+        offset += toAdd;
+      }
+    }
+    if (originalText == text) {
+      return null;
+    }
+    return text;
+  }
+  getGroups(range, text) {
+    let start = range.start;
+    let end = range.end;
+    let groups = [text];
+    let bracketRegex = /(?:\[|{)([^\]}]+)+/gm;
+    const bracketMatchs = [...text.matchAll(bracketRegex)];
+    if (bracketMatchs && bracketMatchs.length) {
+      bracketMatchs.forEach((match) => {
+        if (/\n/.test(match[1])) {
+          groups.push(match[1]);
+        }
       });
     }
-    return lt;
+    return groups;
   }
-  hasPartialToken(info) {
-    for (let j = info.tokens.length - 1; j >= 0; --j) {
-      let lastT = info.tokens[j];
-      if (lastT.type == TokenType.PartialBlock || lastT.type == TokenType.EndOfBlock || lastT.type == TokenType.PartialString) {
-        return true;
-      }
+  getExtension(editor) {
+    let filePath = editor.document.path;
+    let extension = nova.path.extname(filePath).substring(1);
+    if (filePath.endsWith(".blade.php")) {
+      extension = "html";
+    } else if (extension == "vue") {
+      extension = "html";
     }
-    return false;
-  }
-  hasSameIndent(info1, info2) {
-    var t1 = info1.tokens[0];
-    var t2 = info2.tokens[0];
-    if (t1.type == TokenType.Whitespace) {
-      if (t1.text == t2.text) {
-        return true;
-      }
-    } else if (t2.type != TokenType.Whitespace) {
-      return true;
-    }
-    return false;
-  }
-  arrayAnd(array1, array2) {
-    var res = [];
-    var map = {};
-    for (var i = 0; i < array1.length; ++i) {
-      map[array1[i]] = true;
-    }
-    for (var i = 0; i < array2.length; ++i) {
-      if (map[array2[i]]) {
-        res.push(array2[i]);
-      }
-    }
-    return res;
-  }
-  narrow(start, end, anchor, importantIndent) {
-    let anchorToken = this.tokenize(anchor);
-    let range = { anchor, infos: [anchorToken] };
-    let tokenTypes = anchorToken.sgfntTokens;
-    if (anchorToken.sgfntTokens.length == 0) {
-      return range;
-    }
-    if (this.hasPartialToken(anchorToken)) {
-      return range;
-    }
-    let i = anchor - 1;
-    while (i >= start) {
-      let token = this.tokenize(i);
-      if (this.hasPartialToken(token)) {
-        break;
-      }
-      let tt = this.arrayAnd(tokenTypes, token.sgfntTokens);
-      if (tt.length == 0) {
-        break;
-      }
-      tokenTypes = tt;
-      if (importantIndent && !this.hasSameIndent(anchorToken, token)) {
-        break;
-      }
-      range.infos.unshift(token);
-      --i;
-    }
-    i = anchor + 1;
-    while (i <= end) {
-      let token = this.tokenize(i);
-      let tt = this.arrayAnd(tokenTypes, token.sgfntTokens);
-      if (tt.length == 0) {
-        break;
-      }
-      tokenTypes = tt;
-      if (importantIndent && !this.hasSameIndent(anchorToken, token)) {
-        break;
-      }
-      if (this.hasPartialToken(token)) {
-        range.infos.push(token);
-        break;
-      }
-      range.infos.push(token);
-      ++i;
-    }
-    let sgt;
-    if (tokenTypes.indexOf(TokenType.Assignment) >= 0) {
-      sgt = TokenType.Assignment;
-    } else {
-      sgt = tokenTypes[0];
-    }
-    for (let info of range.infos) {
-      info.sgfntTokenType = sgt;
-    }
-    return range;
-  }
-  format(range) {
-    let indentation = null;
-    let anchorLine = range.infos[0];
-    if (this.indentBase == "activeline") {
-      for (let info of range.infos) {
-        if (info.line.lineNumber == range.anchor) {
-          anchorLine = info;
-          break;
-        }
-      }
-    }
-    if (anchorLine.tokens[0].type == TokenType.Whitespace) {
-      indentation = anchorLine.tokens[0].text;
-    } else {
-      indentation = "";
-    }
-    for (let info of range.infos) {
-      if (info.tokens[0].type == TokenType.Whitespace) {
-        info.tokens.shift();
-      }
-      if (info.tokens.length > 1 && info.tokens[info.tokens.length - 1].type == TokenType.Whitespace) {
-        info.tokens.pop();
-      }
-    }
-    let firstWordLength = 0;
-    for (let info of range.infos) {
-      let count = 0;
-      for (let token of info.tokens) {
-        if (token.type == info.sgfntTokenType) {
-          count = -count;
-          break;
-        }
-        if (token.type != TokenType.Whitespace) {
-          ++count;
-        }
-      }
-      if (count < -1) {
-        firstWordLength = Math.max(firstWordLength, info.tokens[0].text.length);
-      }
-    }
-    if (firstWordLength > 0) {
-      let wordSpace = { type: TokenType.Insertion, text: whitespace(firstWordLength + 1) };
-      let oneSpace = { type: TokenType.Insertion, text: " " };
-      for (let info of range.infos) {
-        let count = 0;
-        for (let token of info.tokens) {
-          if (token.type == info.sgfntTokenType) {
-            count = -count;
-            break;
-          }
-          if (token.type != TokenType.Whitespace) {
-            ++count;
-          }
-        }
-        if (count == -1) {
-          info.tokens.unshift(wordSpace);
-        } else if (count < -1) {
-          if (info.tokens[1].type == TokenType.Whitespace) {
-            info.tokens[1] = oneSpace;
-          } else if (info.tokens[0].type == TokenType.CommaAsWord) {
-            info.tokens.splice(1, 0, oneSpace);
-          }
-          if (info.tokens[0].text.length != firstWordLength) {
-            let ws = { type: TokenType.Insertion, text: whitespace(firstWordLength - info.tokens[0].text.length) };
-            if (info.tokens[0].type == TokenType.CommaAsWord) {
-              info.tokens.unshift(ws);
-            } else {
-              info.tokens.splice(1, 0, ws);
-            }
-          }
-        }
-      }
-    }
-    for (let info of range.infos) {
-      let i = 1;
-      while (i < info.tokens.length) {
-        if (info.tokens[i].type == info.sgfntTokenType || info.tokens[i].type == TokenType.Comma) {
-          if (info.tokens[i - 1].type == TokenType.Whitespace) {
-            info.tokens.splice(i - 1, 1);
-            --i;
-          }
-          if (info.tokens[i + 1] && info.tokens[i + 1].type == TokenType.Whitespace) {
-            info.tokens.splice(i + 1, 1);
-          }
-        }
-        ++i;
-      }
-    }
-    const configWS = {
-      colon: [0, 1],
-      arrow: [1, 1],
-      assignment: [1, 1],
-      comment: 2
-    };
-    const stt = TokenType[range.infos[0].sgfntTokenType].toLowerCase();
-    const configDef = { "colon": [0, 1], "assignment": [1, 1], "comment": 2, "arrow": [1, 1] };
-    const configSTT = configWS[stt] || configDef[stt];
-    const configComment = configWS["comment"] || configDef["comment"];
-    const rangeSize = range.infos.length;
-    let length = new Array(rangeSize);
-    length.fill(0);
-    let column = new Array(rangeSize);
-    column.fill(0);
-    let result = new Array(rangeSize);
-    result.fill(indentation);
-    let exceed = 0;
-    let resultSize = 0;
-    while (exceed < rangeSize) {
-      let operatorSize = 0;
-      for (let l = 0; l < rangeSize; ++l) {
-        let i = column[l];
-        let info = range.infos[l];
-        let tokenSize = info.tokens.length;
-        if (i == -1) {
-          continue;
-        }
-        let end = tokenSize;
-        let res = result[l];
-        if (tokenSize > 1 && info.tokens[tokenSize - 1].type == TokenType.Comment) {
-          if (tokenSize > 2 && info.tokens[tokenSize - 2].type == TokenType.Whitespace) {
-            end = tokenSize - 2;
-          } else {
-            end = tokenSize - 1;
-          }
-        }
-        for (; i < end; ++i) {
-          let token = info.tokens[i];
-          if (token.type == info.sgfntTokenType || token.type == TokenType.Comma && i != 0) {
-            operatorSize = Math.max(operatorSize, token.text.length);
-            break;
-          } else {
-            res += token.text;
-          }
-        }
-        result[l] = res;
-        if (i < end) {
-          resultSize = Math.max(resultSize, res.length);
-        }
-        if (i == end) {
-          ++exceed;
-          column[l] = -1;
-          info.tokens.splice(0, end);
-        } else {
-          column[l] = i;
-        }
-      }
-      for (let l = 0; l < rangeSize; ++l) {
-        let i = column[l];
-        if (i == -1) {
-          continue;
-        }
-        let info = range.infos[l];
-        let res = result[l];
-        let op = info.tokens[i].text;
-        if (op.length < operatorSize) {
-          {
-            op = op + whitespace(operatorSize - op.length);
-          }
-        }
-        let padding = "";
-        if (resultSize > res.length) {
-          padding = whitespace(resultSize - res.length);
-        }
-        if (info.tokens[i].type == TokenType.Comma) {
-          res += op;
-          if (i < info.tokens.length - 1) {
-            res += padding + " ";
-          }
-        } else {
-          if (configSTT[0] < 0) {
-            if (configSTT[1] < 0) {
-              let z = res.length - 1;
-              while (z >= 0) {
-                let ch = res.charAt(z);
-                if (ch.match(REG_WS)) {
-                  break;
-                }
-                --z;
-              }
-              res = res.substring(0, z + 1) + padding + res.substring(z + 1) + op;
-            } else {
-              res = res + op;
-              if (i < info.tokens.length - 1) {
-                res += padding;
-              }
-            }
-          } else {
-            res = res + padding + whitespace(configSTT[0]) + op;
-          }
-          if (configSTT[1] > 0) {
-            res += whitespace(configSTT[1]);
-          }
-        }
-        result[l] = res;
-        column[l] = i + 1;
-      }
-    }
-    if (configComment < 0) {
-      for (let l = 0; l < rangeSize; ++l) {
-        let info = range.infos[l];
-        for (let token of info.tokens) {
-          result[l] += token.text;
-        }
-      }
-    } else {
-      resultSize = 0;
-      for (let res of result) {
-        resultSize = Math.max(res.length, resultSize);
-      }
-      for (let l = 0; l < rangeSize; ++l) {
-        let info = range.infos[l];
-        if (info.tokens.length) {
-          let res = result[l];
-          result[l] = res + whitespace(resultSize - res.length + configComment) + info.tokens.pop().text;
-        }
-      }
-    }
-    return result;
+    return extension;
   }
 }
 
