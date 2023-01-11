@@ -10,8 +10,16 @@ test('Text to Upper Case', () => {
     expect(tools.toUpperCase('My Test')).toBe('MY TEST');
 });
 
-test('Text to Snale Case', () => {
+test('Text to Snake Case', () => {
     expect(tools.toSnakeCase('My Test')).toBe('my_test');
+});
+
+test('Text to Pascal Snake Case', () => {
+    expect(tools.toPascalSnakeCase('My Test')).toBe('My_Test');
+});
+
+test('Text to Camel Snake Case', () => {
+    expect(tools.toCamelSnakeCase('My Test')).toBe('my_Test');
 });
 
 test('Text to Camel Case', () => {
@@ -38,8 +46,16 @@ test('Text to No Case', () => {
     expect(tools.toNoCase('myTest')).toBe('my test');
 });
 
+test('Text to Flat Case', () => {
+    expect(tools.toFlatCase('myTest')).toBe('mytest');
+});
+
 test('Text to Param Case', () => {
     expect(tools.toParamCase('myTest')).toBe('my-test');
+});
+
+test('Text to Screaming Param Case', () => {
+    expect(tools.toScreamingParamCase('myTest')).toBe('MY-TEST');
 });
 
 test('Text to Pascal Case', () => {
