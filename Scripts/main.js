@@ -20,7 +20,7 @@ exports.activate = () => {
         toconstantcase: 'toConstantCase',
         toheadercase: 'toHeaderCase',
         tonocase: 'toNoCase',
-        toflatcase: 'toflatCase',
+        toflatcase: 'toFlatCase',
         todotcase: 'toDotCase',
         toparamcase: 'toParamCase',
         toscreamingparamcase: 'toScreamingParamCase',
