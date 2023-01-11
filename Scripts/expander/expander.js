@@ -66,9 +66,9 @@ class SelectionExpander {
             let additionalData = {
                 lineRange: {
                     start: lineRange.start,
-                    end: lineRange.end - 1 >= lineRange.start ? lineRange.end - 1 : lineRange.end,
+                    end: lineRange.end - 1 >= lineRange.start ? lineRange.end - 1 : lineRange.end
                 },
-                selectedText: editor.getTextInRange(new Range(start, end)),
+                selectedText: editor.getTextInRange(new Range(start, end))
             };
 
             let result = exp.expand(text, start, end, additionalData);
@@ -115,7 +115,7 @@ class SelectionExpander {
         const path = editor.document.path;
         const history = this.getHistory(path);
 
-        if (!history || !history.steps.length) {
+        if (!history || !history.steps.length) {
             return;
         }
 
@@ -196,7 +196,6 @@ class SelectionExpander {
         return true;
     }
 
-
     /**
      * Maybe Reset History
      * the editor will reset
@@ -210,13 +209,14 @@ class SelectionExpander {
         const selected = editor.selectedRanges;
 
         if (!history) {
-            return false;
+            return;
         }
 
         // Selection cleared, reset history
-        if (history.lastSelected && selected[0].start == selected[0].end) {
+        if (selected && history.lastSelected && selected[0].start == selected[0].end) {
             this.resetHistory(editor);
         }
+        return;
     }
 
     /**
