@@ -1,3 +1,7 @@
+## Version 3.2.1
+
+- Fixed: Error when replacing multiple selections and the new text was shorter than the original
+
 ## Version 3.2.0
 
 - New: Make Train Case as an alias for Make Header Case
@@ -8,6 +12,8 @@
 - New: Make Flat Case
 - Updated: Make Param Case has been renamed to Make Kebab Case
 - Updated: README
+
+Thank's to @guillaumealgis for the PR
 
 ## Version 3.1.0
 
