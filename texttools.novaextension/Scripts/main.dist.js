@@ -1421,11 +1421,12 @@ class SelectionExpander {
     const history = expandHistory.get(path);
     const selected = editor.selectedRanges;
     if (!history) {
-      return false;
+      return;
     }
-    if (history.lastSelected && selected[0].start == selected[0].end) {
+    if (selected && history.lastSelected && selected[0].start == selected[0].end) {
       this.resetHistory(editor);
     }
+    return;
   }
   resetHistory(editor) {
     const path = editor.document.path;
@@ -2815,6 +2816,7 @@ class NovaTextTools {
     if (selectedRanges.length === 1 && selectedRanges[0].start === selectedRanges[0].end) {
       selectedRanges = [new Range(0, editor.document.length)];
     }
+    let prevDeletedRange = 0;
     for (let range of selectedRanges) {
       const text = editor.getTextInRange(range);
       Promise.resolve(fn.apply(this, [text])).then((response) => {
@@ -2822,10 +2824,24 @@ class NovaTextTools {
           return false;
         }
         if (action === "replace") {
-          if (response.length < range.end - range.start) {
+          let deletedRange;
+          if (response.length < range.length) {
+            deletedRange = new Range(range.start + response.length, range.end);
             range = new Range(range.start, range.start + response.length);
           }
-          editor.edit((e) => e.replace(range, response));
+          if (prevDeletedRange > 0) {
+            range = new Range(range.start - prevDeletedRange, range.start + response.length - prevDeletedRange);
+            if (deletedRange) {
+              deletedRange = new Range(deletedRange.start - prevDeletedRange, deletedRange.end - prevDeletedRange);
+            }
+          }
+          editor.edit((e) => {
+            if (deletedRange) {
+              prevDeletedRange += deletedRange.length;
+              e.delete(deletedRange);
+            }
+            e.replace(range, response);
+          });
         }
         if (action === "insert") {
           console.log("action", action, response);
@@ -3781,7 +3797,7 @@ exports.activate = () => {
     toconstantcase: "toConstantCase",
     toheadercase: "toHeaderCase",
     tonocase: "toNoCase",
-    toflatcase: "toflatCase",
+    toflatcase: "toFlatCase",
     todotcase: "toDotCase",
     toparamcase: "toParamCase",
     toscreamingparamcase: "toScreamingParamCase",
