@@ -54,6 +54,24 @@
         "when": "editorHasFocus"
       },
       {
+        "title": "Make Screaming Snake Case",
+        "paletteTitle": "Make Screaming Snake Case",
+        "command": "biati.texttools.toconstantcase",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Make Pascal Snake Case",
+        "paletteTitle": "Make Pascal Snake Case",
+        "command": "biati.texttools.topascalsnakecase",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Make Camel Snake Case",
+        "paletteTitle": "Make Camel Snake Case",
+        "command": "biati.texttools.tocamelsnakecase",
+        "when": "editorHasFocus"
+      },
+      {
         "title": "Make Constant Case",
         "paletteTitle": "Make Constant Case",
         "command": "biati.texttools.toconstantcase",
@@ -72,15 +90,33 @@
         "when": "editorHasFocus"
       },
       {
+        "title": "Make Train Case",
+        "paletteTitle": "Make Train Case",
+        "command": "biati.texttools.toheadercase",
+        "when": "editorHasFocus"
+      },
+      {
         "title": "Make No Case",
         "paletteTitle": "Make No Case",
         "command": "biati.texttools.tonocase",
         "when": "editorHasFocus"
       },
       {
-        "title": "Make Param Case",
-        "paletteTitle": "Make Param Case",
+        "title": "Make Flat Case",
+        "paletteTitle": "Make Flat Case",
+        "command": "biati.texttools.toflatcase",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Make Kebab Case",
+        "paletteTitle": "Make Kebab Case",
         "command": "biati.texttools.toparamcase",
+        "when": "editorHasFocus"
+      },
+      {
+        "title": "Make Screaming Kebab Case",
+        "paletteTitle": "Make Screaming Kebab Case",
+        "command": "biati.texttools.toscreamingparamcase",
         "when": "editorHasFocus"
       },
       {
