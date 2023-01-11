@@ -26,6 +26,7 @@ class NovaTextTools {
             selectedRanges = [new Range(0, editor.document.length)];
         }
 
+        let prevDeletedRange = 0;
         for (let range of selectedRanges) {
             const text = editor.getTextInRange(range);
 
@@ -35,11 +36,28 @@ class NovaTextTools {
                 }
 
                 if (action === 'replace') {
-                    if (response.length < range.end - range.start) {
+                    let deletedRange;
+                    if (response.length < range.length) {
+                        deletedRange = new Range(range.start + response.length, range.end);
                         range = new Range(range.start, range.start + response.length);
                     }
 
-                    editor.edit((e) => e.replace(range, response));
+                    // if there were previously deleted ranges we need to
+                    // adjust the following selections otherwise the text will not be replaced correctly
+                    if (prevDeletedRange > 0) {
+                        range = new Range(range.start - prevDeletedRange, range.start + response.length - prevDeletedRange);
+                        if (deletedRange) {
+                            deletedRange = new Range(deletedRange.start - prevDeletedRange, deletedRange.end - prevDeletedRange);
+                        }
+                    }
+
+                    editor.edit((e) => {
+                        if (deletedRange) {
+                            prevDeletedRange += deletedRange.length;
+                            e.delete(deletedRange);
+                        }
+                        e.replace(range, response);
+                    });
                 }
                 if (action === 'insert') {
                     console.log('action', action, response);
