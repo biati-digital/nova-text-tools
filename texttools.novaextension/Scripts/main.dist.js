@@ -3006,7 +3006,7 @@ class NovaTextTools {
       } else {
         match = line.includes(search);
       }
-      if (match == true && isNot == true || match == false && isNot == true) {
+      if (match == true && isNot == true || match == false && isNot == true || keep === false) {
         match = !match;
       }
       return match;
