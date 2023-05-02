@@ -1,3 +1,7 @@
+## Version 3.2.2
+
+- Fixed: Delete Lines Matching not working
+
 ## Version 3.2.1
 
 - Fixed: Error when replacing multiple selections and the new text was shorter than the original
