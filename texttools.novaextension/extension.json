@@ -3,7 +3,7 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode, Expand and Shrink Selection, Align Selection and much more...",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
