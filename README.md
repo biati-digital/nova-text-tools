@@ -97,13 +97,13 @@ To learn more please checkout the examples below.
 ### Generate Commands
 
 -  Generate UUID
--  Generate Fake Data (Names, Emails, Phones, Credit Cards, etc. Still working on it but definetly will be added)
+-  Generate Fake Data (Names, Emails, Phones, Credit Cards, etc. Still working on it but definitely will be added)
 -  Generate Dummy File (Quickly create any file with any extension and size, read more below.)
 
 ### Numbers
 
 -  Add All Numbers (View the examples below)
--  Substract All Numbers (View the examples below)
+-  Subtract All Numbers (View the examples below)
 
 ### JSON
 -  JSON String Parse (Pretty print a JSON encoded string with support for serialized strings, this way you can easily print a serialized array from a database)
@@ -118,7 +118,7 @@ Easy, there are several ways.
 - You can invoke the commands using the [Commands Palette](https://library.panic.com/nova/command-palettes/)
 - You can right click your file and you will see a "Text Tools" menu that contains all the available commands
 - You can access the tools from the Editor Menu -> Text Tools
-- You can also configure a Key Binding for the command you use the most for exaple `Select All Ocurrences`
+- You can also configure a Key Binding for the command you use the most for example `Select All Ocurrences`
 
 &nbsp;
 
@@ -152,7 +152,7 @@ xfranecki@gmail.com
 
 #### Filter lines that begins with:
 
-To match lines at the beggining, when calling the command (for example "Filter Lines Matching...") we just need to enter our query starting with a `^` so if we enter `^ma`
+To match lines at the beginning, when calling the command (for example "Filter Lines Matching...") we just need to enter our query starting with a `^` so if we enter `^ma`
 
 ```
 marquardt.gudrun@gmail.com
@@ -313,7 +313,7 @@ Ernesto Gladi
 
 ### JSON String Parse
 
-Really usefull to pretty print some json string, for example:
+Really useful to pretty print some json string, for example:
 
 ```
 {"name":"John", "age":30, "car":null}
@@ -349,7 +349,7 @@ result will be:
 
 ### Numbers
 
-You can easily add or substract all the numbers in your document, each value must be in it's own line, if the line contains other text it will be removed to leave only the numbers. **Important: for now it only supports numbers with comma as thousand separator and dot as decimal separator**
+You can easily add or subtract all the numbers in your document, each value must be in it's own line, if the line contains other text it will be removed to leave only the numbers. **Important: for now it only supports numbers with comma as thousand separator and dot as decimal separator**
 
 ```
 130.23
@@ -393,8 +393,8 @@ The file size can be written in multiple ways, it's case insensitive and spaces 
 &nbsp;
 
 ### Have an idea for another tool?
-If you have one in mind do not hestiate to share it with us, if it can help a lot of people we'll surely implement it.
+If you have one in mind do not hesitate to share it with us, if it can help a lot of people we'll surely implement it.
 
 
 ###
-Expand selection is a heavily modified version of the vscode extension [expand region](https://marketplace.visualstudio.com/items?itemName=letrieu.expand-region) and sublime [expand region](https://github.com/aronwoost/sublime-expand-region)
+Expand selection is a heavily modified version of the VS Code extension [expand region](https://marketplace.visualstudio.com/items?itemName=letrieu.expand-region) and Sublime Text [expand region](https://github.com/aronwoost/sublime-expand-region).
