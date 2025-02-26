@@ -403,15 +403,15 @@
         "when": "editorHasFocus"
       },
       {
-        "title": "Select Ocurrences Matching...",
-        "paletteTitle": "Select Ocurrences Matching...",
-        "command": "biati.texttools.selectallocurrencesmatching",
+        "title": "Select Occurrences Matching...",
+        "paletteTitle": "Select Occurrences Matching...",
+        "command": "biati.texttools.selectalloccurrencesmatching",
         "when": "editorHasFocus"
       },
       {
-        "title": "Select All Ocurrences",
-        "paletteTitle": "Select All Ocurrences",
-        "command": "biati.texttools.selectocurrences",
+        "title": "Select All Occurrences",
+        "paletteTitle": "Select All Occurrences",
+        "command": "biati.texttools.selectoccurrences",
         "when": "editorHasFocus"
       },
       {
