@@ -1145,13 +1145,13 @@ class NovaTextTools {
     }
 
     /**
-     * Select All Ocurrences matching
-     * check all ocurrences that matches a specific query
+     * Select All Occurrences matching
+     * check all occurrences that matches a specific query
      */
-    selectAllOcurrencesMatching(editor, text) {
+    selectAllOccurrencesMatching(editor, text) {
         return new Promise((resolve, reject) => {
             // prettier-ignore
-            nova.workspace.showInputPalette('Select Ocurrences Matching...', {
+            nova.workspace.showInputPalette('Select Occurrences Matching...', {
                     placeholder: ''
                 }, (val) => {
                     if (!val) {
@@ -1255,9 +1255,9 @@ class NovaTextTools {
     }
 
     /**
-     * Select All Ocurrences
+     * Select All Occurrences
      */
-    selectOcurrences(editor, text) {
+    selectOccurrences(editor, text) {
         let selected = editor.selectedText;
         if (!selected) {
             return false;
