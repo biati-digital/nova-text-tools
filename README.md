@@ -81,7 +81,7 @@
 
 -  Select Lines Matching... (Selects lines that contains certain text or matches a regex)
 -  Select Words Matching... (Select all strings that contains certain text or matches a regex)
--  Select All Ocurrences (grabs your currently selected text and will select all ocurrences in the file)
+-  Select All Occurrences (grabs your currently selected text and will select all occurrences in the file)
 -  Selection Expand (Expand the current selection `control+option+right`)
 -  Selection Shrink (Shrink the current selection `control+option+left`)
 -  Selection Align (Planned)
@@ -118,7 +118,7 @@ Easy, there are several ways.
 - You can invoke the commands using the [Commands Palette](https://library.panic.com/nova/command-palettes/)
 - You can right click your file and you will see a "Text Tools" menu that contains all the available commands
 - You can access the tools from the Editor Menu -> Text Tools
-- You can also configure a Key Binding for the command you use the most for example `Select All Ocurrences`
+- You can also configure a Key Binding for the command you use the most for exaple `Select All Occurrences`
 
 &nbsp;
 
@@ -231,7 +231,7 @@ humanfrinds@wecarealotfordogs.org
 
 &nbsp;
 
-#### Select Ocurrences Matching...
+#### Select Occurrences Matching...
 
 You can use this to quickly make selections by using a regex or regular text for example:
 
@@ -249,7 +249,7 @@ class Foo(object):
         self.view = x
 ```
 
-We can invoque the "Select Ocurrences Matching..." and we can enter `def` to select all ocurrences of **def**, we can also use a regular expression for example `def (\w+)\(self, rx\)` this will select `on_done` and `on_change`
+We can invoque the "Select Occurrences Matching..." and we can enter `def` to select all occurrences of **def**, we can also use a regular expression for example `def (\w+)\(self, rx\)` this will select `on_done` and `on_change`
 
 If you use regex and there's capture groups then only the groups will be selected.
 

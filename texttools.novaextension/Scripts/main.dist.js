@@ -3502,9 +3502,9 @@ class NovaTextTools {
       });
     });
   }
-  selectAllOcurrencesMatching(editor, text) {
+  selectAllOccurrencesMatching(editor, text) {
     return new Promise((resolve, reject) => {
-      nova.workspace.showInputPalette("Select Ocurrences Matching...", {
+      nova.workspace.showInputPalette("Select Occurrences Matching...", {
         placeholder: ""
       }, (val) => {
         if (!val) {
@@ -3591,7 +3591,7 @@ class NovaTextTools {
       });
     });
   }
-  selectOcurrences(editor, text) {
+  selectOccurrences(editor, text) {
     let selected = editor.selectedText;
     if (!selected) {
       return false;
@@ -3862,8 +3862,8 @@ exports.activate = () => {
   }
   const selectionCommands = {
     selectlinesmatching: "selectLinesMatching",
-    selectallocurrencesmatching: "selectAllOcurrencesMatching",
-    selectocurrences: "selectOcurrences"
+    selectalloccurrencesmatching: "selectAllOccurrencesMatching",
+    selectoccurrences: "selectOccurrences"
   };
   for (const scommand in selectionCommands) {
     nova.commands.register(`biati.texttools.${scommand}`, (editor) => {

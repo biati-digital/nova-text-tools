@@ -90,7 +90,7 @@ Thank's to @guillaumealgis for the PR
 
 - New: Filter Unique Lines
 - New: Generate Dummy File
-- New: Regex support for "Select Ocurrences Matching...", "Select Lines Matching..." "Filter Lines Matching...", etc.
+- New: Regex support for "Select Occurrences Matching...", "Select Lines Matching..." "Filter Lines Matching...", etc.
 - New: Single Quotes to Double Quotes
 - New: Single Quotes to Backticks
 - New: Double Quotes to Single Quotes
@@ -107,7 +107,7 @@ Thank's to @guillaumealgis for the PR
 
 ## Version 1.1.0
 
-- Fixed an error with select all ocurrences
+- Fixed an error with select all occurrences
 - Updated ReadMe
 
 
