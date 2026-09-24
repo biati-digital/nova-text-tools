@@ -3,7 +3,7 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode, Expand and Shrink Selection, Align Selection and much more...",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
@@ -295,7 +295,7 @@
         "when": "editorHasFocus"
       },
       {
-        "title": "Sort by Lines Length",
+        "title": "Sort Lines by Length",
         "paletteTitle": "Sort Lines by Length",
         "command": "biati.texttools.sortbylength",
         "when": "editorHasFocus"
@@ -478,8 +478,8 @@
         "when": "editorHasFocus"
       },
       {
-        "title": "Substract All Numbers",
-        "paletteTitle": "Substract All Numbers",
+        "title": "Subtract All Numbers",
+        "paletteTitle": "Subtract All Numbers",
         "command": "biati.texttools.substractallnumbers",
         "when": "editorHasFocus"
       },
