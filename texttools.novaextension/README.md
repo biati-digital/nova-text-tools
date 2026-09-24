@@ -103,7 +103,7 @@ To learn more please checkout the examples below.
 ### Numbers
 
 -  Add All Numbers (View the examples below)
--  Substract All Numbers (View the examples below)
+-  Subtract All Numbers (View the examples below)
 
 ### JSON
 -  JSON String Parse (Pretty print a JSON encoded string with support for serialized strings, this way you can easily print a serialized array from a database)

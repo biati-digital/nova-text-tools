@@ -593,7 +593,7 @@ class NovaTextTools {
     }
 
     /**
-     * Captal Case
+     * Capital Case
      */
     toCapitalCase(text) {
         const lines = text.split('\n');
@@ -1145,8 +1145,8 @@ class NovaTextTools {
     }
 
     /**
-     * Select All Ocurrences matching
-     * check all ocurrences that matches a specific query
+     * Select All Occurrences matching
+     * check all occurrences that matches a specific query
      */
     selectAllOcurrencesMatching(editor, text) {
         return new Promise((resolve, reject) => {
@@ -1255,7 +1255,7 @@ class NovaTextTools {
     }
 
     /**
-     * Select All Ocurrences
+     * Select All Occurrences
      */
     selectOcurrences(editor, text) {
         let selected = editor.selectedText;
@@ -1294,7 +1294,7 @@ class NovaTextTools {
     }
 
     /**
-     * Substract All Numbers
+     * Subtract All Numbers
      */
     substractAllNumbers(text) {
         const lines = text.split('\n');

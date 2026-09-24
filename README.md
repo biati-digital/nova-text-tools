@@ -103,7 +103,7 @@ To learn more please checkout the examples below.
 ### Numbers
 
 -  Add All Numbers (View the examples below)
--  Substract All Numbers (View the examples below)
+-  Subtract All Numbers (View the examples below)
 
 ### JSON
 -  JSON String Parse (Pretty print a JSON encoded string with support for serialized strings, this way you can easily print a serialized array from a database)
@@ -393,7 +393,7 @@ The file size can be written in multiple ways, it's case insensitive and spaces 
 &nbsp;
 
 ### Have an idea for another tool?
-If you have one in mind do not hestiate to share it with us, if it can help a lot of people we'll surely implement it.
+If you have one in mind do not hesitate to share it with us, if it can help a lot of people we'll surely implement it.
 
 
 ###
