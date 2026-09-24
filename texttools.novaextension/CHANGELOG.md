@@ -1,3 +1,7 @@
+## Version 3.2.3
+
+- Fixed: Some spelling errors
+
 ## Version 3.2.2
 
 - Fixed: Delete Lines Matching not working
