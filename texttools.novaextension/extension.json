@@ -405,13 +405,21 @@
       {
         "title": "Select Occurrences Matching...",
         "paletteTitle": "Select Occurrences Matching...",
+<<<<<<< HEAD
         "command": "biati.texttools.selectallocurrencesmatching",
+=======
+        "command": "biati.texttools.selectalloccurrencesmatching",
+>>>>>>> master
         "when": "editorHasFocus"
       },
       {
         "title": "Select All Occurrences",
         "paletteTitle": "Select All Occurrences",
+<<<<<<< HEAD
         "command": "biati.texttools.selectocurrences",
+=======
+        "command": "biati.texttools.selectoccurrences",
+>>>>>>> master
         "when": "editorHasFocus"
       },
       {

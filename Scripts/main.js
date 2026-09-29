@@ -94,8 +94,8 @@ exports.activate = () => {
     // Selection commands
     const selectionCommands = {
         selectlinesmatching: 'selectLinesMatching',
-        selectallocurrencesmatching: 'selectAllOcurrencesMatching',
-        selectocurrences: 'selectOcurrences'
+        selectalloccurrencesmatching: 'selectAllOccurrencesMatching',
+        selectoccurrences: 'selectOccurrences'
     };
 
     for (const scommand in selectionCommands) {

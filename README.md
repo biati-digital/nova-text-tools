@@ -97,7 +97,7 @@ To learn more please checkout the examples below.
 ### Generate Commands
 
 -  Generate UUID
--  Generate Fake Data (Names, Emails, Phones, Credit Cards, etc. Still working on it but definetly will be added)
+-  Generate Fake Data (Names, Emails, Phones, Credit Cards, etc. Still working on it but definitely will be added)
 -  Generate Dummy File (Quickly create any file with any extension and size, read more below.)
 
 ### Numbers
@@ -118,7 +118,11 @@ Easy, there are several ways.
 - You can invoke the commands using the [Commands Palette](https://library.panic.com/nova/command-palettes/)
 - You can right click your file and you will see a "Text Tools" menu that contains all the available commands
 - You can access the tools from the Editor Menu -> Text Tools
+<<<<<<< HEAD
 - You can also configure a Key Binding for the command you use the most for example `Select All Occurrences`
+=======
+- You can also configure a Key Binding for the command you use the most for exaple `Select All Occurrences`
+>>>>>>> master
 
 &nbsp;
 
@@ -397,4 +401,8 @@ If you have one in mind do not hesitate to share it with us, if it can help a lo
 
 
 ###
+<<<<<<< HEAD
 Expand selection is a heavily modified version of the VS Code extension [expand region](https://marketplace.visualstudio.com/items?itemName=letrieu.expand-region) and sublime [expand region](https://github.com/aronwoost/sublime-expand-region)
+=======
+Expand selection is a heavily modified version of the VS Code extension [expand region](https://marketplace.visualstudio.com/items?itemName=letrieu.expand-region) and Sublime Text [expand region](https://github.com/aronwoost/sublime-expand-region).
+>>>>>>> master
