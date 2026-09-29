@@ -1,3 +1,8 @@
+## Version 3.2.5
+
+- Improved: minor changes in code
+- Fixed: Some spelling errors
+
 ## Version 3.2.3
 
 - Fixed: Some spelling errors
