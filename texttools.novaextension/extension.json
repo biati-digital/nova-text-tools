@@ -3,7 +3,7 @@
   "name": "Text Tools",
   "organization": "biati",
   "description": "Sort, Transform, Filter, Delete Duplicates, Encode, Decode, Expand and Shrink Selection, Align Selection and much more...",
-  "version": "3.2.3",
+  "version": "3.2.5",
   "repository": "https://github.com/biati-digital/nova-text-tools",
   "bugs": "https://github.com/biati-digital/nova-text-tools/issues",
   "funding": "https://www.paypal.com/paypalme/bdigital9816/0usd",
@@ -403,14 +403,14 @@
         "when": "editorHasFocus"
       },
       {
-        "title": "Select Ocurrences Matching...",
-        "paletteTitle": "Select Ocurrences Matching...",
+        "title": "Select Occurrences Matching...",
+        "paletteTitle": "Select Occurrences Matching...",
         "command": "biati.texttools.selectallocurrencesmatching",
         "when": "editorHasFocus"
       },
       {
-        "title": "Select All Ocurrences",
-        "paletteTitle": "Select All Ocurrences",
+        "title": "Select All Occurrences",
+        "paletteTitle": "Select All Occurrences",
         "command": "biati.texttools.selectocurrences",
         "when": "editorHasFocus"
       },
